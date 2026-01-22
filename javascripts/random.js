@@ -19,9 +19,10 @@
     const p = assetUrl.pathname;
     const idx = p.indexOf("/assets/");
     if (idx >= 0) {
-      const rootPath = p.slice(0, idx + 1); // keep trailing slash
-      return assetUrl.origin + rootPath;
+      const rootPath = p.slice(0, idx + 1);
+      return window.location.origin + rootPath;
     }
+
 
     const base = new URL(document.baseURI);
     if (!base.pathname.endsWith("/")) base.pathname += "/";
