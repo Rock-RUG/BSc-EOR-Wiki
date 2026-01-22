@@ -4,22 +4,32 @@
   const GLOBAL_LINK_SELECTOR = 'a.md-tabs__link[href*="random"]';
 
   function getSiteRootUrl() {
-    const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
-    const link =
-      document.querySelector('link[href*="assets/stylesheets/main"]') ||
-      document.querySelector('link[href*="assets/stylesheets"]');
+  const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
+  const link =
+    document.querySelector('link[href*="assets/stylesheets/main"]') ||
+    document.querySelector('link[href*="assets/stylesheets"]');
 
-    const attr = script ? script.getAttribute("src") : (link ? link.getAttribute("href") : null);
-    const assetUrl = attr ? new URL(attr, document.baseURI) : new URL(document.baseURI);
+  const attr = script
+    ? script.getAttribute("src")
+    : (link ? link.getAttribute("href") : null);
 
-    const p = assetUrl.pathname;
-    const idx = p.indexOf("/assets/");
-    if (idx >= 0) return assetUrl.origin + p.slice(0, idx + 1);
+  const assetUrl = attr
+    ? new URL(attr, document.baseURI)
+    : new URL(document.baseURI);
 
-    const base = new URL(document.baseURI);
-    if (!base.pathname.endsWith("/")) base.pathname += "/";
-    return base.origin + base.pathname;
+  const p = assetUrl.pathname;
+  const idx = p.indexOf("/assets/");
+
+  // ⭐ 核心修改：origin 一律用当前页面的 origin
+  if (idx >= 0) {
+    return window.location.origin + p.slice(0, idx + 1);
   }
+
+  const base = new URL(document.baseURI);
+  if (!base.pathname.endsWith("/")) base.pathname += "/";
+  return window.location.origin + base.pathname;
+}
+
 
   function relPathFromSiteRoot(absPathname) {
     const siteRoot = new URL(getSiteRootUrl());
