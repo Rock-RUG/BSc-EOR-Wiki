@@ -172,6 +172,7 @@
     const indexJson = await loadSearchIndex();
     const loc = pickRandomLocation(indexJson, scope || "");
     if (!loc) return;
+    try { sessionStorage.setItem("random_review_mode_v1", "1"); } catch (_) {}
     window.location.assign(toAbsoluteUrl(loc));
   }
 

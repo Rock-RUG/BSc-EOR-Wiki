@@ -542,6 +542,7 @@
 
       const chosen = pickRandom(locs);
       if (!chosen) return;
+      try { sessionStorage.setItem("random_review_mode_v1", "1"); } catch (_) {}
       window.location.assign(toAbsoluteUrl(chosen));
     });
   }
