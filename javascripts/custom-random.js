@@ -590,8 +590,8 @@
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => init().catch(e => console.warn("custom-random:", e)));
-  } else {
-    init().catch(e => console.warn("custom-random:", e)));
+    } else {
+    init().catch(e => console.warn("custom-random:", e));
   }
 
   document.addEventListener("DOMContentSwitch", () => init().catch(e => console.warn("custom-random:", e)));
