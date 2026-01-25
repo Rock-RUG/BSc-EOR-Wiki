@@ -1,10 +1,6 @@
 (function () {
   const COURSE_ITEM_ID = "course-random-item";
-  const COURSE_LINK_ID = "course-random-link";
-
   const CUSTOM_ITEM_ID = "custom-random-item";
-  const CUSTOM_LINK_ID = "custom-random-link";
-
   const GLOBAL_LINK_SELECTOR = 'a.md-tabs__link[href*="random"]';
 
   function getSiteRootUrl() {
@@ -13,21 +9,12 @@
       document.querySelector('link[href*="assets/stylesheets/main"]') ||
       document.querySelector('link[href*="assets/stylesheets"]');
 
-    const attr = script
-      ? script.getAttribute("src")
-      : (link ? link.getAttribute("href") : null);
-
-    const assetUrl = attr
-      ? new URL(attr, document.baseURI)
-      : new URL(document.baseURI);
+    const attr = script ? script.getAttribute("src") : (link ? link.getAttribute("href") : null);
+    const assetUrl = attr ? new URL(attr, document.baseURI) : new URL(document.baseURI);
 
     const p = assetUrl.pathname;
     const idx = p.indexOf("/assets/");
-
-    // origin 一律用当前页面的 origin
-    if (idx >= 0) {
-      return window.location.origin + p.slice(0, idx + 1);
-    }
+    if (idx >= 0) return window.location.origin + p.slice(0, idx + 1);
 
     const base = new URL(document.baseURI);
     if (!base.pathname.endsWith("/")) base.pathname += "/";
@@ -48,8 +35,6 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
-  // 课程判定：路径至少两段 /<year>/<course>/...
-  // 排除 /<year>/ 或 /<year>/index.html
   function getCourseScopeIfAny() {
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
@@ -68,35 +53,35 @@
   function findGlobalRandomItem() {
     const list = findTabsList();
     if (!list) return null;
-    const a = list.querySelector(GLOBAL_LINK_SELECTOR);
-    return a ? a.closest(".md-tabs__item") : null;
+
+    // 找到“真正的 Random”tab：优先匹配 href 结尾 random 或包含 /random/
+    const links = Array.from(list.querySelectorAll("a.md-tabs__link"));
+    const target = links.find(a => {
+      const h = (a.getAttribute("href") || "").toLowerCase().split("#")[0].split("?")[0];
+      if (!h) return false;
+      if (h.includes("custom-random")) return false;
+      return h.includes("/random/") || h.endsWith("random.html") || h.endsWith("random/");
+    }) || list.querySelector(GLOBAL_LINK_SELECTOR);
+
+    return target ? target.closest(".md-tabs__item") : null;
   }
 
-  function removeCourseItem() {
-    const old = document.getElementById(COURSE_ITEM_ID);
-    if (old) old.remove();
+  function removeAllCustomItems(list) {
+    if (!list) return;
+
+    // 1) 按 id 删
+    list.querySelectorAll(`#${CUSTOM_ITEM_ID}`).forEach(el => el.remove());
+
+    // 2) 按链接 href 再兜底删（避免 id 被复制导致重复）
+    list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
+      const item = a.closest(".md-tabs__item");
+      if (item) item.remove();
+    });
   }
 
-  function removeCustomItem() {
-    const old = document.getElementById(CUSTOM_ITEM_ID);
-    if (old) old.remove();
-  }
-
-  function createCourseItem(href) {
-    const li = document.createElement("li");
-    li.className = "md-tabs__item";
-    li.id = COURSE_ITEM_ID;
-
-    const a = document.createElement("a");
-    a.className = "md-tabs__link";
-    a.id = COURSE_LINK_ID;
-    a.href = href;
-    a.textContent = "Random in course";
-    // 给 random.js 用：点击它要存 course scope
-    a.setAttribute("data-random-scope", "course");
-
-    li.appendChild(a);
-    return li;
+  function removeAllCourseItems(list) {
+    if (!list) return;
+    list.querySelectorAll(`#${COURSE_ITEM_ID}`).forEach(el => el.remove());
   }
 
   function createCustomItem() {
@@ -106,7 +91,6 @@
 
     const a = document.createElement("a");
     a.className = "md-tabs__link";
-    a.id = CUSTOM_LINK_ID;
     a.href = new URL("custom-random.html", getSiteRootUrl()).toString();
     a.textContent = "Custom random";
 
@@ -114,49 +98,30 @@
     return li;
   }
 
-  function setRightGroupStart(itemToStart) {
+  function createCourseItem(href) {
+    const li = document.createElement("li");
+    li.className = "md-tabs__item";
+    li.id = COURSE_ITEM_ID;
+
+    const a = document.createElement("a");
+    a.className = "md-tabs__link";
+    a.href = href;
+    a.textContent = "Random in course";
+    a.setAttribute("data-random-scope", "course");
+
+    li.appendChild(a);
+    return li;
+  }
+
+  function setRightGroupStart(item) {
     const list = findTabsList();
     if (!list) return;
 
-    // 清掉所有 random-right-start
     list.querySelectorAll(".md-tabs__item.random-right-start").forEach(el => {
       el.classList.remove("random-right-start");
     });
 
-    if (itemToStart) itemToStart.classList.add("random-right-start");
-  }
-
-  function ensureCustomTab(globalItem) {
-    const list = findTabsList();
-    if (!list || !globalItem) return null;
-
-    let customItem = document.getElementById(CUSTOM_ITEM_ID);
-    if (!customItem) {
-      customItem = createCustomItem();
-      list.insertBefore(customItem, globalItem);
-    }
-    return customItem;
-  }
-
-  function ensureCourseTab(globalItem) {
-    const list = findTabsList();
-    if (!list || !globalItem) return { courseItem: null, courseScope: "" };
-
-    const courseScope = getCourseScopeIfAny();
-
-    if (!courseScope) {
-      removeCourseItem();
-      return { courseItem: null, courseScope: "" };
-    }
-
-    let courseItem = document.getElementById(COURSE_ITEM_ID);
-    if (!courseItem) {
-      const globalLink = globalItem.querySelector("a.md-tabs__link");
-      const href = globalLink ? globalLink.getAttribute("href") : "random/";
-      courseItem = createCourseItem(href);
-      list.insertBefore(courseItem, globalItem);
-    }
-    return { courseItem, courseScope };
+    if (item) item.classList.add("random-right-start");
   }
 
   function ensureTabs() {
@@ -164,31 +129,25 @@
     const globalItem = findGlobalRandomItem();
     if (!list || !globalItem) return;
 
-    // 1) 全站都要有 custom random
-    const customItem = ensureCustomTab(globalItem);
+    // 每次切页都先彻底清理，保证不会重复
+    removeAllCustomItems(list);
+    removeAllCourseItems(list);
 
-    // 2) 课程内才有 course random
-    const { courseItem, courseScope } = ensureCourseTab(globalItem);
+    // 插入顺序固定为：Custom random | Random in course(如果有) | Random
+    const customItem = createCustomItem();
+    list.insertBefore(customItem, globalItem);
 
-    // 3) 如果 courseItem 被新建，会插在 global 左边，但此时 custom 可能已经在 global 左边
-    //    你要的顺序是：Custom random | Random in course | Random
-    //    所以如果 course 存在且 custom 在 global 左边，就把 custom 移到 course 左边
-    if (courseScope && courseItem && customItem) {
-      // 如果 customItem 目前不在 courseItem 左边，强制放到 courseItem 左边
-      if (customItem.nextSibling !== courseItem) {
-        try {
-          list.insertBefore(customItem, courseItem);
-        } catch (_) {}
-      }
+    const courseScope = getCourseScopeIfAny();
+    let courseItem = null;
+    if (courseScope) {
+      const globalLink = globalItem.querySelector("a.md-tabs__link");
+      const href = globalLink ? globalLink.getAttribute("href") : "random/";
+      courseItem = createCourseItem(href);
+      list.insertBefore(courseItem, globalItem);
     }
 
-    // 4) 右侧组起点：customItem（最左边那个）
-    setRightGroupStart(customItem || courseItem || globalItem);
-
-    // 5) 非课程页：确保 courseItem 清理掉，但 custom 仍保留
-    if (!courseScope) {
-      removeCourseItem();
-    }
+    // 右侧组起点：Custom random
+    setRightGroupStart(customItem);
   }
 
   function init() {
@@ -204,4 +163,3 @@
   // mkdocs-material instant navigation
   document.addEventListener("DOMContentSwitch", init);
 })();
-s

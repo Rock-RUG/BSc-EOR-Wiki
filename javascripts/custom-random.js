@@ -4,7 +4,9 @@
   const CANDS_KEY = "random_custom_candidates_v1";
   const ENTRY_KEY = "random_custom_page_v1";
 
-  // ====== base url ======
+  // 新增：存每个 token 对应的候选列表，用于目标页判断“命中了哪些 token”
+  const TOKENMAP_KEY = "random_custom_token_map_v1";
+
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
     const link =
@@ -23,7 +25,6 @@
     return base.origin + base.pathname;
   }
 
-  // ====== helpers ======
   function escapeHtml(s) {
     return String(s)
       .replaceAll("&", "&amp;")
@@ -42,7 +43,6 @@
   }
 
   function tokeniseLoose(s) {
-    // allow user input like "m1c-lecture05", "continuity", "IVT EVT"
     const n = normaliseForSearch(s);
     if (!n) return [];
     return n.split(" ").filter(Boolean);
@@ -65,7 +65,6 @@
     return /^random.*\.html$/.test(file) || file === "custom-random.html";
   }
 
-  // concept 页候选：至少 /year/course/page 这三段
   function isConceptLocation(loc) {
     const s = String(loc || "");
     if (!s) return false;
@@ -95,7 +94,7 @@
     return await res.json();
   }
 
-  // ---- aggregate section hits (#...) into their parent page ----
+  // 聚合 section hits 到 page-level
   function aggregateDocsToPages(docs) {
     const pageMap = new Map();
 
@@ -116,12 +115,8 @@
         pageMap.set(pageLoc, entry);
       }
 
-      // Prefer the page-level title (doc whose location has no '#')
-      if (locFull === pageLoc && d.title) {
-        entry.title = String(d.title);
-      }
+      if (locFull === pageLoc && d.title) entry.title = String(d.title);
 
-      // skip noisy sections: prerequisites + related concepts
       const anchor = locFull.includes("#") ? (locFull.split("#")[1] || "").toLowerCase() : "";
       const isNoisySection =
         anchor === "prerequisites" ||
@@ -129,11 +124,8 @@
         anchor === "related-concepts" ||
         anchor.startsWith("related-concepts-");
 
-      if (!isNoisySection && d.text) {
-        entry.text += " " + String(d.text);
-      }
+      if (!isNoisySection && d.text) entry.text += " " + String(d.text);
 
-      // bring tags/extra fields into text blob (if they exist)
       if (d.tags) entry.text += " " + String(d.tags);
       if (d.keywords) entry.text += " " + String(d.keywords);
       if (d.meta) entry.text += " " + JSON.stringify(d.meta);
@@ -171,24 +163,51 @@
     } catch (_) {}
   }
 
+  function storeTokenMap(mapObj) {
+    try {
+      sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(mapObj || {}));
+    } catch (_) {}
+  }
+
   function storeEntryUrl() {
     try {
       sessionStorage.setItem(ENTRY_KEY, window.location.href);
     } catch (_) {}
   }
 
-  function buildCandidateSet(pageDocs, tokens) {
-    const toks = (tokens || []).flatMap(tokeniseLoose).filter(Boolean);
-    if (!toks.length) return [];
+  // 单 token 的命中（把 token 作为整体输入，但匹配用 loose tokenised）
+  function matchToken(pageDoc, tokenRaw) {
+    const toks = tokeniseLoose(tokenRaw);
+    if (!toks.length) return false;
 
-    // AND semantics: every token must appear somewhere
-    return pageDocs.filter(d => {
-      const hay = normaliseForSearch((d.title || "") + " " + (d.text || "") + " " + (d.location || ""));
-      for (const t of toks) {
-        if (!hay.includes(t)) return false;
+    const hay = normaliseForSearch((pageDoc.title || "") + " " + (pageDoc.text || "") + " " + (pageDoc.location || ""));
+    // 这里仍然用 AND：一个 token 里面如果用户写了 "ivt evt"，希望同时命中
+    for (const t of toks) {
+      if (!hay.includes(t)) return false;
+    }
+    return true;
+  }
+
+  // 你要的：多个 token 之间做 OR（并集），并且结果按 token 分区
+  function buildResultsByToken(pageDocs, tokens) {
+    const byToken = [];
+    const tokenMap = {}; // token -> [location]
+
+    for (const token of (tokens || [])) {
+      const hits = pageDocs.filter(d => matchToken(d, token));
+      byToken.push({ token, hits });
+      tokenMap[token] = hits.map(h => h.location);
+    }
+
+    // 合并去重（并集）
+    const unionMap = new Map(); // loc -> doc
+    for (const group of byToken) {
+      for (const doc of group.hits) {
+        if (!unionMap.has(doc.location)) unionMap.set(doc.location, doc);
       }
-      return true;
-    });
+    }
+
+    return { byToken, union: Array.from(unionMap.values()), tokenMap };
   }
 
   function toAbsoluteUrl(loc) {
@@ -205,54 +224,74 @@
 
   function renderApp(container, state) {
     const tokens = state.tokens;
-    const count = state.results.length;
+    const unionCount = state.union.length;
 
     const chips = tokens.length
       ? tokens.map((t, i) => `
-          <span class="md-tag" style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0;padding:4px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);">
+          <span style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0;padding:4px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);">
             <span>${escapeHtml(t)}</span>
             <button data-del="${i}" class="md-button" style="padding:2px 8px;min-width:auto">×</button>
           </span>
         `).join("")
       : `<span style="opacity:.7">No tokens yet.</span>`;
 
-    const list = count
-      ? state.results.slice(0, 200).map(r => {
-          const href = toAbsoluteUrl(r.location);
-          const course = courseLabelFromLocation(r.location);
+    // 按 token 分区展示
+    const sections = state.byToken.length
+      ? state.byToken.map(group => {
+          const count = group.hits.length;
+          const list = count
+            ? group.hits.slice(0, 120).map(r => {
+                const href = toAbsoluteUrl(r.location);
+                const course = courseLabelFromLocation(r.location);
+                return `
+                  <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                      <a href="${href}" style="text-decoration:none">${escapeHtml(r.title || "Untitled")}</a>
+                      ${course ? `<span style="opacity:.75;font-size:.85em">${escapeHtml(course)}</span>` : ""}
+                    </div>
+                  </article>
+                `;
+              }).join("")
+            : `<div style="opacity:.7;padding:8px 0">No pages matched this token.</div>`;
+
           return `
-            <article class="sr-item">
-              <div class="sr-head">
-                <a class="sr-title" href="${href}">${escapeHtml(r.title || "Untitled")}</a>
-                ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
+            <section style="margin-top:16px;padding:12px 14px;border:1px solid var(--md-default-fg-color--lightest);border-radius:12px">
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+                <div>
+                  <strong>${escapeHtml(group.token)}</strong>
+                  <span style="opacity:.75">(${count} page(s))</span>
+                </div>
+                <button data-del-token="${escapeHtml(group.token)}" class="md-button" style="padding:4px 10px">× Remove</button>
               </div>
-            </article>
+              <div style="margin-top:10px">
+                ${list}
+              </div>
+            </section>
           `;
         }).join("")
-      : `<div class="sr-empty"><p>No matching pages.</p></div>`;
+      : `<div style="opacity:.75;margin-top:12px">Add tokens to see results.</div>`;
+
+    const unionInfo = tokens.length
+      ? `<div style="margin-top:14px;opacity:.85">Union (OR) across tokens: <strong>${unionCount}</strong> unique page(s)</div>`
+      : "";
 
     container.innerHTML = `
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
         <input id="cr-input" class="md-input" style="flex:1;min-width:240px" placeholder="e.g. continuity, m1c-lecture05" />
         <button id="cr-add" class="md-button md-button--primary">Add</button>
-        <button id="cr-clear" class="md-button">Clear</button>
+        <button id="cr-clear" class="md-button">Clear all</button>
       </div>
 
-      <div style="margin:6px 0 14px 0">
+      <div style="margin:6px 0 8px 0">
         ${chips}
       </div>
 
-      <div class="sr-top" style="margin-top:10px">
-        <div class="sr-top__title">Filtered pages</div>
-        <div class="sr-top__count">${count} page(s) matched</div>
-      </div>
+      ${unionInfo}
 
-      <div class="sr-list" style="margin-top:8px">
-        ${list}
-      </div>
+      ${sections}
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px">
-        <button id="cr-random" class="md-button md-button--primary" ${count ? "" : "disabled"}>Start random</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px">
+        <button id="cr-random" class="md-button md-button--primary" ${unionCount ? "" : "disabled"}>Start random</button>
       </div>
     `;
 
@@ -284,6 +323,7 @@
       state.recompute();
     });
 
+    // 上方 chips 的单删
     container.querySelectorAll("button[data-del]").forEach(btn => {
       btn.addEventListener("click", () => {
         const idx = Number(btn.getAttribute("data-del"));
@@ -295,10 +335,25 @@
       });
     });
 
+    // 每个分区右上角 “× Remove”
+    container.querySelectorAll("button[data-del-token]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const token = btn.getAttribute("data-del-token") || "";
+        state.tokens = state.tokens.filter(t => t !== token);
+        storeTokens(state.tokens);
+        state.recompute();
+      });
+    });
+
     randomBtn.addEventListener("click", () => {
-      if (!state.results.length) return;
+      if (!state.union.length) return;
+
       storeEntryUrl();
-      const locs = state.results.map(r => r.location);
+
+      // 写入 tokenMap + union candidates，供目标页 banner 使用
+      storeTokenMap(state.tokenMap);
+
+      const locs = state.union.map(r => r.location);
       storeCandidates(locs);
 
       const chosen = pickRandom(locs);
@@ -319,12 +374,17 @@
 
     let state = {
       tokens: readTokens(),
-      results: [],
+      byToken: [],
+      union: [],
+      tokenMap: {},
       recompute: () => {},
     };
 
     state.recompute = () => {
-      state.results = buildCandidateSet(pageDocs, state.tokens);
+      const built = buildResultsByToken(pageDocs, state.tokens);
+      state.byToken = built.byToken;
+      state.union = built.union;
+      state.tokenMap = built.tokenMap;
       renderApp(mount, state);
     };
 
