@@ -11,8 +11,11 @@
   // 用户勾选池（location -> true/false）
   const SELECT_KEY = "random_custom_selected_v1";
 
-  // 新增：custom random 页面上的 self-test 勾选状态
+  // custom random 页面上的 self-test 勾选状态
   const SELFTEST_PREF_KEY = "random_custom_selftest_pref_v1";
+
+  // 新增：只在 Start random / Continue random 导航时出现 banner 的一次性标记
+  const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
 
   const PER_TOKEN_PREVIEW = 10;
 
@@ -208,7 +211,6 @@
   }
 
   function readSelfTestPref() {
-    // 默认 true，更符合“自测”目的
     const v = readJson(SELFTEST_PREF_KEY, true);
     return v === true;
   }
@@ -221,7 +223,9 @@
     const toks = tokeniseLoose(tokenRaw);
     if (!toks.length) return false;
 
-    const hay = normaliseForSearch((pageDoc.title || "") + " " + (pageDoc.text || "") + " " + (pageDoc.location || ""));
+    const hay = normaliseForSearch(
+      (pageDoc.title || "") + " " + (pageDoc.text || "") + " " + (pageDoc.location || "")
+    );
     for (const t of toks) {
       if (!hay.includes(t)) return false;
     }
@@ -233,9 +237,9 @@
     const tokenMap = {};
 
     for (const token of (tokens || [])) {
-      const hits = pageDocs.filter(d => matchToken(d, token));
+      const hits = pageDocs.filter((d) => matchToken(d, token));
       byToken.push({ token, hits });
-      tokenMap[token] = hits.map(h => h.location);
+      tokenMap[token] = hits.map((h) => h.location);
     }
 
     const unionMap = new Map();
@@ -256,8 +260,7 @@
 
   function pickRandom(arr) {
     if (!arr || !arr.length) return null;
-    const i = Math.floor(Math.random() * arr.length);
-    return arr[i];
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
   function ensureDefaultSelection(unionDocs, selectedMap) {
@@ -269,7 +272,7 @@
         changed = true;
       }
     }
-    const unionSet = new Set(unionDocs.map(d => d.location));
+    const unionSet = new Set(unionDocs.map((d) => d.location));
     for (const k of Object.keys(selectedMap)) {
       if (!unionSet.has(k)) {
         delete selectedMap[k];
@@ -295,12 +298,16 @@
     const selectedCount = countSelected(state.union, state.selectedMap);
 
     const chips = tokens.length
-      ? tokens.map((t, i) => `
+      ? tokens
+          .map(
+            (t, i) => `
           <span style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0;padding:4px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);">
             <span>${escapeHtml(t)}</span>
             <button data-del="${i}" class="md-button" style="padding:2px 8px;min-width:auto">×</button>
           </span>
-        `).join("")
+        `
+          )
+          .join("")
       : `<span style="opacity:.7">No tokens yet.</span>`;
 
     const unionInfo = tokens.length
@@ -329,21 +336,23 @@
     const selectedMap = state.selectedMap || {};
 
     const sections = state.byToken.length
-      ? state.byToken.map(group => {
-          const token = group.token;
-          const hits = group.hits || [];
-          const count = hits.length;
+      ? state.byToken
+          .map((group) => {
+            const token = group.token;
+            const hits = group.hits || [];
+            const count = hits.length;
 
-          const expanded = !!expandState[token];
-          const shown = expanded ? hits : hits.slice(0, PER_TOKEN_PREVIEW);
-          const hiddenCount = Math.max(0, count - shown.length);
+            const expanded = !!expandState[token];
+            const shown = expanded ? hits : hits.slice(0, PER_TOKEN_PREVIEW);
+            const hiddenCount = Math.max(0, count - shown.length);
 
-          const list = count
-            ? shown.map(r => {
-                const href = toAbsoluteUrl(r.location);
-                const course = courseLabelFromLocation(r.location);
-                const checked = selectedMap[r.location] ? "checked" : "";
-                return `
+            const list = count
+              ? shown
+                  .map((r) => {
+                    const href = toAbsoluteUrl(r.location);
+                    const course = courseLabelFromLocation(r.location);
+                    const checked = selectedMap[r.location] ? "checked" : "";
+                    return `
                   <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
                     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
                       <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
@@ -354,23 +363,25 @@
                     </div>
                   </article>
                 `;
-              }).join("")
-            : `<div style="opacity:.7;padding:8px 0">No pages matched this token.</div>`;
+                  })
+                  .join("")
+              : `<div style="opacity:.7;padding:8px 0">No pages matched this token.</div>`;
 
-          const foldBtn = (count > PER_TOKEN_PREVIEW)
-            ? `<button data-toggle-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">
+            const foldBtn =
+              count > PER_TOKEN_PREVIEW
+                ? `<button data-toggle-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">
                  ${expanded ? "Fold" : `Expand (+${hiddenCount})`}
                </button>`
-            : "";
+                : "";
 
-          const tokenActions = count
-            ? `
+            const tokenActions = count
+              ? `
               <button data-token-all="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">Select all</button>
               <button data-token-none="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">Select none</button>
             `
-            : "";
+              : "";
 
-          return `
+            return `
             <section style="margin-top:16px;padding:12px 14px;border:1px solid var(--md-default-fg-color--lightest);border-radius:12px">
               <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
                 <div>
@@ -388,7 +399,8 @@
               </div>
             </section>
           `;
-        }).join("")
+          })
+          .join("")
       : `<div style="opacity:.75;margin-top:12px">Add tokens to see results.</div>`;
 
     container.innerHTML = `
@@ -412,9 +424,7 @@
     const addBtn = container.querySelector("#cr-add");
     const clearBtn = container.querySelector("#cr-clear");
     const randomBtn = container.querySelector("#cr-random");
-
     const selfTestCb = container.querySelector("#cr-selftest");
-
 
     function addTokenFromInput() {
       const v = (input.value || "").trim();
@@ -433,7 +443,6 @@
       }
     });
 
-    // 记住 self-test 勾选
     if (selfTestCb) {
       selfTestCb.addEventListener("change", () => {
         state.selfTestPref = !!selfTestCb.checked;
@@ -445,6 +454,7 @@
     clearBtn.addEventListener("click", () => {
       state.tokens = [];
       storeTokens(state.tokens);
+
       state.expandState = {};
       storeExpandState(state.expandState);
 
@@ -454,27 +464,27 @@
       state.recompute();
     });
 
-    container.querySelectorAll("button[data-del]").forEach(btn => {
+    container.querySelectorAll("button[data-del]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const idx = Number(btn.getAttribute("data-del"));
-        if (Number.isFinite(idx)) {
-          const removed = state.tokens[idx];
-          state.tokens.splice(idx, 1);
-          storeTokens(state.tokens);
+        if (!Number.isFinite(idx)) return;
 
-          if (removed && state.expandState) {
-            delete state.expandState[removed];
-            storeExpandState(state.expandState);
-          }
-          state.recompute();
+        const removed = state.tokens[idx];
+        state.tokens.splice(idx, 1);
+        storeTokens(state.tokens);
+
+        if (removed && state.expandState) {
+          delete state.expandState[removed];
+          storeExpandState(state.expandState);
         }
+        state.recompute();
       });
     });
 
-    container.querySelectorAll("button[data-del-token]").forEach(btn => {
+    container.querySelectorAll("button[data-del-token]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-del-token") || "";
-        state.tokens = state.tokens.filter(t => t !== token);
+        state.tokens = state.tokens.filter((t) => t !== token);
         storeTokens(state.tokens);
 
         if (state.expandState) {
@@ -485,7 +495,7 @@
       });
     });
 
-    container.querySelectorAll("button[data-toggle-token]").forEach(btn => {
+    container.querySelectorAll("button[data-toggle-token]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-toggle-token") || "";
         state.expandState = state.expandState || {};
@@ -495,7 +505,7 @@
       });
     });
 
-    container.querySelectorAll("input[type=checkbox][data-select-loc]").forEach(cb => {
+    container.querySelectorAll("input[type=checkbox][data-select-loc]").forEach((cb) => {
       cb.addEventListener("change", () => {
         const loc = cb.getAttribute("data-select-loc") || "";
         if (!loc) return;
@@ -505,26 +515,23 @@
       });
     });
 
-
-    container.querySelectorAll("button[data-token-all]").forEach(btn => {
+    container.querySelectorAll("button[data-token-all]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-token-all") || "";
-        const group = state.byToken.find(g => g.token === token);
+        const group = state.byToken.find((g) => g.token === token);
         if (!group) return;
-        const locs = group.hits.map(d => d.location);
-        setSelectionForLocations(state.selectedMap, locs, true);
+        setSelectionForLocations(state.selectedMap, group.hits.map((d) => d.location), true);
         storeSelectedMap(state.selectedMap);
         state.recompute();
       });
     });
 
-    container.querySelectorAll("button[data-token-none]").forEach(btn => {
+    container.querySelectorAll("button[data-token-none]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-token-none") || "";
-        const group = state.byToken.find(g => g.token === token);
+        const group = state.byToken.find((g) => g.token === token);
         if (!group) return;
-        const locs = group.hits.map(d => d.location);
-        setSelectionForLocations(state.selectedMap, locs, false);
+        setSelectionForLocations(state.selectedMap, group.hits.map((d) => d.location), false);
         storeSelectedMap(state.selectedMap);
         state.recompute();
       });
@@ -532,23 +539,28 @@
 
     // Start random：只从勾选池随机
     randomBtn.addEventListener("click", () => {
-      const poolDocs = state.union.filter(d => state.selectedMap[d.location]);
+      const poolDocs = state.union.filter((d) => state.selectedMap[d.location]);
       if (!poolDocs.length) return;
 
       storeEntryUrl();
       storeTokenMap(state.tokenMap);
 
-      const locs = poolDocs.map(r => r.location);
+      const locs = poolDocs.map((r) => r.location);
       storeCandidates(locs);
 
       const chosen = pickRandom(locs);
       if (!chosen) return;
 
-      // 关键：根据勾选决定是否开启 self-test mode
+      // 根据勾选决定是否开启 self-test mode
       const wantSelfTest = !!(selfTestCb && selfTestCb.checked);
       try {
         if (wantSelfTest) sessionStorage.setItem("random_review_mode_v1", "1");
         else sessionStorage.removeItem("random_review_mode_v1");
+      } catch (_) {}
+
+      // 关键：只有本次跳转才显示 banner
+      try {
+        sessionStorage.setItem(NAV_FLAG_KEY, "1");
       } catch (_) {}
 
       window.location.assign(toAbsoluteUrl(chosen));
@@ -596,11 +608,15 @@
     state.recompute();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => init().catch(e => console.warn("custom-random:", e)));
-  } else {
-    init().catch(e => console.warn("custom-random:", e));
+  function safeInit() {
+    init().catch((e) => console.warn("custom-random:", e));
   }
 
-  document.addEventListener("DOMContentSwitch", () => init().catch(e => console.warn("custom-random:", e)));
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", safeInit);
+  } else {
+    safeInit();
+  }
+
+  document.addEventListener("DOMContentSwitch", safeInit);
 })();

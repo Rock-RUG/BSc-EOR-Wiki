@@ -5,6 +5,9 @@
   const TOKENS_KEY = "random_custom_tokens_v1";
   const TOKENMAP_KEY = "random_custom_token_map_v1";
 
+  // 新增：只在 Start random / Continue random 导航时出现 banner 的一次性标记
+  const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
+
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
     const link =
@@ -74,13 +77,24 @@
 
   function pickRandom(arr) {
     if (!arr || !arr.length) return null;
-    const i = Math.floor(Math.random() * arr.length);
-    return arr[i];
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
   function isOnCustomRandomPage() {
     const p = window.location.pathname.toLowerCase();
     return p.endsWith("/custom-random.html") || p.endsWith("custom-random.html");
+  }
+
+  // 本次页面是否由 Start/Continue random 导航而来
+  function consumeNavFlag() {
+    try {
+      const v = sessionStorage.getItem(NAV_FLAG_KEY);
+      if (v !== "1") return false;
+      sessionStorage.removeItem(NAV_FLAG_KEY);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   // 把当前 pathname 转成相对 site root 的路径（不带开头 /）
@@ -90,23 +104,14 @@
 
     let p = String(window.location.pathname || "");
     if (p.startsWith(rootPath)) p = p.slice(rootPath.length);
-    p = p.replace(/^\/+/, "");
-    return p;
+    return p.replace(/^\/+/, "");
   }
 
-  function splitSegs(relPath) {
-    return String(relPath || "").split("/").filter(Boolean);
-  }
-
-  function isIndexLike(relPath) {
-    const p = String(relPath || "").toLowerCase();
-    return p === "" || p === "index.html" || p.endsWith("/index.html");
-  }
-
-  // 只允许在 concept 页显示 banner：至少三段 /year/course/page
   function isConceptPage(relPath) {
-    if (isIndexLike(relPath)) return false;
-    const segs = splitSegs(relPath);
+    const p = String(relPath || "").toLowerCase();
+    if (p === "" || p === "index.html" || p.endsWith("/index.html")) return false;
+
+    const segs = String(relPath || "").split("/").filter(Boolean);
     return segs.length >= 3;
   }
 
@@ -136,10 +141,14 @@
     const count = cands.length;
 
     const tokenChips = tokens.length
-      ? tokens.map(t => {
-          const isHit = matchedTokens.includes(t);
-          return `<span style="display:inline-flex;align-items:center;margin:2px 6px 2px 0;padding:3px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);${isHit ? "font-weight:700" : "opacity:.85"}">${escapeHtml(t)}${isHit ? " ✓" : ""}</span>`;
-        }).join("")
+      ? tokens
+          .map((t) => {
+            const isHit = matchedTokens.includes(t);
+            return `<span style="display:inline-flex;align-items:center;margin:2px 6px 2px 0;padding:3px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);${
+              isHit ? "font-weight:700" : "opacity:.85"
+            }">${escapeHtml(t)}${isHit ? " ✓" : ""}</span>`;
+          })
+          .join("")
       : `<span style="opacity:.75">No tokens</span>`;
 
     const matchedText = matchedTokens.length
@@ -176,6 +185,12 @@
       e.preventDefault();
       const chosen = pickRandom(cands);
       if (!chosen) return;
+
+      // 关键：下一页也应当显示 banner
+      try {
+        sessionStorage.setItem(NAV_FLAG_KEY, "1");
+      } catch (_) {}
+
       window.location.assign(toAbsoluteUrl(chosen));
     });
 
@@ -190,9 +205,10 @@
   function init() {
     if (isOnCustomRandomPage()) return;
 
-    const rel = currentRelPath();
+    // 关键：不是从 Start/Continue random 导航而来，就不显示 banner
+    if (!consumeNavFlag()) return;
 
-    // 核心修复：Home / index / 年级目录页 都不注入
+    const rel = currentRelPath();
     if (!isConceptPage(rel)) return;
 
     const cands = readCandidates();
