@@ -8,8 +8,11 @@
   // 每个 token 的展开状态
   const EXPAND_KEY = "random_custom_expand_v1";
 
-  // 新增：用户勾选池（location -> true/false）
+  // 用户勾选池（location -> true/false）
   const SELECT_KEY = "random_custom_selected_v1";
+
+  // 新增：custom random 页面上的 self-test 勾选状态
+  const SELFTEST_PREF_KEY = "random_custom_selftest_pref_v1";
 
   const PER_TOKEN_PREVIEW = 10;
 
@@ -195,13 +198,23 @@
     writeJson(EXPAND_KEY, obj || {});
   }
 
-  // 新增：读写勾选池
   function readSelectedMap() {
     const obj = readJson(SELECT_KEY, {});
     return obj && typeof obj === "object" ? obj : {};
   }
+
   function storeSelectedMap(obj) {
     writeJson(SELECT_KEY, obj || {});
+  }
+
+  function readSelfTestPref() {
+    // 默认 true，更符合“自测”目的
+    const v = readJson(SELFTEST_PREF_KEY, true);
+    return v === true;
+  }
+
+  function storeSelfTestPref(v) {
+    writeJson(SELFTEST_PREF_KEY, !!v);
   }
 
   function matchToken(pageDoc, tokenRaw) {
@@ -209,7 +222,6 @@
     if (!toks.length) return false;
 
     const hay = normaliseForSearch((pageDoc.title || "") + " " + (pageDoc.text || "") + " " + (pageDoc.location || ""));
-    // token 内部仍然 AND
     for (const t of toks) {
       if (!hay.includes(t)) return false;
     }
@@ -226,7 +238,6 @@
       tokenMap[token] = hits.map(h => h.location);
     }
 
-    // union 去重
     const unionMap = new Map();
     for (const group of byToken) {
       for (const doc of group.hits) {
@@ -249,7 +260,6 @@
     return arr[i];
   }
 
-  // 新增：确保 union 里的页面在 selectedMap 中默认勾选
   function ensureDefaultSelection(unionDocs, selectedMap) {
     let changed = false;
     for (const d of unionDocs) {
@@ -259,7 +269,6 @@
         changed = true;
       }
     }
-    // 清理不在 union 内的旧记录
     const unionSet = new Set(unionDocs.map(d => d.location));
     for (const k of Object.keys(selectedMap)) {
       if (!unionSet.has(k)) {
@@ -283,7 +292,6 @@
   function renderApp(container, state) {
     const tokens = state.tokens;
     const unionCount = state.union.length;
-
     const selectedCount = countSelected(state.union, state.selectedMap);
 
     const chips = tokens.length
@@ -302,12 +310,19 @@
          </div>`
       : "";
 
-    // Start random + union 级别全选/全不选
+    const selfTestChecked = state.selfTestPref ? "checked" : "";
+
     const startBar = `
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
         <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
           Start random
         </button>
+
+        <label style="display:inline-flex;align-items:center;gap:8px;opacity:.9">
+          <input id="cr-selftest" type="checkbox" ${selfTestChecked} />
+          Self-test mode (fold sections)
+        </label>
+
         <button id="cr-union-all" class="md-button">Select all</button>
         <button id="cr-union-none" class="md-button">Select none</button>
       </div>
@@ -351,7 +366,6 @@
                </button>`
             : "";
 
-          // token 级别全选/全不选
           const tokenActions = count
             ? `
               <button data-token-all="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">Select all</button>
@@ -402,6 +416,11 @@
     const clearBtn = container.querySelector("#cr-clear");
     const randomBtn = container.querySelector("#cr-random");
 
+    const selfTestCb = container.querySelector("#cr-selftest");
+
+    const unionAllBtn = container.querySelector("#cr-union-all");
+    const unionNoneBtn = container.querySelector("#cr-union-none");
+
     function addTokenFromInput() {
       const v = (input.value || "").trim();
       if (!v) return;
@@ -419,18 +438,27 @@
       }
     });
 
+    // 记住 self-test 勾选
+    if (selfTestCb) {
+      selfTestCb.addEventListener("change", () => {
+        state.selfTestPref = !!selfTestCb.checked;
+        storeSelfTestPref(state.selfTestPref);
+        state.recompute();
+      });
+    }
+
     clearBtn.addEventListener("click", () => {
       state.tokens = [];
       storeTokens(state.tokens);
       state.expandState = {};
       storeExpandState(state.expandState);
-      // 清空勾选池
+
       state.selectedMap = {};
       storeSelectedMap(state.selectedMap);
+
       state.recompute();
     });
 
-    // chips 单删
     container.querySelectorAll("button[data-del]").forEach(btn => {
       btn.addEventListener("click", () => {
         const idx = Number(btn.getAttribute("data-del"));
@@ -448,7 +476,6 @@
       });
     });
 
-    // token remove
     container.querySelectorAll("button[data-del-token]").forEach(btn => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-del-token") || "";
@@ -463,7 +490,6 @@
       });
     });
 
-    // Expand/Fold
     container.querySelectorAll("button[data-toggle-token]").forEach(btn => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-toggle-token") || "";
@@ -474,7 +500,6 @@
       });
     });
 
-    // 单条勾选
     container.querySelectorAll("input[type=checkbox][data-select-loc]").forEach(cb => {
       cb.addEventListener("change", () => {
         const loc = cb.getAttribute("data-select-loc") || "";
@@ -484,10 +509,6 @@
         state.recompute();
       });
     });
-
-    // union 全选/全不选
-    const unionAllBtn = container.querySelector("#cr-union-all");
-    const unionNoneBtn = container.querySelector("#cr-union-none");
 
     unionAllBtn.addEventListener("click", () => {
       const locs = state.union.map(d => d.location);
@@ -503,7 +524,6 @@
       state.recompute();
     });
 
-    // token 全选/全不选
     container.querySelectorAll("button[data-token-all]").forEach(btn => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-token-all") || "";
@@ -536,13 +556,19 @@
       storeEntryUrl();
       storeTokenMap(state.tokenMap);
 
-      // 把“随机池”写入 candidates（banner 的 Continue random 也应该沿用这个池子）
       const locs = poolDocs.map(r => r.location);
       storeCandidates(locs);
 
       const chosen = pickRandom(locs);
       if (!chosen) return;
-      try { sessionStorage.setItem("random_review_mode_v1", "1"); } catch (_) {}
+
+      // 关键：根据勾选决定是否开启 self-test mode
+      const wantSelfTest = !!(selfTestCb && selfTestCb.checked);
+      try {
+        if (wantSelfTest) sessionStorage.setItem("random_review_mode_v1", "1");
+        else sessionStorage.removeItem("random_review_mode_v1");
+      } catch (_) {}
+
       window.location.assign(toAbsoluteUrl(chosen));
     });
   }
@@ -564,6 +590,7 @@
       tokenMap: {},
       expandState: readExpandState(),
       selectedMap: readSelectedMap(),
+      selfTestPref: readSelfTestPref(),
       recompute: () => {},
     };
 
@@ -573,13 +600,11 @@
       state.union = built.union;
       state.tokenMap = built.tokenMap;
 
-      // 保证 expandState 里不会残留已删除 token
       const cleanExpand = {};
       for (const t of state.tokens) cleanExpand[t] = !!state.expandState[t];
       state.expandState = cleanExpand;
       storeExpandState(state.expandState);
 
-      // 默认勾选：新出现的 union 页面自动勾上；消失的自动清理
       const changed = ensureDefaultSelection(state.union, state.selectedMap);
       if (changed) storeSelectedMap(state.selectedMap);
 
@@ -591,7 +616,7 @@
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => init().catch(e => console.warn("custom-random:", e)));
-    } else {
+  } else {
     init().catch(e => console.warn("custom-random:", e));
   }
 
