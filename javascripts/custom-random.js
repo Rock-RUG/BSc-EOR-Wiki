@@ -367,11 +367,14 @@
                   .join("")
               : `<div style="opacity:.7;padding:8px 0">No pages matched this token.</div>`;
 
-            const foldBtn =
+            // ✅ 新增：把 Expand/Collapse 放到列表底部（靠右）
+            const toggleBtn =
               count > PER_TOKEN_PREVIEW
-                ? `<button data-toggle-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">
-                 ${expanded ? "Fold" : `Expand (+${hiddenCount})`}
-               </button>`
+                ? `<div style="margin-top:10px;display:flex;justify-content:flex-end">
+                     <button data-toggle-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">
+                       ${expanded ? "Collapse" : `Expand (+${hiddenCount})`}
+                     </button>
+                   </div>`
                 : "";
 
             const tokenActions = count
@@ -389,13 +392,12 @@
                   <span style="opacity:.75">(${count} page(s))</span>
                 </div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-                  ${foldBtn}
                   ${tokenActions}
-                  <button data-del-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">× Remove</button>
                 </div>
               </div>
               <div style="margin-top:10px">
                 ${list}
+                ${toggleBtn}
               </div>
             </section>
           `;
@@ -481,20 +483,6 @@
       });
     });
 
-    container.querySelectorAll("button[data-del-token]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const token = btn.getAttribute("data-del-token") || "";
-        state.tokens = state.tokens.filter((t) => t !== token);
-        storeTokens(state.tokens);
-
-        if (state.expandState) {
-          delete state.expandState[token];
-          storeExpandState(state.expandState);
-        }
-        state.recompute();
-      });
-    });
-
     container.querySelectorAll("button[data-toggle-token]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-toggle-token") || "";
@@ -554,13 +542,13 @@
       // 根据勾选决定是否开启 self-test mode
       const wantSelfTest = !!(selfTestCb && selfTestCb.checked);
       try {
-      if (wantSelfTest) {
-         sessionStorage.setItem("random_review_mode_v1", "1");
-         sessionStorage.setItem("random_review_nav_flag_v1", "1"); // 新增：只对本次跳转生效
-       } else {
-         sessionStorage.removeItem("random_review_mode_v1");
-         sessionStorage.removeItem("random_review_nav_flag_v1");
-       }
+        if (wantSelfTest) {
+          sessionStorage.setItem("random_review_mode_v1", "1");
+          sessionStorage.setItem("random_review_nav_flag_v1", "1"); // 新增：只对本次跳转生效
+        } else {
+          sessionStorage.removeItem("random_review_mode_v1");
+          sessionStorage.removeItem("random_review_nav_flag_v1");
+        }
       } catch (_) {}
 
       // 关键：只有本次跳转才显示 banner
