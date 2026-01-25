@@ -8,6 +8,9 @@
   // 每个 token 的展开状态
   const EXPAND_KEY = "random_custom_expand_v1";
 
+  // 新增：用户勾选池（location -> true/false）
+  const SELECT_KEY = "random_custom_selected_v1";
+
   const PER_TOKEN_PREVIEW = 10;
 
   function getSiteRootUrl() {
@@ -192,6 +195,15 @@
     writeJson(EXPAND_KEY, obj || {});
   }
 
+  // 新增：读写勾选池
+  function readSelectedMap() {
+    const obj = readJson(SELECT_KEY, {});
+    return obj && typeof obj === "object" ? obj : {};
+  }
+  function storeSelectedMap(obj) {
+    writeJson(SELECT_KEY, obj || {});
+  }
+
   function matchToken(pageDoc, tokenRaw) {
     const toks = tokeniseLoose(tokenRaw);
     if (!toks.length) return false;
@@ -237,9 +249,42 @@
     return arr[i];
   }
 
+  // 新增：确保 union 里的页面在 selectedMap 中默认勾选
+  function ensureDefaultSelection(unionDocs, selectedMap) {
+    let changed = false;
+    for (const d of unionDocs) {
+      const loc = d.location;
+      if (selectedMap[loc] === undefined) {
+        selectedMap[loc] = true;
+        changed = true;
+      }
+    }
+    // 清理不在 union 内的旧记录
+    const unionSet = new Set(unionDocs.map(d => d.location));
+    for (const k of Object.keys(selectedMap)) {
+      if (!unionSet.has(k)) {
+        delete selectedMap[k];
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
+  function countSelected(unionDocs, selectedMap) {
+    let c = 0;
+    for (const d of unionDocs) if (selectedMap[d.location]) c++;
+    return c;
+  }
+
+  function setSelectionForLocations(selectedMap, locations, value) {
+    for (const loc of locations) selectedMap[loc] = value;
+  }
+
   function renderApp(container, state) {
     const tokens = state.tokens;
     const unionCount = state.union.length;
+
+    const selectedCount = countSelected(state.union, state.selectedMap);
 
     const chips = tokens.length
       ? tokens.map((t, i) => `
@@ -251,17 +296,25 @@
       : `<span style="opacity:.7">No tokens yet.</span>`;
 
     const unionInfo = tokens.length
-      ? `<div style="margin-top:12px;opacity:.85">Union (OR) across tokens: <strong>${unionCount}</strong> unique page(s)</div>`
+      ? `<div style="margin-top:12px;opacity:.85">
+           Union (OR) across tokens: <strong>${unionCount}</strong> unique page(s),
+           Selected for random: <strong>${selectedCount}</strong>
+         </div>`
       : "";
 
-    // Start random 按钮放到结果上方
+    // Start random + union 级别全选/全不选
     const startBar = `
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
-        <button id="cr-random" class="md-button md-button--primary" ${unionCount ? "" : "disabled"}>Start random</button>
+        <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
+          Start random
+        </button>
+        <button id="cr-union-all" class="md-button">Select all</button>
+        <button id="cr-union-none" class="md-button">Select none</button>
       </div>
     `;
 
     const expandState = state.expandState || {};
+    const selectedMap = state.selectedMap || {};
 
     const sections = state.byToken.length
       ? state.byToken.map(group => {
@@ -277,10 +330,14 @@
             ? shown.map(r => {
                 const href = toAbsoluteUrl(r.location);
                 const course = courseLabelFromLocation(r.location);
+                const checked = selectedMap[r.location] ? "checked" : "";
                 return `
                   <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-                      <a href="${href}" style="text-decoration:none">${escapeHtml(r.title || "Untitled")}</a>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                      <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
+                        <input type="checkbox" data-select-loc="${escapeHtml(r.location)}" ${checked} />
+                        <a href="${href}" style="text-decoration:none">${escapeHtml(r.title || "Untitled")}</a>
+                      </div>
                       ${course ? `<span style="opacity:.75;font-size:.85em">${escapeHtml(course)}</span>` : ""}
                     </div>
                   </article>
@@ -294,6 +351,14 @@
                </button>`
             : "";
 
+          // token 级别全选/全不选
+          const tokenActions = count
+            ? `
+              <button data-token-all="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">Select all</button>
+              <button data-token-none="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">Select none</button>
+            `
+            : "";
+
           return `
             <section style="margin-top:16px;padding:12px 14px;border:1px solid var(--md-default-fg-color--lightest);border-radius:12px">
               <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
@@ -303,6 +368,7 @@
                 </div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
                   ${foldBtn}
+                  ${tokenActions}
                   <button data-del-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">× Remove</button>
                 </div>
               </div>
@@ -358,9 +424,13 @@
       storeTokens(state.tokens);
       state.expandState = {};
       storeExpandState(state.expandState);
+      // 清空勾选池
+      state.selectedMap = {};
+      storeSelectedMap(state.selectedMap);
       state.recompute();
     });
 
+    // chips 单删
     container.querySelectorAll("button[data-del]").forEach(btn => {
       btn.addEventListener("click", () => {
         const idx = Number(btn.getAttribute("data-del"));
@@ -369,7 +439,6 @@
           state.tokens.splice(idx, 1);
           storeTokens(state.tokens);
 
-          // 同步清理展开状态
           if (removed && state.expandState) {
             delete state.expandState[removed];
             storeExpandState(state.expandState);
@@ -379,6 +448,7 @@
       });
     });
 
+    // token remove
     container.querySelectorAll("button[data-del-token]").forEach(btn => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-del-token") || "";
@@ -404,13 +474,70 @@
       });
     });
 
+    // 单条勾选
+    container.querySelectorAll("input[type=checkbox][data-select-loc]").forEach(cb => {
+      cb.addEventListener("change", () => {
+        const loc = cb.getAttribute("data-select-loc") || "";
+        if (!loc) return;
+        state.selectedMap[loc] = cb.checked;
+        storeSelectedMap(state.selectedMap);
+        state.recompute();
+      });
+    });
+
+    // union 全选/全不选
+    const unionAllBtn = container.querySelector("#cr-union-all");
+    const unionNoneBtn = container.querySelector("#cr-union-none");
+
+    unionAllBtn.addEventListener("click", () => {
+      const locs = state.union.map(d => d.location);
+      setSelectionForLocations(state.selectedMap, locs, true);
+      storeSelectedMap(state.selectedMap);
+      state.recompute();
+    });
+
+    unionNoneBtn.addEventListener("click", () => {
+      const locs = state.union.map(d => d.location);
+      setSelectionForLocations(state.selectedMap, locs, false);
+      storeSelectedMap(state.selectedMap);
+      state.recompute();
+    });
+
+    // token 全选/全不选
+    container.querySelectorAll("button[data-token-all]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const token = btn.getAttribute("data-token-all") || "";
+        const group = state.byToken.find(g => g.token === token);
+        if (!group) return;
+        const locs = group.hits.map(d => d.location);
+        setSelectionForLocations(state.selectedMap, locs, true);
+        storeSelectedMap(state.selectedMap);
+        state.recompute();
+      });
+    });
+
+    container.querySelectorAll("button[data-token-none]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const token = btn.getAttribute("data-token-none") || "";
+        const group = state.byToken.find(g => g.token === token);
+        if (!group) return;
+        const locs = group.hits.map(d => d.location);
+        setSelectionForLocations(state.selectedMap, locs, false);
+        storeSelectedMap(state.selectedMap);
+        state.recompute();
+      });
+    });
+
+    // Start random：只从勾选池随机
     randomBtn.addEventListener("click", () => {
-      if (!state.union.length) return;
+      const poolDocs = state.union.filter(d => state.selectedMap[d.location]);
+      if (!poolDocs.length) return;
 
       storeEntryUrl();
       storeTokenMap(state.tokenMap);
 
-      const locs = state.union.map(r => r.location);
+      // 把“随机池”写入 candidates（banner 的 Continue random 也应该沿用这个池子）
+      const locs = poolDocs.map(r => r.location);
       storeCandidates(locs);
 
       const chosen = pickRandom(locs);
@@ -435,6 +562,7 @@
       union: [],
       tokenMap: {},
       expandState: readExpandState(),
+      selectedMap: readSelectedMap(),
       recompute: () => {},
     };
 
@@ -445,10 +573,14 @@
       state.tokenMap = built.tokenMap;
 
       // 保证 expandState 里不会残留已删除 token
-      const clean = {};
-      for (const t of state.tokens) clean[t] = !!state.expandState[t];
-      state.expandState = clean;
+      const cleanExpand = {};
+      for (const t of state.tokens) cleanExpand[t] = !!state.expandState[t];
+      state.expandState = cleanExpand;
       storeExpandState(state.expandState);
+
+      // 默认勾选：新出现的 union 页面自动勾上；消失的自动清理
+      const changed = ensureDefaultSelection(state.union, state.selectedMap);
+      if (changed) storeSelectedMap(state.selectedMap);
 
       renderApp(mount, state);
     };
@@ -459,7 +591,7 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => init().catch(e => console.warn("custom-random:", e)));
   } else {
-    init().catch(e => console.warn("custom-random:", e));
+    init().catch(e => console.warn("custom-random:", e)));
   }
 
   document.addEventListener("DOMContentSwitch", () => init().catch(e => console.warn("custom-random:", e)));
