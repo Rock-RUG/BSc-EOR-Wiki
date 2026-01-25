@@ -310,12 +310,17 @@
           .join("")
       : `<span style="opacity:.7">No tokens yet.</span>`;
 
-    const unionInfo = tokens.length
-      ? `<div style="margin-top:12px;opacity:.85">
-           Union (OR) across tokens: <strong>${unionCount}</strong> unique page(s),
-           Selected for random: <strong>${selectedCount}</strong>
-         </div>`
-      : "";
+   const unionInfo = tokens.length
+  ? `<div style="margin-top:12px;opacity:.85;line-height:1.5">
+       <div>
+         Found <strong>${unionCount}</strong> page(s) related to your keywords.
+       </div>
+       <div>
+         <strong>${selectedCount}</strong> page(s) are currently selected for random practice.
+       </div>
+     </div>`
+  : "";
+
 
     const selfTestChecked = state.selfTestPref ? "checked" : "";
 
