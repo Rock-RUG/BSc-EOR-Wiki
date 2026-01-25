@@ -188,8 +188,10 @@
 
       // 关键：下一页也应当显示 banner
       try {
-        sessionStorage.setItem(NAV_FLAG_KEY, "1");
-      } catch (_) {}
+  if (sessionStorage.getItem("random_review_mode_v1") === "1") {
+    sessionStorage.setItem("random_review_nav_flag_v1", "1");
+  }
+} catch (_) {}
 
       window.location.assign(toAbsoluteUrl(chosen));
     });

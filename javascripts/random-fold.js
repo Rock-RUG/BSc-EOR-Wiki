@@ -1,9 +1,11 @@
 // docs/javascripts/random-fold.js
 (function () {
-  const FLAG = "random_review_mode_v1";
+  const MODE_FLAG = "random_review_mode_v1";
+
+  // 新增：只有从 Start/Continue random 导航过来才允许折叠（一次性）
+  const REVIEW_NAV_FLAG = "random_review_nav_flag_v1";
 
   function isConceptPage() {
-    // 你的规则：至少 /year/course/page 三段，且不是 index
     const p = String(window.location.pathname || "").replace(/^\/+/, "").toLowerCase();
     if (!p) return false;
     if (p.endsWith("index.html")) return false;
@@ -11,9 +13,24 @@
     return segs.length >= 3;
   }
 
-  function shouldFold() {
+  function isModeOn() {
     try {
-      return sessionStorage.getItem(FLAG) === "1";
+      return sessionStorage.getItem(MODE_FLAG) === "1";
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // 关键：没有“本次导航票据”，就把 mode 关掉，保证默认关闭
+  function consumeReviewNavFlagOrDisableMode() {
+    try {
+      const v = sessionStorage.getItem(REVIEW_NAV_FLAG);
+      if (v === "1") {
+        sessionStorage.removeItem(REVIEW_NAV_FLAG);
+        return true;
+      }
+      sessionStorage.removeItem(MODE_FLAG);
+      return false;
     } catch (_) {
       return false;
     }
@@ -39,10 +56,11 @@
     if (h1) h1.insertAdjacentElement("afterend", chip);
     else container.insertAdjacentElement("afterbegin", chip);
 
-    const btn = chip.querySelector("#rf-exit");
-    btn.addEventListener("click", () => {
-      try { sessionStorage.removeItem(FLAG); } catch (_) {}
-      // 退出后刷新一次恢复全展开
+    chip.querySelector("#rf-exit").addEventListener("click", () => {
+      try {
+        sessionStorage.removeItem(MODE_FLAG);
+        sessionStorage.removeItem(REVIEW_NAV_FLAG);
+      } catch (_) {}
       window.location.reload();
     });
   }
@@ -51,36 +69,28 @@
     const inner = document.querySelector("article.md-content__inner");
     if (!inner) return;
 
-    // 避免重复处理
     if (inner.getAttribute("data-rf-done") === "1") return;
     inner.setAttribute("data-rf-done", "1");
 
-    // 找到所有 h2
-    const h2s = Array.from(inner.children).filter(el => el.tagName === "H2");
+    const h2s = Array.from(inner.children).filter((el) => el.tagName === "H2");
     if (!h2s.length) return;
 
-    // 在标题下加一个“退出自测模式”
     addExitChip(inner);
 
     for (const h2 of h2s) {
-      // 如果这个 h2 已经被移动过，跳过
       if (!h2.parentElement || h2.parentElement.tagName === "SUMMARY") continue;
 
       const details = document.createElement("details");
       details.className = "rf-details";
-      // 默认折叠：不设置 open
 
       const summary = document.createElement("summary");
       summary.className = "rf-summary";
       summary.style.cursor = "pointer";
       summary.style.fontWeight = "600";
-
-      // summary 文本 = 原 h2 文本（保留 emoji）
       summary.textContent = h2.textContent || "Section";
 
       details.appendChild(summary);
 
-      // 把 h2 后面的兄弟节点都搬进去，直到下一个 H2 或结束
       let node = h2.nextSibling;
       const toMove = [];
       while (node) {
@@ -90,7 +100,6 @@
         node = next;
       }
 
-      // 插入 details 到 h2 位置，移除 h2
       inner.insertBefore(details, h2);
       h2.remove();
 
@@ -100,7 +109,11 @@
 
   function init() {
     if (!isConceptPage()) return;
-    if (!shouldFold()) return;
+    if (!isModeOn()) return;
+
+    // 没票据：说明不是从 random 导航来的，立刻关掉 mode，什么也不做
+    if (!consumeReviewNavFlagOrDisableMode()) return;
+
     foldSections();
   }
 
@@ -109,6 +122,5 @@
   } else {
     init();
   }
-  // mkdocs-material instant navigation
   document.addEventListener("DOMContentSwitch", init);
 })();

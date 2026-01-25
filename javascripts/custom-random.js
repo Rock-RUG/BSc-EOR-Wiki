@@ -554,8 +554,13 @@
       // 根据勾选决定是否开启 self-test mode
       const wantSelfTest = !!(selfTestCb && selfTestCb.checked);
       try {
-        if (wantSelfTest) sessionStorage.setItem("random_review_mode_v1", "1");
-        else sessionStorage.removeItem("random_review_mode_v1");
+      if (wantSelfTest) {
+         sessionStorage.setItem("random_review_mode_v1", "1");
+         sessionStorage.setItem("random_review_nav_flag_v1", "1"); // 新增：只对本次跳转生效
+       } else {
+         sessionStorage.removeItem("random_review_mode_v1");
+         sessionStorage.removeItem("random_review_nav_flag_v1");
+       }
       } catch (_) {}
 
       // 关键：只有本次跳转才显示 banner
