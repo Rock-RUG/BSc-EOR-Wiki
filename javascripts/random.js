@@ -3,8 +3,34 @@
   const STORAGE_SCOPE = "random_scope_v3";
   const STORAGE_LAST_NON_RANDOM = "random_last_non_random_v3";
 
-  function isRandomLikePath(pathname) {
-    return String(pathname || "").toLowerCase().includes("random");
+  function isCustomRandomPath(pathname) {
+    const p = String(pathname || "").toLowerCase();
+    return p.includes("custom-random");
+  }
+
+  // 只把“真正的 random 入口页”当成 random page
+  // 匹配：
+  // - .../random/...
+  // - .../random.html
+  // - .../random/index.html
+  // 排除：
+  // - custom-random.html
+  function isTrueRandomPagePath(pathname) {
+    const p = String(pathname || "").toLowerCase();
+    if (isCustomRandomPath(p)) return false;
+    return /(^|\/)random(\/|\.html$)/.test(p) || /(^|\/)random\/index\.html$/.test(p);
+  }
+
+  // 点击链接时，判断是否指向真正的 random 入口
+  function isTrueRandomHref(href) {
+    const h = String(href || "").toLowerCase();
+    if (!h) return false;
+    if (h.includes("custom-random")) return false;
+
+    // 兼容相对路径 / 绝对路径 / 带 query/hash
+    const clean = h.split("#")[0].split("?")[0];
+
+    return /(^|\/)random(\/|\.html$)/.test(clean) || /(^|\/)random\/index\.html$/.test(clean);
   }
 
   function getSiteRootUrl() {
@@ -20,9 +46,8 @@
     const idx = p.indexOf("/assets/");
     if (idx >= 0) {
       const rootPath = p.slice(0, idx + 1);
-      return window.location.origin + rootPath;
+      return assetUrl.origin + rootPath;
     }
-
 
     const base = new URL(document.baseURI);
     if (!base.pathname.endsWith("/")) base.pathname += "/";
@@ -43,10 +68,10 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
-  // 记录最后一个非 random 页面，避免你在 random 页里再次点 random 时失去上下文
+  // 记录最后一个非 random 页面，避免在 random 页里再次点 random 时失去上下文
   function rememberLastNonRandom() {
     const now = window.location.pathname;
-    if (!isRandomLikePath(now)) {
+    if (!isTrueRandomPagePath(now) && !isCustomRandomPath(now)) {
       try {
         sessionStorage.setItem(STORAGE_LAST_NON_RANDOM, now);
       } catch (_) {}
@@ -62,26 +87,21 @@
   }
 
   // 从路径推断课程 scope：/<year>/<course>/...
-  // 不在课程则返回空字符串（表示全站）
   function inferCourseScopeFromPath(absPathname) {
     const rel = relPathFromSiteRoot(absPathname);
     const segs = splitSegs(rel);
 
     // 如果是 random 页，用 last non random 来推断
-    if (segs.length && isRandomLikePath(segs[segs.length - 1])) {
+    if (segs.length && isTrueRandomPagePath(segs[segs.length - 1])) {
       const last = readLastNonRandomPath();
       if (last) return inferCourseScopeFromPath(last);
       return "";
     }
 
-    // / 或 /index.html: 非课程
     if (segs.length < 2) return "";
-
-    // /<year>/ 或 /<year>/index.html: year landing，不算课程
     if (segs.length === 1) return "";
     if (segs.length === 2 && segs[1].toLowerCase() === "index.html") return "";
 
-    // 课程范围默认取前两段
     return `${segs[0]}/${segs[1]}/`;
   }
 
@@ -108,11 +128,14 @@
   }
 
   // concept 页候选：至少 /year/course/page 这三段
-  // 排除 random 自己
+  // 排除 random 入口页本身（但不要误伤 custom-random，因为它不在索引里也不会当候选）
   function isConceptLocation(loc) {
     const s = String(loc || "");
     if (!s) return false;
-    if (s.toLowerCase().includes("random")) return false;
+
+    const low = s.toLowerCase();
+    if (low.includes("custom-random")) return false;
+    if (/\/random(\/|\.html$)/.test(low) || /\/random\/index\.html$/.test(low)) return false;
 
     const clean = s.replace(/^\/+/, "").replace(/\/+$/, "");
     const segs = splitSegs(clean);
@@ -129,7 +152,7 @@
       .map(String)
       .filter(isConceptLocation)
       .filter(loc => {
-        if (!scope) return true; // scope 为空表示全站
+        if (!scope) return true;
         const clean = loc.replace(/^\/+/, "");
         return clean.startsWith(scope);
       });
@@ -153,9 +176,6 @@
   }
 
   // 点击 Random 入口时，仅记录 scope，不拦截默认跳转
-  // 规则：
-  // - data-random-scope="course" 代表课程随机，scope 取当前课程
-  // - 否则一律全站随机（scope 为空）
   function bindRandomScopeRecorder() {
     if (window.__randomScopeRecorderBoundV3) return;
     window.__randomScopeRecorderBoundV3 = true;
@@ -169,8 +189,8 @@
         const href = a.getAttribute("href") || "";
         if (!href) return;
 
-        // 只处理指向 random 的链接
-        if (!href.toLowerCase().includes("random")) return;
+        // 只处理“真正的 random 入口”
+        if (!isTrueRandomHref(href)) return;
 
         const mode = a.getAttribute("data-random-scope") || "";
 
@@ -178,7 +198,6 @@
           const courseScope = inferCourseScopeFromPath(window.location.pathname);
           storeScope(courseScope || "");
         } else {
-          // Random page 一律全站随机
           storeScope("");
         }
       },
@@ -186,14 +205,11 @@
     );
   }
 
-  // 如果当前就是 random 页面，则根据 scope 自动跳转到随机 concept
+  // 如果当前就是 random 入口页，则根据 scope 自动跳转到随机 concept
   async function autoOnRandomPage() {
-    if (!isRandomLikePath(window.location.pathname)) return;
+    if (!isTrueRandomPagePath(window.location.pathname)) return;
 
-    // 优先使用已经记录的 scope
-    // 如果没有，就全站随机
     const scope = readScope() || "";
-
     try {
       await randomJump(scope);
     } catch (e) {
