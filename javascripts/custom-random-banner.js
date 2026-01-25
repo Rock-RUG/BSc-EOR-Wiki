@@ -83,8 +83,8 @@
     return p.endsWith("/custom-random.html") || p.endsWith("custom-random.html");
   }
 
-  function currentPageRelLocation() {
-    // 目标页的 location 用 pathname 相对 site root 表示，和 search_index 里的 location 一致（不带开头 /）
+  // 把当前 pathname 转成相对 site root 的路径（不带开头 /）
+  function currentRelPath() {
     const siteRoot = new URL(getSiteRootUrl());
     const rootPath = siteRoot.pathname.endsWith("/") ? siteRoot.pathname : (siteRoot.pathname + "/");
 
@@ -92,6 +92,22 @@
     if (p.startsWith(rootPath)) p = p.slice(rootPath.length);
     p = p.replace(/^\/+/, "");
     return p;
+  }
+
+  function splitSegs(relPath) {
+    return String(relPath || "").split("/").filter(Boolean);
+  }
+
+  function isIndexLike(relPath) {
+    const p = String(relPath || "").toLowerCase();
+    return p === "" || p === "index.html" || p.endsWith("/index.html");
+  }
+
+  // 只允许在 concept 页显示 banner：至少三段 /year/course/page
+  function isConceptPage(relPath) {
+    if (isIndexLike(relPath)) return false;
+    const segs = splitSegs(relPath);
+    return segs.length >= 3;
   }
 
   function computeMatchedTokens(tokens, tokenMap, currentLocRel) {
@@ -174,13 +190,17 @@
   function init() {
     if (isOnCustomRandomPage()) return;
 
+    const rel = currentRelPath();
+
+    // 核心修复：Home / index / 年级目录页 都不注入
+    if (!isConceptPage(rel)) return;
+
     const cands = readCandidates();
     if (!cands.length) return;
 
     const tokens = readTokens();
     const tokenMap = readTokenMap();
-    const currentLocRel = currentPageRelLocation();
-    const matchedTokens = computeMatchedTokens(tokens, tokenMap, currentLocRel);
+    const matchedTokens = computeMatchedTokens(tokens, tokenMap, rel);
 
     insertBanner(cands, tokens, matchedTokens);
   }

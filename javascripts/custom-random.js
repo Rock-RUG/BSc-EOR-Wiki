@@ -3,9 +3,12 @@
   const TOKENS_KEY = "random_custom_tokens_v1";
   const CANDS_KEY = "random_custom_candidates_v1";
   const ENTRY_KEY = "random_custom_page_v1";
-
-  // 新增：存每个 token 对应的候选列表，用于目标页判断“命中了哪些 token”
   const TOKENMAP_KEY = "random_custom_token_map_v1";
+
+  // 每个 token 的展开状态
+  const EXPAND_KEY = "random_custom_expand_v1";
+
+  const PER_TOKEN_PREVIEW = 10;
 
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
@@ -94,7 +97,6 @@
     return await res.json();
   }
 
-  // 聚合 section hits 到 page-level
   function aggregateDocsToPages(docs) {
     const pageMap = new Map();
 
@@ -141,32 +143,38 @@
     return Array.from(pageMap.values());
   }
 
-  function readTokens() {
+  function readJson(key, fallback) {
     try {
-      const raw = sessionStorage.getItem(TOKENS_KEY);
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr.filter(Boolean).map(String) : [];
+      const raw = sessionStorage.getItem(key);
+      if (!raw) return fallback;
+      const v = JSON.parse(raw);
+      return v == null ? fallback : v;
     } catch (_) {
-      return [];
+      return fallback;
     }
   }
 
-  function storeTokens(tokens) {
+  function writeJson(key, value) {
     try {
-      sessionStorage.setItem(TOKENS_KEY, JSON.stringify(tokens || []));
+      sessionStorage.setItem(key, JSON.stringify(value));
     } catch (_) {}
+  }
+
+  function readTokens() {
+    const arr = readJson(TOKENS_KEY, []);
+    return Array.isArray(arr) ? arr.filter(Boolean).map(String) : [];
+  }
+
+  function storeTokens(tokens) {
+    writeJson(TOKENS_KEY, tokens || []);
   }
 
   function storeCandidates(locations) {
-    try {
-      sessionStorage.setItem(CANDS_KEY, JSON.stringify(locations || []));
-    } catch (_) {}
+    writeJson(CANDS_KEY, locations || []);
   }
 
   function storeTokenMap(mapObj) {
-    try {
-      sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(mapObj || {}));
-    } catch (_) {}
+    writeJson(TOKENMAP_KEY, mapObj || {});
   }
 
   function storeEntryUrl() {
@@ -175,23 +183,30 @@
     } catch (_) {}
   }
 
-  // 单 token 的命中（把 token 作为整体输入，但匹配用 loose tokenised）
+  function readExpandState() {
+    const obj = readJson(EXPAND_KEY, {});
+    return obj && typeof obj === "object" ? obj : {};
+  }
+
+  function storeExpandState(obj) {
+    writeJson(EXPAND_KEY, obj || {});
+  }
+
   function matchToken(pageDoc, tokenRaw) {
     const toks = tokeniseLoose(tokenRaw);
     if (!toks.length) return false;
 
     const hay = normaliseForSearch((pageDoc.title || "") + " " + (pageDoc.text || "") + " " + (pageDoc.location || ""));
-    // 这里仍然用 AND：一个 token 里面如果用户写了 "ivt evt"，希望同时命中
+    // token 内部仍然 AND
     for (const t of toks) {
       if (!hay.includes(t)) return false;
     }
     return true;
   }
 
-  // 你要的：多个 token 之间做 OR（并集），并且结果按 token 分区
   function buildResultsByToken(pageDocs, tokens) {
     const byToken = [];
-    const tokenMap = {}; // token -> [location]
+    const tokenMap = {};
 
     for (const token of (tokens || [])) {
       const hits = pageDocs.filter(d => matchToken(d, token));
@@ -199,8 +214,8 @@
       tokenMap[token] = hits.map(h => h.location);
     }
 
-    // 合并去重（并集）
-    const unionMap = new Map(); // loc -> doc
+    // union 去重
+    const unionMap = new Map();
     for (const group of byToken) {
       for (const doc of group.hits) {
         if (!unionMap.has(doc.location)) unionMap.set(doc.location, doc);
@@ -235,12 +250,31 @@
         `).join("")
       : `<span style="opacity:.7">No tokens yet.</span>`;
 
-    // 按 token 分区展示
+    const unionInfo = tokens.length
+      ? `<div style="margin-top:12px;opacity:.85">Union (OR) across tokens: <strong>${unionCount}</strong> unique page(s)</div>`
+      : "";
+
+    // Start random 按钮放到结果上方
+    const startBar = `
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
+        <button id="cr-random" class="md-button md-button--primary" ${unionCount ? "" : "disabled"}>Start random</button>
+      </div>
+    `;
+
+    const expandState = state.expandState || {};
+
     const sections = state.byToken.length
       ? state.byToken.map(group => {
-          const count = group.hits.length;
+          const token = group.token;
+          const hits = group.hits || [];
+          const count = hits.length;
+
+          const expanded = !!expandState[token];
+          const shown = expanded ? hits : hits.slice(0, PER_TOKEN_PREVIEW);
+          const hiddenCount = Math.max(0, count - shown.length);
+
           const list = count
-            ? group.hits.slice(0, 120).map(r => {
+            ? shown.map(r => {
                 const href = toAbsoluteUrl(r.location);
                 const course = courseLabelFromLocation(r.location);
                 return `
@@ -254,14 +288,23 @@
               }).join("")
             : `<div style="opacity:.7;padding:8px 0">No pages matched this token.</div>`;
 
+          const foldBtn = (count > PER_TOKEN_PREVIEW)
+            ? `<button data-toggle-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">
+                 ${expanded ? "Fold" : `Expand (+${hiddenCount})`}
+               </button>`
+            : "";
+
           return `
             <section style="margin-top:16px;padding:12px 14px;border:1px solid var(--md-default-fg-color--lightest);border-radius:12px">
               <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
                 <div>
-                  <strong>${escapeHtml(group.token)}</strong>
+                  <strong>${escapeHtml(token)}</strong>
                   <span style="opacity:.75">(${count} page(s))</span>
                 </div>
-                <button data-del-token="${escapeHtml(group.token)}" class="md-button" style="padding:4px 10px">× Remove</button>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                  ${foldBtn}
+                  <button data-del-token="${escapeHtml(token)}" class="md-button" style="padding:4px 10px">× Remove</button>
+                </div>
               </div>
               <div style="margin-top:10px">
                 ${list}
@@ -271,10 +314,6 @@
         }).join("")
       : `<div style="opacity:.75;margin-top:12px">Add tokens to see results.</div>`;
 
-    const unionInfo = tokens.length
-      ? `<div style="margin-top:14px;opacity:.85">Union (OR) across tokens: <strong>${unionCount}</strong> unique page(s)</div>`
-      : "";
-
     container.innerHTML = `
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
         <input id="cr-input" class="md-input" style="flex:1;min-width:240px" placeholder="e.g. continuity, m1c-lecture05" />
@@ -282,17 +321,14 @@
         <button id="cr-clear" class="md-button">Clear all</button>
       </div>
 
-      <div style="margin:6px 0 8px 0">
+      <div style="margin:6px 0 6px 0">
         ${chips}
       </div>
 
       ${unionInfo}
+      ${startBar}
 
       ${sections}
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px">
-        <button id="cr-random" class="md-button md-button--primary" ${unionCount ? "" : "disabled"}>Start random</button>
-      </div>
     `;
 
     const input = container.querySelector("#cr-input");
@@ -320,27 +356,50 @@
     clearBtn.addEventListener("click", () => {
       state.tokens = [];
       storeTokens(state.tokens);
+      state.expandState = {};
+      storeExpandState(state.expandState);
       state.recompute();
     });
 
-    // 上方 chips 的单删
     container.querySelectorAll("button[data-del]").forEach(btn => {
       btn.addEventListener("click", () => {
         const idx = Number(btn.getAttribute("data-del"));
         if (Number.isFinite(idx)) {
+          const removed = state.tokens[idx];
           state.tokens.splice(idx, 1);
           storeTokens(state.tokens);
+
+          // 同步清理展开状态
+          if (removed && state.expandState) {
+            delete state.expandState[removed];
+            storeExpandState(state.expandState);
+          }
           state.recompute();
         }
       });
     });
 
-    // 每个分区右上角 “× Remove”
     container.querySelectorAll("button[data-del-token]").forEach(btn => {
       btn.addEventListener("click", () => {
         const token = btn.getAttribute("data-del-token") || "";
         state.tokens = state.tokens.filter(t => t !== token);
         storeTokens(state.tokens);
+
+        if (state.expandState) {
+          delete state.expandState[token];
+          storeExpandState(state.expandState);
+        }
+        state.recompute();
+      });
+    });
+
+    // Expand/Fold
+    container.querySelectorAll("button[data-toggle-token]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const token = btn.getAttribute("data-toggle-token") || "";
+        state.expandState = state.expandState || {};
+        state.expandState[token] = !state.expandState[token];
+        storeExpandState(state.expandState);
         state.recompute();
       });
     });
@@ -349,8 +408,6 @@
       if (!state.union.length) return;
 
       storeEntryUrl();
-
-      // 写入 tokenMap + union candidates，供目标页 banner 使用
       storeTokenMap(state.tokenMap);
 
       const locs = state.union.map(r => r.location);
@@ -377,6 +434,7 @@
       byToken: [],
       union: [],
       tokenMap: {},
+      expandState: readExpandState(),
       recompute: () => {},
     };
 
@@ -385,6 +443,13 @@
       state.byToken = built.byToken;
       state.union = built.union;
       state.tokenMap = built.tokenMap;
+
+      // 保证 expandState 里不会残留已删除 token
+      const clean = {};
+      for (const t of state.tokens) clean[t] = !!state.expandState[t];
+      state.expandState = clean;
+      storeExpandState(state.expandState);
+
       renderApp(mount, state);
     };
 
