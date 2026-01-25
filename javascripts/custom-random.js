@@ -322,9 +322,6 @@
           <input id="cr-selftest" type="checkbox" ${selfTestChecked} />
           Self-test mode (fold sections)
         </label>
-
-        <button id="cr-union-all" class="md-button">Select all</button>
-        <button id="cr-union-none" class="md-button">Select none</button>
       </div>
     `;
 
@@ -418,8 +415,6 @@
 
     const selfTestCb = container.querySelector("#cr-selftest");
 
-    const unionAllBtn = container.querySelector("#cr-union-all");
-    const unionNoneBtn = container.querySelector("#cr-union-none");
 
     function addTokenFromInput() {
       const v = (input.value || "").trim();
@@ -510,19 +505,6 @@
       });
     });
 
-    unionAllBtn.addEventListener("click", () => {
-      const locs = state.union.map(d => d.location);
-      setSelectionForLocations(state.selectedMap, locs, true);
-      storeSelectedMap(state.selectedMap);
-      state.recompute();
-    });
-
-    unionNoneBtn.addEventListener("click", () => {
-      const locs = state.union.map(d => d.location);
-      setSelectionForLocations(state.selectedMap, locs, false);
-      storeSelectedMap(state.selectedMap);
-      state.recompute();
-    });
 
     container.querySelectorAll("button[data-token-all]").forEach(btn => {
       btn.addEventListener("click", () => {
