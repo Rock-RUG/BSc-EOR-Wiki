@@ -71,7 +71,7 @@
   const now = Date.now();
   try {
     const last = Number(localStorage.getItem(key) || "0");
-    if (now - last < 30_000) return; // 30 秒冷却
+    if (now - last < 60_000) return; // 60 秒冷却
     localStorage.setItem(key, String(now));
   } catch (_) {}
 
