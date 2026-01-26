@@ -74,6 +74,7 @@
   }
 
   function init() {
+    console.log("[track] init fired", window.location.pathname);
     trackOncePerPage();
   }
 
