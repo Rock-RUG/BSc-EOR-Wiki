@@ -118,7 +118,6 @@
   }
 
   function normalizePathname(u) {
-    // pathname 末尾 / 与否统一
     let p = (u && u.pathname) ? u.pathname : "";
     if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
     return p;
@@ -133,21 +132,31 @@
     Object.assign(panel.style, {
       position: "fixed",
       zIndex: "9999",
-      background: "rgb(30, 33, 41)",
+      background: "rgba(30, 33, 41, 0.96)",
       borderRadius: "14px",
       padding: "6px",
-      boxShadow: "0 10px 35px rgba(0,0,0,.38)",
+      boxShadow: "0 8px 24px rgba(0,0,0,.28)",
       fontSize: "14px",
+      backdropFilter: "blur(6px)",
       lineHeight: "1.35",
-      minWidth: "160px",
       maxWidth: "260px",
       overflow: "hidden",
     });
 
     const rect = anchorEl.getBoundingClientRect();
-    // 6) 位置更贴合 tab 文本
-    const left = Math.max(8, Math.min(rect.left + 6, window.innerWidth - 260));
-    const top = Math.min(rect.bottom + 10, window.innerHeight - 80);
+
+    // ✅ 关键：严格左对齐 Random tab
+    // 同时保证面板至少和 tab 一样宽，更像原生
+    const minW = Math.max(150, Math.round(rect.width));
+    panel.style.minWidth = `${minW}px`;
+
+    // left: 以 tab 的 left 为准（对齐）
+    // 仅做边界裁剪，避免超出屏幕
+    const maxLeft = window.innerWidth - Math.min(260, minW) - 8;
+    const left = Math.max(8, Math.min(rect.left, maxLeft));
+
+    // top: 紧贴下方一点
+    const top = Math.min(rect.bottom + 8, window.innerHeight - 80);
 
     panel.style.left = `${left}px`;
     panel.style.top = `${top}px`;
@@ -155,12 +164,11 @@
     const cur = new URL(window.location.href);
 
     items.forEach((it, i) => {
-      // 4) 分隔线：在第 2 项前（即 i===1）插入
       if (i === 1) {
         const hr = document.createElement("div");
         hr.style.height = "1px";
-        hr.style.margin = "6px 6px";
-        hr.style.background = "rgba(255,255,255,0.06)";
+        hr.style.margin = "6px 10px";
+        hr.style.background = "rgba(255,255,255,0.05)";
         panel.appendChild(hr);
       }
 
@@ -171,7 +179,7 @@
 
       Object.assign(a.style, {
         display: "block",
-        padding: "6px 10px",
+        padding: "6px 12px",
         borderRadius: "10px",
         textDecoration: "none",
         color: "inherit",
@@ -183,7 +191,6 @@
         transition: "background 120ms ease, transform 120ms ease",
       });
 
-      // 3) 当前页面高亮（使用 it.href 对比，更稳定）
       let isActive = false;
       try {
         const target = new URL(it.href, document.baseURI);
@@ -192,15 +199,14 @@
         isActive = false;
       }
 
-      const ACTIVE_BG = "rgba(255,255,255,0.08)";
-      const HOVER_BG = "rgba(255,255,255,0.045)";
+      const ACTIVE_BG = "rgba(255,255,255,0.06)";
+      const HOVER_BG = "rgba(255,255,255,0.09)";
 
       if (isActive) {
         a.style.background = ACTIVE_BG;
         a.style.fontWeight = "600";
       }
 
-      // 2) hover 更像 Material，且 mouseleave 时恢复 active 背景
       a.addEventListener("mouseenter", () => {
         a.style.background = HOVER_BG;
         a.style.transform = "translateY(-0.5px)";
@@ -215,7 +221,6 @@
 
     document.body.appendChild(panel);
 
-    // outside click close
     setTimeout(() => {
       const onDocClick = (e) => {
         if (!panel.contains(e.target) && e.target !== anchorEl) {
@@ -227,7 +232,6 @@
       document.addEventListener("click", onDocClick, { once: true, capture: true });
     }, 0);
 
-    // scroll/resize close
     const onClose = () => {
       closePanel();
       anchorEl.setAttribute("aria-expanded", "false");
@@ -251,11 +255,13 @@
     a2.setAttribute("aria-haspopup", "menu");
     a2.setAttribute("aria-expanded", "false");
 
-    // 5) 箭头随展开/收起切换
     const caret = document.createElement("span");
     caret.textContent = " ▾";
-    caret.style.opacity = "0.8";
-    caret.style.fontSize = "0.9em";
+    caret.style.marginLeft = "4px";
+    caret.style.fontSize = "0.85em";
+    caret.style.position = "relative";
+    caret.style.top = "-1px";
+    caret.style.opacity = "0.85";
     a2.appendChild(caret);
 
     a2.addEventListener("click", (e) => {
