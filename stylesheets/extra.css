@@ -694,84 +694,47 @@
 }
 
 /* ================================
-   Top navigation vertical alignment
+   Top nav Random dropdown (compact)
    ================================ */
 
-/* Ensure all top-level nav items align vertically */
-.md-tabs__link,
-.md-tabs__item,
-.md-header__inner a {
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
+/* 1) Try to catch multiple possible containers */
+.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown) {
+  font-size: 0.875rem !important;   /* match top tabs feel */
+  line-height: 1.35 !important;
 }
 
-/* Random dropdown trigger alignment */
-.md-tabs__item--random,
-.md-tabs__item--random > a {
-  display: inline-flex;
-  align-items: center;
+/* 2) If dropdown uses Material nav markup, force it compact */
+.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
+  :is(.md-nav__title, .md-nav__link, .md-nav__item, .md-nav__list) {
+  font-size: 0.875rem !important;
+  line-height: 1.35 !important;
 }
 
-/* ================================
-   Top nav typography system
-   ================================ */
-
-:root {
-  --nav-font-size: 0.875rem;
-  --nav-line-height: 1.4;
+/* 3) Hide the big "Random" title row if it’s rendered as a nav title */
+.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
+  :is(.md-nav__title, h1, h2, h3) {
+  display: none !important;
 }
 
-/* Main tabs */
-.md-tabs__link {
-  font-size: var(--nav-font-size);
-  line-height: var(--nav-line-height);
-  font-weight: 400;
+/* 4) Links/items spacing like top tabs (not giant card text) */
+.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
+  a {
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  padding: 0.4rem 0.75rem !important;
+  display: block !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  color: var(--md-default-fg-color) !important;
 }
 
-/* Dropdown trigger (Random ▼) */
-.md-tabs__link.dropdown-toggle {
-  font-size: var(--nav-font-size);
-  line-height: var(--nav-line-height);
+/* 5) Hover feedback */
+.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
+  a:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Search placeholder + input */
-.md-search__input,
-.md-search__icon {
-  font-size: var(--nav-font-size);
+/* 6) Tighten dropdown box padding if it feels “card-like” */
+.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown) {
+  padding: 0.25rem 0 !important;
 }
-
-/* ================================
-   Unified dropdown system (Random / Account)
-   ================================ */
-
-.md-dropdown {
-  background: rgba(30, 33, 40, 0.96);
-  border-radius: 0.5rem;
-  padding: 0.25rem 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  min-width: 180px;
-}
-
-/* Dropdown items */
-.md-dropdown a {
-  font-size: var(--nav-font-size);
-  line-height: var(--nav-line-height);
-  padding: 0.4rem 0.75rem;
-  color: var(--md-default-fg-color);
-  display: block;
-  text-decoration: none;
-}
-
-/* Hover feedback */
-.md-dropdown a:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* Section separators (future-proof) */
-.md-dropdown hr {
-  margin: 0.25rem 0;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
