@@ -41,7 +41,18 @@
 
   // 可选：排除目录/课程 landing 页（如果你的课程页不是 concept）
   // 例如 Year-1/1a-xxx/index.html 已被上面挡掉
+const rel = relPath.replace(/^\//, "").toLowerCase();
 
+// 排除 about / how-it-works（按你的实际路径改关键词）
+if (
+  rel.startsWith("about/") ||
+  rel === "about.html" ||
+  rel.startsWith("how-it-works/") ||
+  rel === "how-it-works.html" ||
+  rel.includes("about-this-wiki") // 保险：标题页/旧路径
+) {
+  return false;
+}
   return true;
 }
 
