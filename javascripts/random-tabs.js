@@ -1,4 +1,5 @@
 (function () {
+  const TRENDING_ITEM_ID = "trending-item";
   const COURSE_ITEM_ID = "course-random-item";
   const CUSTOM_ITEM_ID = "custom-random-item";
   const GLOBAL_LINK_SELECTOR = 'a.md-tabs__link[href*="random"]';
@@ -84,6 +85,19 @@
     list.querySelectorAll(`#${COURSE_ITEM_ID}`).forEach(el => el.remove());
   }
 
+  function removeAllTrendingItems(list) {
+    if (!list) return;
+
+    // 1) 按 id 删
+    list.querySelectorAll(`#${TRENDING_ITEM_ID}`).forEach(el => el.remove());
+
+    // 2) 按链接 href 再兜底删
+    list.querySelectorAll('a.md-tabs__link[href*="trending"]').forEach(a => {
+      const item = a.closest(".md-tabs__item");
+      if (item) item.remove();
+    });
+  }
+
   function createCustomItem() {
     const li = document.createElement("li");
     li.className = "md-tabs__item";
@@ -113,6 +127,20 @@
     return li;
   }
 
+  function createTrendingItem() {
+    const li = document.createElement("li");
+    li.className = "md-tabs__item";
+    li.id = TRENDING_ITEM_ID;
+
+    const a = document.createElement("a");
+    a.className = "md-tabs__link";
+    a.href = new URL("trending.html", getSiteRootUrl()).toString();
+    a.textContent = "Trending";
+
+    li.appendChild(a);
+    return li;
+  }
+
   function setRightGroupStart(item) {
     const list = findTabsList();
     if (!list) return;
@@ -132,8 +160,9 @@
     // 每次切页都先彻底清理，保证不会重复
     removeAllCustomItems(list);
     removeAllCourseItems(list);
+    removeAllTrendingItems(list);
 
-    // 插入顺序固定为：Custom random | Random in course(如果有) | Random
+    // 插入顺序固定为：Custom random | Random in course(如果有) | Random | Trending
     const customItem = createCustomItem();
     list.insertBefore(customItem, globalItem);
 
@@ -144,6 +173,14 @@
       const href = globalLink ? globalLink.getAttribute("href") : "random/";
       courseItem = createCourseItem(href);
       list.insertBefore(courseItem, globalItem);
+    }
+
+    // Trending 放在 Random 的右边
+    const trendingItem = createTrendingItem();
+    if (globalItem.nextSibling) {
+      list.insertBefore(trendingItem, globalItem.nextSibling);
+    } else {
+      list.appendChild(trendingItem);
     }
 
     // 右侧组起点：Custom random
