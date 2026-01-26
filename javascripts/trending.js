@@ -73,11 +73,15 @@ PERIODS.forEach(p => {
 
       // popular/comments 暂时占位
       if (metric !== "views") {
-  list.style.display = "none";
-  placeholder.style.display = "block";
-  placeholder.textContent = "Coming soon";
+  list.innerHTML = "";
+  const div = document.createElement("div");
+  div.className = "trending-placeholder";
+  div.textContent = "Coming soon";
+  list.replaceWith(div);
+  pager.style.display = "none";   // 关键：隐藏 Prev/Next
   return;
 }
+
 
 
       const url = new URL(API_BASE + "/hot");

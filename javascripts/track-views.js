@@ -1,5 +1,5 @@
 (function () {
-  const TRACK_ENDPOINT = "https://mkdocs-hot.eorwikihot.workers.dev";
+  const TRACK_ENDPOINT = "https://mkdocs-hot.eorwikihot.workers.dev/track";
 
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
@@ -76,9 +76,9 @@
   function init() {
     console.log("[track] init fired", window.location.pathname);
     console.log("[track] href", location.href);
-console.log("[track] relPath", relPathFromSiteRoot(location.pathname));
-console.log("[track] isConcept?", isConceptRelPath(relPathFromSiteRoot(location.pathname)));
-console.log("[track] endpoint", TRACK_ENDPOINT);
+    console.log("[track] relPath", relPathFromSiteRoot(location.pathname));
+    console.log("[track] isConcept?", isConceptRelPath(relPathFromSiteRoot(location.pathname)));
+    console.log("[track] endpoint", TRACK_ENDPOINT);
     trackOncePerPage();
   }
 
