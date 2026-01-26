@@ -134,7 +134,7 @@
 
     const a = document.createElement("a");
     a.className = "md-tabs__link";
-    a.href = new URL("trending.html", getSiteRootUrl()).toString();
+    a.href = new URL("trending/", getSiteRootUrl()).toString();
     a.textContent = "Trending";
 
     li.appendChild(a);
