@@ -56,14 +56,14 @@
     const list = findTabsList();
     if (!list) return null;
 
-    // 找到“真正的 Random”tab：优先匹配 href 结尾 random 或包含 /random/
     const links = Array.from(list.querySelectorAll("a.md-tabs__link"));
-    const target = links.find(a => {
-      const h = (a.getAttribute("href") || "").toLowerCase().split("#")[0].split("?")[0];
-      if (!h) return false;
-      if (h.includes("custom-random")) return false;
-      return h.includes("/random/") || h.endsWith("random.html") || h.endsWith("random/");
-    }) || list.querySelector(GLOBAL_LINK_SELECTOR);
+    const target =
+      links.find(a => {
+        const h = (a.getAttribute("href") || "").toLowerCase().split("#")[0].split("?")[0];
+        if (!h) return false;
+        if (h.includes("custom-random")) return false;
+        return h.includes("/random/") || h.endsWith("random.html") || h.endsWith("random/");
+      }) || list.querySelector(GLOBAL_LINK_SELECTOR);
 
     return target ? target.closest(".md-tabs__item") : null;
   }
@@ -78,23 +78,19 @@
     });
   }
 
-  // 把以前顶部存在的 Custom random / Random in course 这些残留项清理掉
   function removeOldRandomRelatedItems(list) {
     if (!list) return;
 
-    // 兜底删：custom-random tab
     list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
       const item = a.closest(".md-tabs__item");
       if (item) item.remove();
     });
 
-    // 兜底删：random in course（如果以前存在）
     list.querySelectorAll('a.md-tabs__link[data-random-scope="course"]').forEach(a => {
       const item = a.closest(".md-tabs__item");
       if (item) item.remove();
     });
 
-    // 兜底删：我们自己创建过的 dropdown item
     list.querySelectorAll(`#${RANDOM_DROPDOWN_ITEM_ID}`).forEach(el => el.remove());
   }
 
@@ -121,13 +117,19 @@
     return !!document.getElementById(PANEL_ID);
   }
 
-  function buildPanel(anchorEl, items) {
+  function normalizePathname(u) {
+    // pathname 末尾 / 与否统一
+    let p = (u && u.pathname) ? u.pathname : "";
+    if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+    return p;
+  }
+
+  function buildPanel(anchorEl, items, caretEl) {
     closePanel();
 
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
 
-    // ===== 强制视觉一致：不要用 rem，避免 header 上下文缩放影响 =====
     Object.assign(panel.style, {
       position: "fixed",
       zIndex: "9999",
@@ -137,17 +139,31 @@
       boxShadow: "0 10px 35px rgba(0,0,0,.38)",
       fontSize: "14px",
       lineHeight: "1.35",
-      minWidth: "180px",
+      minWidth: "160px",
+      maxWidth: "260px",
+      overflow: "hidden",
     });
 
     const rect = anchorEl.getBoundingClientRect();
-    const left = Math.max(8, Math.min(rect.left, window.innerWidth - 220));
+    // 6) 位置更贴合 tab 文本
+    const left = Math.max(8, Math.min(rect.left + 6, window.innerWidth - 260));
     const top = Math.min(rect.bottom + 10, window.innerHeight - 80);
 
     panel.style.left = `${left}px`;
     panel.style.top = `${top}px`;
 
-    items.forEach(it => {
+    const cur = new URL(window.location.href);
+
+    items.forEach((it, i) => {
+      // 4) 分隔线：在第 2 项前（即 i===1）插入
+      if (i === 1) {
+        const hr = document.createElement("div");
+        hr.style.height = "1px";
+        hr.style.margin = "6px 6px";
+        hr.style.background = "rgba(255,255,255,0.06)";
+        panel.appendChild(hr);
+      }
+
       const a = document.createElement("a");
       a.className = "item";
       a.href = it.href;
@@ -164,13 +180,34 @@
         fontWeight: "400",
         whiteSpace: "nowrap",
         cursor: "pointer",
+        transition: "background 120ms ease, transform 120ms ease",
       });
 
+      // 3) 当前页面高亮（使用 it.href 对比，更稳定）
+      let isActive = false;
+      try {
+        const target = new URL(it.href, document.baseURI);
+        isActive = normalizePathname(cur) === normalizePathname(target);
+      } catch (_) {
+        isActive = false;
+      }
+
+      const ACTIVE_BG = "rgba(255,255,255,0.08)";
+      const HOVER_BG = "rgba(255,255,255,0.045)";
+
+      if (isActive) {
+        a.style.background = ACTIVE_BG;
+        a.style.fontWeight = "600";
+      }
+
+      // 2) hover 更像 Material，且 mouseleave 时恢复 active 背景
       a.addEventListener("mouseenter", () => {
-        a.style.background = "rgba(255,255,255,0.06)";
+        a.style.background = HOVER_BG;
+        a.style.transform = "translateY(-0.5px)";
       });
       a.addEventListener("mouseleave", () => {
-        a.style.background = "transparent";
+        a.style.background = isActive ? ACTIVE_BG : "transparent";
+        a.style.transform = "none";
       });
 
       panel.appendChild(a);
@@ -181,13 +218,21 @@
     // outside click close
     setTimeout(() => {
       const onDocClick = (e) => {
-        if (!panel.contains(e.target) && e.target !== anchorEl) closePanel();
+        if (!panel.contains(e.target) && e.target !== anchorEl) {
+          closePanel();
+          anchorEl.setAttribute("aria-expanded", "false");
+          if (caretEl) caretEl.textContent = " ▾";
+        }
       };
       document.addEventListener("click", onDocClick, { once: true, capture: true });
     }, 0);
 
     // scroll/resize close
-    const onClose = () => closePanel();
+    const onClose = () => {
+      closePanel();
+      anchorEl.setAttribute("aria-expanded", "false");
+      if (caretEl) caretEl.textContent = " ▾";
+    };
     window.addEventListener("scroll", onClose, { passive: true, once: true });
     window.addEventListener("resize", onClose, { passive: true, once: true });
   }
@@ -196,27 +241,23 @@
     const a = globalItem.querySelector("a.md-tabs__link");
     if (!a) return;
 
-    // 防止重复绑定：用 clone 替换节点，清掉旧监听
     const a2 = a.cloneNode(true);
     a.replaceWith(a2);
 
-    // 保存原 Random 链接（用于 dropdown 里的 Random）
     const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
     const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
 
-    // 把 tab 文案变成 Random ▾
     a2.textContent = "Random";
     a2.setAttribute("aria-haspopup", "menu");
     a2.setAttribute("aria-expanded", "false");
 
-    // 加个小箭头（纯文本，避免 icon 依赖）
+    // 5) 箭头随展开/收起切换
     const caret = document.createElement("span");
     caret.textContent = " ▾";
     caret.style.opacity = "0.8";
     caret.style.fontSize = "0.9em";
     a2.appendChild(caret);
 
-    // 让点击不跳转，只打开 dropdown
     a2.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -224,6 +265,7 @@
       if (isPanelOpen()) {
         closePanel();
         a2.setAttribute("aria-expanded", "false");
+        caret.textContent = " ▾";
         return;
       }
 
@@ -232,19 +274,17 @@
         { label: "Custom random", href: customHref },
       ];
 
-      // 课程页才加 Random in course
       const courseScope = getCourseScopeIfAny();
       if (courseScope) {
-        // 你原来 Random in course 是复用 random/ 的入口，所以这里保持一致：
         items.splice(1, 0, { label: "Random in course", href: new URL(originalHref, document.baseURI).toString() });
       }
 
-      buildPanel(a2, items);
+      buildPanel(a2, items, caret);
       a2.setAttribute("aria-expanded", "true");
+      caret.textContent = " ▴";
     });
   }
 
-  // 让 Random/Trending 保持在右侧：给右侧组起点打标（你 CSS 里应该用这个来 float/right）
   function setRightGroupStart(item) {
     const list = findTabsList();
     if (!list) return;
@@ -261,17 +301,12 @@
     const globalItem = findGlobalRandomItem();
     if (!list || !globalItem) return;
 
-    // 清理旧的 random 相关 tab（Custom random / Random in course 等）
     removeOldRandomRelatedItems(list);
-
-    // 先清 trending（防重复）
     removeAllTrendingItems(list);
 
-    // 把“真正的 Random tab”改造成 dropdown 触发器
     globalItem.id = RANDOM_DROPDOWN_ITEM_ID;
     attachDropdownToRandomTab(globalItem);
 
-    // Trending 放在 Random 的右边
     const trendingItem = createTrendingItem();
     if (globalItem.nextSibling) {
       list.insertBefore(trendingItem, globalItem.nextSibling);
@@ -279,10 +314,7 @@
       list.appendChild(trendingItem);
     }
 
-    // 右侧组起点：Random dropdown
     setRightGroupStart(globalItem);
-
-    // 如果切页残留了 panel，关掉
     closePanel();
   }
 
@@ -296,6 +328,5 @@
     init();
   }
 
-  // mkdocs-material instant navigation（你原来就是这样写的，继续保留）
   document.addEventListener("DOMContentSwitch", init);
 })();
