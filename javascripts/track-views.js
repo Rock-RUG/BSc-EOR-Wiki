@@ -75,6 +75,10 @@
 
   function init() {
     console.log("[track] init fired", window.location.pathname);
+    console.log("[track] href", location.href);
+console.log("[track] relPath", relPathFromSiteRoot(location.pathname));
+console.log("[track] isConcept?", isConceptRelPath(relPathFromSiteRoot(location.pathname)));
+console.log("[track] endpoint", TRACK_ENDPOINT);
     trackOncePerPage();
   }
 
