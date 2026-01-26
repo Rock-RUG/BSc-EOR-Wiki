@@ -617,3 +617,10 @@
   opacity: .7;
   font-variant-numeric: tabular-nums;
 }
+
+#trending-app .trending-metahead{
+  text-align: right;
+  opacity: .65;
+  font-size: .78rem;
+  margin: .2rem 0 .35rem;
+}

@@ -1,3 +1,35 @@
+function cleanTitle(title) {
+  const t = String(title || "").trim();
+  if (!t) return "";
+  return t.replace(/\s+-\s+BSc EOR Wiki\s*$/i, "").trim();
+}
+
+function courseLabelFromPath(path) {
+  // 例：Year-1/1a-Math-I-Calculus/definite-integral.html
+  const p = String(path || "").replace(/^\/+/, "");
+  const segs = p.split("/").filter(Boolean);
+  if (segs.length < 2) return "";
+
+  let courseSeg = segs[1]; // 1a-Math-I-Calculus
+  courseSeg = courseSeg.replace(/^\d+[a-z]-/i, ""); // 去掉 1a- / 2b- 这种前缀
+  courseSeg = courseSeg.replace(/-/g, " ").trim(); // Math I Calculus
+
+  // 给 "Math I Calculus" 这种插入冒号：Math I: Calculus
+  const parts = courseSeg.split(/\s+/).filter(Boolean);
+  if (parts.length >= 3 && /^Math$/i.test(parts[0]) && /^[IVX]+$/i.test(parts[1])) {
+    return `${parts[0]} ${parts[1]}: ${parts.slice(2).join(" ")}`;
+  }
+
+  return courseSeg;
+}
+
+function displayTitle(item) {
+  const page = cleanTitle(item.title) || item.path;
+  const course = courseLabelFromPath(item.path);
+  return course ? `${page} - ${course}` : page;
+}
+
+
 (function () {
   const API_BASE = "https://mkdocs-hot.eorwikihot.workers.dev";
   const PAGE_PATH = "trending.html";
@@ -33,6 +65,11 @@
 
     const header = el("div", "trending-block-header");
     header.appendChild(el("h2", "trending-block-title", title));
+    // 仅 Most views 显示右侧数字含义
+if (metric === "views") {
+  header.appendChild(el("div", "trending-metahead", "Total views"));
+}
+
 
     const tabs = el("div", "trending-tabs");
 PERIODS.forEach(p => {
@@ -101,8 +138,8 @@ PERIODS.forEach(p => {
         items.forEach((it, idx) => {
           const li = el("li", "trending-item");
           const a = el("a", "trending-link");
-          a.href = it.path;
-          a.textContent = it.title || it.path;
+          a.href = new URL(it.path, document.baseURI).toString();
+          a.textContent = displayTitle(it);
           li.appendChild(a);
 
           const meta = el("span", "trending-meta", String(it.count || 0));
