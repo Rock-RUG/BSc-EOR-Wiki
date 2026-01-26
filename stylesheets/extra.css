@@ -694,33 +694,84 @@
 }
 
 /* ================================
-   Top nav Random dropdown styling
+   Top navigation vertical alignment
    ================================ */
 
-/* Dropdown container */
-.random-dropdown {
-  padding: 0.25rem 0;
+/* Ensure all top-level nav items align vertically */
+.md-tabs__link,
+.md-tabs__item,
+.md-header__inner a {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
 }
 
-/* Dropdown items: match top tabs */
-.random-dropdown a {
-  font-size: 0.875rem;        /* same scale as top nav tabs */
+/* Random dropdown trigger alignment */
+.md-tabs__item--random,
+.md-tabs__item--random > a {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ================================
+   Top nav typography system
+   ================================ */
+
+:root {
+  --nav-font-size: 0.875rem;
+  --nav-line-height: 1.4;
+}
+
+/* Main tabs */
+.md-tabs__link {
+  font-size: var(--nav-font-size);
+  line-height: var(--nav-line-height);
   font-weight: 400;
-  line-height: 1.35;
-  color: var(--md-default-fg-color);
+}
+
+/* Dropdown trigger (Random ▼) */
+.md-tabs__link.dropdown-toggle {
+  font-size: var(--nav-font-size);
+  line-height: var(--nav-line-height);
+}
+
+/* Search placeholder + input */
+.md-search__input,
+.md-search__icon {
+  font-size: var(--nav-font-size);
+}
+
+/* ================================
+   Unified dropdown system (Random / Account)
+   ================================ */
+
+.md-dropdown {
+  background: rgba(30, 33, 40, 0.96);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  min-width: 180px;
+}
+
+/* Dropdown items */
+.md-dropdown a {
+  font-size: var(--nav-font-size);
+  line-height: var(--nav-line-height);
   padding: 0.4rem 0.75rem;
+  color: var(--md-default-fg-color);
   display: block;
   text-decoration: none;
-  white-space: nowrap;
 }
 
-/* Hover state: subtle nav-like feedback */
-.random-dropdown a:hover {
+/* Hover feedback */
+.md-dropdown a:hover {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Remove card-like oversized feeling */
-.random-dropdown h3,
-.random-dropdown .title {
-  display: none;
+/* Section separators (future-proof) */
+.md-dropdown hr {
+  margin: 0.25rem 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
