@@ -1,7 +1,8 @@
 (function () {
   const TRENDING_ITEM_ID = "trending-item";
-  const COURSE_ITEM_ID = "course-random-item";
-  const CUSTOM_ITEM_ID = "custom-random-item";
+  const RANDOM_DROPDOWN_ITEM_ID = "random-dropdown-item";
+  const PANEL_ID = "random-dropdown-panel";
+
   const GLOBAL_LINK_SELECTOR = 'a.md-tabs__link[href*="random"]';
 
   function getSiteRootUrl() {
@@ -36,6 +37,7 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
+  // 课程页才返回 scope；Home / Year index 不返回
   function getCourseScopeIfAny() {
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
@@ -43,7 +45,6 @@
     if (segs.length < 2) return "";
     if (segs.length === 2 && segs[1].toLowerCase() === "index.html") return "";
     if (segs.length === 1) return "";
-
     return `${segs[0]}/${segs[1]}/`;
   }
 
@@ -67,64 +68,34 @@
     return target ? target.closest(".md-tabs__item") : null;
   }
 
-  function removeAllCustomItems(list) {
-    if (!list) return;
-
-    // 1) 按 id 删
-    list.querySelectorAll(`#${CUSTOM_ITEM_ID}`).forEach(el => el.remove());
-
-    // 2) 按链接 href 再兜底删（避免 id 被复制导致重复）
-    list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
-    });
-  }
-
-  function removeAllCourseItems(list) {
-    if (!list) return;
-    list.querySelectorAll(`#${COURSE_ITEM_ID}`).forEach(el => el.remove());
-  }
-
   function removeAllTrendingItems(list) {
     if (!list) return;
 
-    // 1) 按 id 删
     list.querySelectorAll(`#${TRENDING_ITEM_ID}`).forEach(el => el.remove());
-
-    // 2) 按链接 href 再兜底删
     list.querySelectorAll('a.md-tabs__link[href*="trending"]').forEach(a => {
       const item = a.closest(".md-tabs__item");
       if (item) item.remove();
     });
   }
 
-  function createCustomItem() {
-    const li = document.createElement("li");
-    li.className = "md-tabs__item";
-    li.id = CUSTOM_ITEM_ID;
+  // 把以前顶部存在的 Custom random / Random in course 这些残留项清理掉
+  function removeOldRandomRelatedItems(list) {
+    if (!list) return;
 
-    const a = document.createElement("a");
-    a.className = "md-tabs__link";
-    a.href = new URL("custom-random.html", getSiteRootUrl()).toString();
-    a.textContent = "Custom random";
+    // 兜底删：custom-random tab
+    list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
+      const item = a.closest(".md-tabs__item");
+      if (item) item.remove();
+    });
 
-    li.appendChild(a);
-    return li;
-  }
+    // 兜底删：random in course（如果以前存在）
+    list.querySelectorAll('a.md-tabs__link[data-random-scope="course"]').forEach(a => {
+      const item = a.closest(".md-tabs__item");
+      if (item) item.remove();
+    });
 
-  function createCourseItem(href) {
-    const li = document.createElement("li");
-    li.className = "md-tabs__item";
-    li.id = COURSE_ITEM_ID;
-
-    const a = document.createElement("a");
-    a.className = "md-tabs__link";
-    a.href = href;
-    a.textContent = "Random in course";
-    a.setAttribute("data-random-scope", "course");
-
-    li.appendChild(a);
-    return li;
+    // 兜底删：我们自己创建过的 dropdown item
+    list.querySelectorAll(`#${RANDOM_DROPDOWN_ITEM_ID}`).forEach(el => el.remove());
   }
 
   function createTrendingItem() {
@@ -141,6 +112,139 @@
     return li;
   }
 
+  function closePanel() {
+    const p = document.getElementById(PANEL_ID);
+    if (p) p.remove();
+  }
+
+  function isPanelOpen() {
+    return !!document.getElementById(PANEL_ID);
+  }
+
+  function buildPanel(anchorEl, items) {
+    closePanel();
+
+    const panel = document.createElement("div");
+    panel.id = PANEL_ID;
+
+    // ===== 强制视觉一致：不要用 rem，避免 header 上下文缩放影响 =====
+    Object.assign(panel.style, {
+      position: "fixed",
+      zIndex: "9999",
+      background: "rgb(30, 33, 41)",
+      borderRadius: "14px",
+      padding: "6px",
+      boxShadow: "0 10px 35px rgba(0,0,0,.38)",
+      fontSize: "14px",
+      lineHeight: "1.35",
+      minWidth: "180px",
+    });
+
+    const rect = anchorEl.getBoundingClientRect();
+    const left = Math.max(8, Math.min(rect.left, window.innerWidth - 220));
+    const top = Math.min(rect.bottom + 10, window.innerHeight - 80);
+
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
+
+    items.forEach(it => {
+      const a = document.createElement("a");
+      a.className = "item";
+      a.href = it.href;
+      a.textContent = it.label;
+
+      Object.assign(a.style, {
+        display: "block",
+        padding: "6px 10px",
+        borderRadius: "10px",
+        textDecoration: "none",
+        color: "inherit",
+        fontSize: "14px",
+        lineHeight: "1.35",
+        fontWeight: "400",
+        whiteSpace: "nowrap",
+        cursor: "pointer",
+      });
+
+      a.addEventListener("mouseenter", () => {
+        a.style.background = "rgba(255,255,255,0.06)";
+      });
+      a.addEventListener("mouseleave", () => {
+        a.style.background = "transparent";
+      });
+
+      panel.appendChild(a);
+    });
+
+    document.body.appendChild(panel);
+
+    // outside click close
+    setTimeout(() => {
+      const onDocClick = (e) => {
+        if (!panel.contains(e.target) && e.target !== anchorEl) closePanel();
+      };
+      document.addEventListener("click", onDocClick, { once: true, capture: true });
+    }, 0);
+
+    // scroll/resize close
+    const onClose = () => closePanel();
+    window.addEventListener("scroll", onClose, { passive: true, once: true });
+    window.addEventListener("resize", onClose, { passive: true, once: true });
+  }
+
+  function attachDropdownToRandomTab(globalItem) {
+    const a = globalItem.querySelector("a.md-tabs__link");
+    if (!a) return;
+
+    // 防止重复绑定：用 clone 替换节点，清掉旧监听
+    const a2 = a.cloneNode(true);
+    a.replaceWith(a2);
+
+    // 保存原 Random 链接（用于 dropdown 里的 Random）
+    const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
+    const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
+
+    // 把 tab 文案变成 Random ▾
+    a2.textContent = "Random";
+    a2.setAttribute("aria-haspopup", "menu");
+    a2.setAttribute("aria-expanded", "false");
+
+    // 加个小箭头（纯文本，避免 icon 依赖）
+    const caret = document.createElement("span");
+    caret.textContent = " ▾";
+    caret.style.opacity = "0.8";
+    caret.style.fontSize = "0.9em";
+    a2.appendChild(caret);
+
+    // 让点击不跳转，只打开 dropdown
+    a2.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isPanelOpen()) {
+        closePanel();
+        a2.setAttribute("aria-expanded", "false");
+        return;
+      }
+
+      const items = [
+        { label: "Random", href: new URL(originalHref, document.baseURI).toString() },
+        { label: "Custom random", href: customHref },
+      ];
+
+      // 课程页才加 Random in course
+      const courseScope = getCourseScopeIfAny();
+      if (courseScope) {
+        // 你原来 Random in course 是复用 random/ 的入口，所以这里保持一致：
+        items.splice(1, 0, { label: "Random in course", href: new URL(originalHref, document.baseURI).toString() });
+      }
+
+      buildPanel(a2, items);
+      a2.setAttribute("aria-expanded", "true");
+    });
+  }
+
+  // 让 Random/Trending 保持在右侧：给右侧组起点打标（你 CSS 里应该用这个来 float/right）
   function setRightGroupStart(item) {
     const list = findTabsList();
     if (!list) return;
@@ -157,23 +261,15 @@
     const globalItem = findGlobalRandomItem();
     if (!list || !globalItem) return;
 
-    // 每次切页都先彻底清理，保证不会重复
-    removeAllCustomItems(list);
-    removeAllCourseItems(list);
+    // 清理旧的 random 相关 tab（Custom random / Random in course 等）
+    removeOldRandomRelatedItems(list);
+
+    // 先清 trending（防重复）
     removeAllTrendingItems(list);
 
-    // 插入顺序固定为：Custom random | Random in course(如果有) | Random | Trending
-    const customItem = createCustomItem();
-    list.insertBefore(customItem, globalItem);
-
-    const courseScope = getCourseScopeIfAny();
-    let courseItem = null;
-    if (courseScope) {
-      const globalLink = globalItem.querySelector("a.md-tabs__link");
-      const href = globalLink ? globalLink.getAttribute("href") : "random/";
-      courseItem = createCourseItem(href);
-      list.insertBefore(courseItem, globalItem);
-    }
+    // 把“真正的 Random tab”改造成 dropdown 触发器
+    globalItem.id = RANDOM_DROPDOWN_ITEM_ID;
+    attachDropdownToRandomTab(globalItem);
 
     // Trending 放在 Random 的右边
     const trendingItem = createTrendingItem();
@@ -183,8 +279,11 @@
       list.appendChild(trendingItem);
     }
 
-    // 右侧组起点：Custom random
-    setRightGroupStart(customItem);
+    // 右侧组起点：Random dropdown
+    setRightGroupStart(globalItem);
+
+    // 如果切页残留了 panel，关掉
+    closePanel();
   }
 
   function init() {
@@ -197,6 +296,6 @@
     init();
   }
 
-  // mkdocs-material instant navigation
+  // mkdocs-material instant navigation（你原来就是这样写的，继续保留）
   document.addEventListener("DOMContentSwitch", init);
 })();
