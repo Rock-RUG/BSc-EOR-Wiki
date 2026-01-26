@@ -694,47 +694,31 @@
 }
 
 /* ================================
-   Top nav Random dropdown (compact)
+   Random dropdown panel (final)
    ================================ */
 
-/* 1) Try to catch multiple possible containers */
-.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown) {
-  font-size: 0.875rem !important;   /* match top tabs feel */
-  line-height: 1.35 !important;
+#random-dropdown-panel {
+  font-size: 0.875rem;
+  line-height: 1.35;
+  padding: 0.25rem;
 }
 
-/* 2) If dropdown uses Material nav markup, force it compact */
-.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
-  :is(.md-nav__title, .md-nav__link, .md-nav__item, .md-nav__list) {
-  font-size: 0.875rem !important;
-  line-height: 1.35 !important;
+#random-dropdown-panel a.item {
+  font-size: 0.875rem;
+  line-height: 1.35;
+  font-weight: 400;
+  padding: 0.4rem 0.75rem;
+  display: block;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--md-default-fg-color);
 }
 
-/* 3) Hide the big "Random" title row if it’s rendered as a nav title */
-.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
-  :is(.md-nav__title, h1, h2, h3) {
-  display: none !important;
+#random-dropdown-panel a.item:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
-/* 4) Links/items spacing like top tabs (not giant card text) */
-.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
-  a {
-  font-size: 0.875rem !important;
-  font-weight: 400 !important;
-  padding: 0.4rem 0.75rem !important;
-  display: block !important;
-  text-decoration: none !important;
-  white-space: nowrap !important;
-  color: var(--md-default-fg-color) !important;
-}
-
-/* 5) Hover feedback */
-.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown)
-  a:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-}
-
-/* 6) Tighten dropdown box padding if it feels “card-like” */
-.md-header :is(.random-dropdown, .random-menu, .random-dropdown-menu, .md-tabs__dropdown) {
-  padding: 0.25rem 0 !important;
+#random-dropdown-panel a.item.is-active {
+  background: rgba(255, 255, 255, 0.10);
+  font-weight: 600;
 }
