@@ -57,17 +57,20 @@
 
 
   function trackOncePerPage() {
-    const rel = relPathFromSiteRoot(window.location.pathname);
-    if (!isConceptRelPath(rel)) return;
+  const rel = relPathFromSiteRoot(window.location.pathname);
+  if (!isConceptRelPath(rel)) return;
 
-    const key = "view_tracked_v1:" + rel;
-    try {
-      if (sessionStorage.getItem(key) === "1") return;
-      sessionStorage.setItem(key, "1");
-    } catch (_) {}
+  const key = "view_last_v1:" + rel;
+  const now = Date.now();
+  try {
+    const last = Number(localStorage.getItem(key) || "0");
+    if (now - last < 30_000) return; // 30 秒冷却
+    localStorage.setItem(key, String(now));
+  } catch (_) {}
 
-    send(rel, document.title || "");
-  }
+  send(rel, document.title || "");
+}
+
 
   function init() {
     console.log("[track] init fired", window.location.pathname);
