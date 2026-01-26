@@ -25,19 +25,26 @@
   }
 
   function isConceptRelPath(rel) {
-  const low = String(rel || "").toLowerCase();
+  const p = String(rel || "").replace(/^\/+/, "");
+  const low = p.toLowerCase();
   if (!low) return false;
 
-  // 不统计这些页面
-  if (low.includes("random")) return false;
-  if (low === "trending" || low.startsWith("trending/")) return false;
+  // 排除明显非内容页
+  const bad = ["assets/", "search", "sitemap", "404", "random", "trending"];
+  if (bad.some(x => low.includes(x))) return false;
 
-  // 首页也不统计（按需）
-  if (low === "" || low === "index.html") return false;
+  // 关键：排除所有目录 index（包括 Year-1/index.html）
+  if (low === "index.html" || low.endsWith("/index.html")) return false;
 
-  // 其余一律统计（先把数据跑起来）
+  // 只统计 html 内容页
+  if (!low.endsWith(".html")) return false;
+
+  // 可选：排除目录/课程 landing 页（如果你的课程页不是 concept）
+  // 例如 Year-1/1a-xxx/index.html 已被上面挡掉
+
   return true;
 }
+
 
   function send(path, title) {
   const payload = JSON.stringify({ path, title });
