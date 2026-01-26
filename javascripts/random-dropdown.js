@@ -113,9 +113,22 @@
     }
     panel.innerHTML = "";
 
+    // Force compact typography (inline styles win over CSS)
+    panel.style.fontSize = "0.875rem";
+    panel.style.lineHeight = "1.35";
+    panel.style.padding = "0.25rem";
+
     items.forEach(({ href, label }) => {
       const a = el("a", "item", label);
       a.href = href;
+      
+      a.style.fontSize = "0.875rem";
+      a.style.lineHeight = "1.35";
+      a.style.fontWeight = "400";
+      a.style.padding = "0.4rem 0.75rem";
+      a.style.display = "block";
+      a.style.whiteSpace = "nowrap";
+
 
       // active highlight
       try {

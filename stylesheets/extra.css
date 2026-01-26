@@ -693,32 +693,3 @@
   cursor: default;
 }
 
-/* ================================
-   Random dropdown panel (final)
-   ================================ */
-
-#random-dropdown-panel {
-  font-size: 0.875rem;
-  line-height: 1.35;
-  padding: 0.25rem;
-}
-
-#random-dropdown-panel a.item {
-  font-size: 0.875rem;
-  line-height: 1.35;
-  font-weight: 400;
-  padding: 0.4rem 0.75rem;
-  display: block;
-  text-decoration: none;
-  white-space: nowrap;
-  color: var(--md-default-fg-color);
-}
-
-#random-dropdown-panel a.item:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-#random-dropdown-panel a.item.is-active {
-  background: rgba(255, 255, 255, 0.10);
-  font-weight: 600;
-}
