@@ -109,7 +109,10 @@
 
   function closePanel() {
     const p = document.getElementById(PANEL_ID);
-    if (p) p.remove();
+    if (p) {
+      if (typeof p._cleanup === "function") p._cleanup();
+      p.remove();
+    }
   }
 
   function isPanelOpen() {
@@ -133,7 +136,6 @@
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
 
-    // dropdown item 内边距，后面会用它来做“文字起点对齐”
     const ITEM_PAD_X = 12;
 
     Object.assign(panel.style, {
@@ -151,25 +153,22 @@
     });
 
     const rect = anchorEl.getBoundingClientRect();
-
-    // 计算 tab 文字起点 = anchor 左边 + anchor 的 padding-left
     const cs = window.getComputedStyle(anchorEl);
     const anchorPadL = getPx(cs.paddingLeft);
+
+    // tab 文字起点
     const tabTextLeft = rect.left + anchorPadL;
 
-    // dropdown 面板 left 应该让 item 的文字起点 = tab 文字起点
-    // item 文字起点 = panel.left + ITEM_PAD_X
+    // dropdown 文字起点 = panel.left + ITEM_PAD_X
     let left = tabTextLeft - ITEM_PAD_X;
 
-    // 面板宽度：至少和 tab 一样宽(加一点容错)，更像原生
     const minW = Math.max(150, Math.round(rect.width));
     panel.style.minWidth = `${minW}px`;
 
-    // 边界裁剪，避免超出屏幕
     const maxLeft = window.innerWidth - Math.min(260, minW) - 8;
     left = Math.max(8, Math.min(left, maxLeft));
 
-    // top 往下多一点，避免面板压住 tab，导致第二次点点不到
+    // 往下挪，避免面板压住 tab
     const top = Math.min(rect.bottom + 12, window.innerHeight - 80);
 
     panel.style.left = `${left}px`;
@@ -236,19 +235,19 @@
     document.body.appendChild(panel);
 
     // 点击外部关闭
-    setTimeout(() => {
-      const onDocPointerDown = (e) => {
-        if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
-          closePanel();
-          anchorEl.setAttribute("aria-expanded", "false");
-          if (caretEl) caretEl.textContent = " ▾";
-        }
-      };
-      document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
-      panel._cleanup = () => document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
-    }, 0);
+    const onDocPointerDown = (e) => {
+      if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
+        closePanel();
+        anchorEl.setAttribute("aria-expanded", "false");
+        if (caretEl) caretEl.textContent = " ▾";
+      }
+    };
+    document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
 
-    // scroll/resize 关闭
+    panel._cleanup = () => {
+      document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
+    };
+
     const onClose = () => {
       closePanel();
       anchorEl.setAttribute("aria-expanded", "false");
@@ -266,19 +265,24 @@
     const a2 = a.cloneNode(true);
     a.replaceWith(a2);
 
+    // 原链接，用于 dropdown 第一个 item
     const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
     const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
+
+    // ✅ 关键：让 tab 自身不再导航（否则必然会跳）
+    a2.setAttribute("href", "#");
 
     a2.textContent = "Random";
     a2.setAttribute("aria-haspopup", "menu");
     a2.setAttribute("aria-expanded", "false");
+    a2.style.cursor = "pointer";
 
     const caret = document.createElement("span");
     caret.textContent = " ▾";
     caret.style.marginLeft = "4px";
     caret.style.fontSize = "0.85em";
     caret.style.position = "relative";
-    caret.style.top = "0px"; // 稍微调低一点（比 -1px 更贴合）
+    caret.style.top = "1px"; // 稍微再调低一点
     caret.style.opacity = "0.85";
     a2.appendChild(caret);
 
@@ -289,8 +293,6 @@
 
     function toggle() {
       if (isPanelOpen()) {
-        const panel = document.getElementById(PANEL_ID);
-        if (panel && typeof panel._cleanup === "function") panel._cleanup();
         closePanel();
         setOpen(false);
         return;
@@ -313,11 +315,32 @@
       setOpen(true);
     }
 
-    // 用 pointerdown，比 click 更稳，也避免被面板覆盖导致点不到
-    a2.addEventListener("pointerdown", (e) => {
+    // ✅ 必须同时拦截 pointerdown + click（否则 click 仍会导航）
+    const stop = (e) => {
       e.preventDefault();
       e.stopPropagation();
+    };
+
+    a2.addEventListener("pointerdown", (e) => {
+      stop(e);
       toggle();
+    });
+
+    a2.addEventListener("click", (e) => {
+      stop(e);
+      // click 不再 toggle，避免一次手势触发两次（pointerdown 已经做了）
+    });
+
+    // ✅ 键盘支持：Enter / Space 打开关闭
+    a2.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        stop(e);
+        toggle();
+      } else if (e.key === "Escape") {
+        stop(e);
+        closePanel();
+        setOpen(false);
+      }
     });
   }
 
@@ -351,9 +374,6 @@
     }
 
     setRightGroupStart(globalItem);
-
-    const panel = document.getElementById(PANEL_ID);
-    if (panel && typeof panel._cleanup === "function") panel._cleanup();
     closePanel();
   }
 
