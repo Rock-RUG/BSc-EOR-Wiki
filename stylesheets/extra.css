@@ -574,3 +574,46 @@
 .md-tabs__list .md-tabs__item.random-right-start {
   margin-left: auto;
 }
+
+
+/* ===== Trending page ===== */
+#trending-app .trending-tabs {
+  display: flex;
+  gap: .45rem;
+  flex-wrap: wrap;
+  margin: .4rem 0 .8rem;
+}
+
+#trending-app .trending-tab {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  padding: .28rem .55rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: .82rem;
+  line-height: 1.2;
+}
+
+#trending-app .trending-tab:hover {
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.24);
+}
+
+#trending-app .trending-tab.is-active,
+#trending-app .trending-tab.active {
+  background: rgba(255,255,255,.16);
+  border-color: rgba(255,255,255,.35);
+}
+
+#trending-app .trending-item {
+  display: flex;
+  justify-content: space-between;
+  gap: .7rem;
+}
+
+#trending-app .trending-meta {
+  opacity: .7;
+  font-variant-numeric: tabular-nums;
+}

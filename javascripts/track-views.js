@@ -25,16 +25,19 @@
   }
 
   function isConceptRelPath(rel) {
-    const low = String(rel || "").toLowerCase();
-    if (!low) return false;
-    if (low.endsWith("index.html")) return false;
-    if (low.includes("random")) return false;
-    if (low === "trending.html") return false;
+  const low = String(rel || "").toLowerCase();
+  if (!low) return false;
 
-    // 你站点的概念页一般是 3 层或以上，如 course/module/topic/page
-    const segs = rel.split("/").filter(Boolean);
-    return segs.length >= 3;
-  }
+  // 不统计这些页面
+  if (low.includes("random")) return false;
+  if (low === "trending" || low.startsWith("trending/")) return false;
+
+  // 首页也不统计（按需）
+  if (low === "" || low === "index.html") return false;
+
+  // 其余一律统计（先把数据跑起来）
+  return true;
+}
 
   function send(path, title) {
     const payload = JSON.stringify({ path, title });
