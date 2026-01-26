@@ -652,3 +652,43 @@
   align-self: center;      /* 纵向居中对齐 tabs */
   text-align: right;
 }
+
+#trending-app .trending-footer{
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+#trending-app .trending-pages{
+  display: flex;
+  gap: .35rem;
+  align-items: center;
+}
+
+#trending-app .trending-page-num{
+  background: transparent;
+  border: 0;
+  padding: .15rem .35rem;
+  opacity: .55;
+  cursor: pointer;
+  font-size: .9rem;
+}
+
+#trending-app .trending-page-num.is-active{
+  opacity: 1;
+  font-weight: 700;
+}
+
+#trending-app .trending-page-btn{
+  background: transparent;
+  border: 0;
+  padding: .15rem .35rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  opacity: .75;
+}
+
+#trending-app .trending-page-btn:disabled{
+  opacity: .25;
+  cursor: default;
+}

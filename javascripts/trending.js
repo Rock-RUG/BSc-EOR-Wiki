@@ -83,12 +83,23 @@ PERIODS.forEach(p => {
 
     const list = el("ol", "trending-list");
     const footer = el("div", "trending-footer");
-    const prev = el("button", "trending-page-btn", "Prev");
-    const next = el("button", "trending-page-btn", "Next");
-    prev.type = "button";
-    next.type = "button";
-    footer.appendChild(prev);
-    footer.appendChild(next);
+
+const prev = el("button", "trending-page-btn");
+prev.type = "button";
+prev.setAttribute("aria-label", "Previous page");
+prev.textContent = "←";
+
+const pages = el("div", "trending-pages");   // 👈 页码容器
+
+const next = el("button", "trending-page-btn");
+next.type = "button";
+next.setAttribute("aria-label", "Next page");
+next.textContent = "→";
+
+footer.appendChild(prev);
+footer.appendChild(pages);
+footer.appendChild(next);
+
 
     block.appendChild(header);
     block.appendChild(list);
@@ -150,12 +161,32 @@ PERIODS.forEach(p => {
       }
 
       if (state.period === "all") {
-        footer.style.display = "flex";
-        prev.disabled = state.offset <= 0;
-        next.disabled = state.offset + limit >= state.total;
-      } else {
-        footer.style.display = "none";
-      }
+  footer.style.display = "flex";
+
+  const totalPages = Math.max(1, Math.ceil(state.total / limit));
+  const currentPage = Math.floor(state.offset / limit) + 1;
+
+  prev.disabled = currentPage <= 1;
+  next.disabled = currentPage >= totalPages;
+
+  // 渲染页码：1 2 3 ... totalPages，当前高亮
+  pages.innerHTML = "";
+  for (let p = 1; p <= totalPages; p++) {
+    const b = el("button", "trending-page-num", String(p));
+    b.type = "button";
+    b.dataset.page = String(p);
+    if (p === currentPage) b.classList.add("is-active");
+    pages.appendChild(b);
+  }
+} else {
+  footer.style.display = "none";
+  pages.innerHTML = "";
+}
+// 🔢 MathJax：对动态插入的标题重新 typeset
+if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
+  window.MathJax.typesetPromise([list]).catch(() => {});
+}
+
     }
 
     function setActiveTab() {
@@ -185,6 +216,16 @@ PERIODS.forEach(p => {
       state.offset = state.offset + limit;
       load();
     });
+
+    pages.addEventListener("click", (e) => {
+  const btn = e.target && e.target.closest(".trending-page-num");
+  if (!btn) return;
+  const p = Number(btn.dataset.page || "1");
+  const limit = (PERIODS.find(x => x.key === state.period) || PERIODS[2]).limit;
+  state.offset = (p - 1) * limit;
+  load();
+});
+
 
     // 默认 this month
     setActiveTab();
