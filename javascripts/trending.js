@@ -35,12 +35,13 @@
     header.appendChild(el("h2", "trending-block-title", title));
 
     const tabs = el("div", "trending-tabs");
-    PERIODS.forEach(p => {
-      const btn = el("button", "trending-tab", p.label);
-      btn.type = "button";
-      btn.dataset.period = p.key;
-      tabs.appendChild(btn);
-    });
+PERIODS.forEach(p => {
+  const btn = el("button", "trending-tab", p.label);
+  btn.type = "button";
+  btn.dataset.period = p.key;
+  tabs.appendChild(btn);
+});
+
     header.appendChild(tabs);
 
     const list = el("ol", "trending-list");
@@ -72,11 +73,12 @@
 
       // popular/comments 暂时占位
       if (metric !== "views") {
-        list.innerHTML = "";
-        list.appendChild(el("li", "trending-coming", "Coming soon"));
-        footer.style.display = "none";
-        return;
-      }
+  list.style.display = "none";
+  placeholder.style.display = "block";
+  placeholder.textContent = "Coming soon";
+  return;
+}
+
 
       const url = new URL(API_BASE + "/hot");
       url.searchParams.set("metric", metric);
@@ -98,7 +100,7 @@
           const li = el("li", "trending-item");
           const a = el("a", "trending-link");
           a.href = it.path;
-          a.textContent = `${idx + 1 + state.offset}. ${it.title || it.path}`;
+          a.textContent = it.title || it.path;
           li.appendChild(a);
 
           const meta = el("span", "trending-meta", String(it.count || 0));
@@ -119,8 +121,9 @@
 
     function setActiveTab() {
       tabs.querySelectorAll(".trending-tab").forEach(btn => {
-        btn.classList.toggle("is-active", btn.dataset.period === state.period);
-      });
+  btn.classList.toggle("is-active", btn.dataset.period === state.period);
+});
+
     }
 
     tabs.addEventListener("click", (e) => {
