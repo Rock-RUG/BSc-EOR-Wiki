@@ -54,7 +54,7 @@
   border: 1px solid rgba(255,255,255,.10);
   border-radius: .55rem;
   box-shadow: 0 12px 36px rgba(0,0,0,.35);
-  padding: .35rem;
+  padding: .25rem;
   z-index: 9999;
   display: none;
 }
@@ -62,12 +62,14 @@
 
 #${PANEL_ID} a.item{
   display: block;
-  padding: .5rem .6rem;
+  padding: .4rem .75rem;
   border-radius: .45rem;
   color: var(--md-default-fg-color);
   text-decoration: none;
-  font-size: .92rem;
-  line-height: 1.2;
+  font-size: .875rem;
+  line-height: 1.35;
+  font-weight: 400;
+  white-space: nowrap;
 }
 #${PANEL_ID} a.item:hover{ background: rgba(255,255,255,.06); }
 #${PANEL_ID} a.item.is-active{ background: rgba(255,255,255,.10); font-weight: 600; }
