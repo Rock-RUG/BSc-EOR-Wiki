@@ -37,7 +37,6 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
-  // 课程页才返回 scope；Home / Year index 不返回
   function getCourseScopeIfAny() {
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
@@ -123,11 +122,19 @@
     return p;
   }
 
+  function getPx(value) {
+    const n = parseFloat(String(value || "0"));
+    return Number.isFinite(n) ? n : 0;
+  }
+
   function buildPanel(anchorEl, items, caretEl) {
     closePanel();
 
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
+
+    // dropdown item 内边距，后面会用它来做“文字起点对齐”
+    const ITEM_PAD_X = 12;
 
     Object.assign(panel.style, {
       position: "fixed",
@@ -137,26 +144,33 @@
       padding: "6px",
       boxShadow: "0 8px 24px rgba(0,0,0,.28)",
       fontSize: "14px",
-      backdropFilter: "blur(6px)",
       lineHeight: "1.35",
+      backdropFilter: "blur(6px)",
       maxWidth: "260px",
       overflow: "hidden",
     });
 
     const rect = anchorEl.getBoundingClientRect();
 
-    // ✅ 关键：严格左对齐 Random tab
-    // 同时保证面板至少和 tab 一样宽，更像原生
+    // 计算 tab 文字起点 = anchor 左边 + anchor 的 padding-left
+    const cs = window.getComputedStyle(anchorEl);
+    const anchorPadL = getPx(cs.paddingLeft);
+    const tabTextLeft = rect.left + anchorPadL;
+
+    // dropdown 面板 left 应该让 item 的文字起点 = tab 文字起点
+    // item 文字起点 = panel.left + ITEM_PAD_X
+    let left = tabTextLeft - ITEM_PAD_X;
+
+    // 面板宽度：至少和 tab 一样宽(加一点容错)，更像原生
     const minW = Math.max(150, Math.round(rect.width));
     panel.style.minWidth = `${minW}px`;
 
-    // left: 以 tab 的 left 为准（对齐）
-    // 仅做边界裁剪，避免超出屏幕
+    // 边界裁剪，避免超出屏幕
     const maxLeft = window.innerWidth - Math.min(260, minW) - 8;
-    const left = Math.max(8, Math.min(rect.left, maxLeft));
+    left = Math.max(8, Math.min(left, maxLeft));
 
-    // top: 紧贴下方一点
-    const top = Math.min(rect.bottom + 8, window.innerHeight - 80);
+    // top 往下多一点，避免面板压住 tab，导致第二次点点不到
+    const top = Math.min(rect.bottom + 12, window.innerHeight - 80);
 
     panel.style.left = `${left}px`;
     panel.style.top = `${top}px`;
@@ -179,7 +193,7 @@
 
       Object.assign(a.style, {
         display: "block",
-        padding: "6px 12px",
+        padding: `6px ${ITEM_PAD_X}px`,
         borderRadius: "10px",
         textDecoration: "none",
         color: "inherit",
@@ -221,17 +235,20 @@
 
     document.body.appendChild(panel);
 
+    // 点击外部关闭
     setTimeout(() => {
-      const onDocClick = (e) => {
-        if (!panel.contains(e.target) && e.target !== anchorEl) {
+      const onDocPointerDown = (e) => {
+        if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
           closePanel();
           anchorEl.setAttribute("aria-expanded", "false");
           if (caretEl) caretEl.textContent = " ▾";
         }
       };
-      document.addEventListener("click", onDocClick, { once: true, capture: true });
+      document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
+      panel._cleanup = () => document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
     }, 0);
 
+    // scroll/resize 关闭
     const onClose = () => {
       closePanel();
       anchorEl.setAttribute("aria-expanded", "false");
@@ -245,6 +262,7 @@
     const a = globalItem.querySelector("a.md-tabs__link");
     if (!a) return;
 
+    // 避免重复绑定：替换成 clone
     const a2 = a.cloneNode(true);
     a.replaceWith(a2);
 
@@ -260,18 +278,21 @@
     caret.style.marginLeft = "4px";
     caret.style.fontSize = "0.85em";
     caret.style.position = "relative";
-    caret.style.top = "-1px";
+    caret.style.top = "0px"; // 稍微调低一点（比 -1px 更贴合）
     caret.style.opacity = "0.85";
     a2.appendChild(caret);
 
-    a2.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    function setOpen(open) {
+      a2.setAttribute("aria-expanded", open ? "true" : "false");
+      caret.textContent = open ? " ▴" : " ▾";
+    }
 
+    function toggle() {
       if (isPanelOpen()) {
+        const panel = document.getElementById(PANEL_ID);
+        if (panel && typeof panel._cleanup === "function") panel._cleanup();
         closePanel();
-        a2.setAttribute("aria-expanded", "false");
-        caret.textContent = " ▾";
+        setOpen(false);
         return;
       }
 
@@ -282,12 +303,21 @@
 
       const courseScope = getCourseScopeIfAny();
       if (courseScope) {
-        items.splice(1, 0, { label: "Random in course", href: new URL(originalHref, document.baseURI).toString() });
+        items.splice(1, 0, {
+          label: "Random in course",
+          href: new URL(originalHref, document.baseURI).toString(),
+        });
       }
 
       buildPanel(a2, items, caret);
-      a2.setAttribute("aria-expanded", "true");
-      caret.textContent = " ▴";
+      setOpen(true);
+    }
+
+    // 用 pointerdown，比 click 更稳，也避免被面板覆盖导致点不到
+    a2.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle();
     });
   }
 
@@ -321,6 +351,9 @@
     }
 
     setRightGroupStart(globalItem);
+
+    const panel = document.getElementById(PANEL_ID);
+    if (panel && typeof panel._cleanup === "function") panel._cleanup();
     closePanel();
   }
 
