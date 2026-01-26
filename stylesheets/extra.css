@@ -692,3 +692,35 @@
   opacity: .25;
   cursor: default;
 }
+
+/* ================================
+   Top nav Random dropdown styling
+   ================================ */
+
+/* Dropdown container */
+.random-dropdown {
+  padding: 0.25rem 0;
+}
+
+/* Dropdown items: match top tabs */
+.random-dropdown a {
+  font-size: 0.875rem;        /* same scale as top nav tabs */
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--md-default-fg-color);
+  padding: 0.4rem 0.75rem;
+  display: block;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Hover state: subtle nav-like feedback */
+.random-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Remove card-like oversized feeling */
+.random-dropdown h3,
+.random-dropdown .title {
+  display: none;
+}
