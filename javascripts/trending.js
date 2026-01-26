@@ -11,8 +11,8 @@
   }
 
   function isTrendingPage() {
-    return window.location.pathname.toLowerCase().includes(PAGE_PATH);
-  }
+  return !!document.getElementById("trending-app");
+}
 
   const PERIODS = [
     { key: "24h", label: "Today", limit: 10 },
@@ -74,11 +74,9 @@ PERIODS.forEach(p => {
       // popular/comments 暂时占位
       if (metric !== "views") {
   list.innerHTML = "";
-  const div = document.createElement("div");
-  div.className = "trending-placeholder";
-  div.textContent = "Coming soon";
-  list.replaceWith(div);
-  pager.style.display = "none";   // 关键：隐藏 Prev/Next
+  list.style.listStyle = "none";
+  list.appendChild(el("li", "trending-empty", "Coming soon"));
+  footer.style.display = "none";
   return;
 }
 

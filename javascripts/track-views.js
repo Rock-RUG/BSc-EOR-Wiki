@@ -40,25 +40,21 @@
 }
 
   function send(path, title) {
-    const payload = JSON.stringify({ path, title });
+  const payload = JSON.stringify({ path, title });
 
-    try {
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(
-          TRACK_ENDPOINT,
-          new Blob([payload], { type: "application/json" })
-        );
-        return;
-      }
-    } catch (_) {}
+  fetch(TRACK_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: payload,
+    keepalive: true,
+  })
+    .then(async (r) => {
+      const t = await r.text().catch(() => "");
+      console.log("[track] POST", r.status, t);
+    })
+    .catch((e) => console.error("[track] POST failed", e));
+}
 
-    fetch(TRACK_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: payload,
-      keepalive: true,
-    }).catch(() => {});
-  }
 
   function trackOncePerPage() {
     const rel = relPathFromSiteRoot(window.location.pathname);
@@ -90,4 +86,5 @@
 
   // material instant navigation 时触发
   document.addEventListener("DOMContentSwitch", init);
+  document.addEventListener("navigation:load", init);
 })();
