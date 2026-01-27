@@ -37,6 +37,8 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
+  // 课程判定：路径至少两段 /<year>/<course>/...
+  // 排除 /<year>/ 或 /<year>/index.html
   function getCourseScopeIfAny() {
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
@@ -77,20 +79,31 @@
     });
   }
 
+  // 清理你之前可能存在的旧实现：
+  // - custom-random tab
+  // - 旧的 Random in course 顶部 tab（如果之前用另一个脚本插入过）
+  // - 旧的 dropdown panel
   function removeOldRandomRelatedItems(list) {
     if (!list) return;
 
+    // 旧的 custom-random 顶部 tab
     list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
       const item = a.closest(".md-tabs__item");
       if (item) item.remove();
     });
 
+    // 旧的 “Random in course” 顶部 tab（你之前那种实现会带 data-random-scope="course"）
     list.querySelectorAll('a.md-tabs__link[data-random-scope="course"]').forEach(a => {
       const item = a.closest(".md-tabs__item");
       if (item) item.remove();
     });
 
+    // 旧 dropdown tab id
     list.querySelectorAll(`#${RANDOM_DROPDOWN_ITEM_ID}`).forEach(el => el.remove());
+
+    // 旧 panel
+    const p = document.getElementById(PANEL_ID);
+    if (p) p.remove();
   }
 
   function createTrendingItem() {
@@ -130,45 +143,30 @@
     return Number.isFinite(n) ? n : 0;
   }
 
+  // items: { kind: "link", label, href, scope? } or { kind:"sep" }
   function buildPanel(anchorEl, items, caretEl) {
     closePanel();
 
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
+    panel.className = "md-random-dropdown-panel";
 
-    const ITEM_PAD_X = 12;
-
-    Object.assign(panel.style, {
-      position: "fixed",
-      zIndex: "9999",
-      background: "rgba(30, 33, 41, 0.96)",
-      borderRadius: "14px",
-      padding: "6px",
-      boxShadow: "0 8px 24px rgba(0,0,0,.28)",
-      fontSize: "14px",
-      lineHeight: "1.35",
-      backdropFilter: "blur(6px)",
-      maxWidth: "260px",
-      overflow: "hidden",
-    });
-
+    // 只在 JS 里管定位和宽度，颜色/字体/间距全部交给 CSS
     const rect = anchorEl.getBoundingClientRect();
     const cs = window.getComputedStyle(anchorEl);
     const anchorPadL = getPx(cs.paddingLeft);
 
-    // tab 文字起点
+    const ITEM_PAD_X = 12;
     const tabTextLeft = rect.left + anchorPadL;
 
-    // dropdown 文字起点 = panel.left + ITEM_PAD_X
     let left = tabTextLeft - ITEM_PAD_X;
-
-    const minW = Math.max(150, Math.round(rect.width));
+    const minW = Math.max(170, Math.round(rect.width));
     panel.style.minWidth = `${minW}px`;
 
-    const maxLeft = window.innerWidth - Math.min(260, minW) - 8;
+    const maxW = 280;
+    const maxLeft = window.innerWidth - Math.min(maxW, minW) - 8;
     left = Math.max(8, Math.min(left, maxLeft));
 
-    // 往下挪，避免面板压住 tab
     const top = Math.min(rect.bottom + 12, window.innerHeight - 80);
 
     panel.style.left = `${left}px`;
@@ -176,34 +174,24 @@
 
     const cur = new URL(window.location.href);
 
-    items.forEach((it, i) => {
-      if (i === 1) {
+    items.forEach((it) => {
+      if (it.kind === "sep") {
         const hr = document.createElement("div");
-        hr.style.height = "1px";
-        hr.style.margin = "6px 10px";
-        hr.style.background = "rgba(255,255,255,0.05)";
+        hr.className = "md-random-dropdown-sep";
         panel.appendChild(hr);
+        return;
       }
 
       const a = document.createElement("a");
-      a.className = "item";
+      a.className = "md-random-dropdown-item";
       a.href = it.href;
       a.textContent = it.label;
 
-      Object.assign(a.style, {
-        display: "block",
-        padding: `6px ${ITEM_PAD_X}px`,
-        borderRadius: "10px",
-        textDecoration: "none",
-        color: "inherit",
-        fontSize: "14px",
-        lineHeight: "1.35",
-        fontWeight: "400",
-        whiteSpace: "nowrap",
-        cursor: "pointer",
-        transition: "background 120ms ease, transform 120ms ease",
-      });
+      if (it.scope === "course") {
+        a.setAttribute("data-random-scope", "course");
+      }
 
+      // active 判定
       let isActive = false;
       try {
         const target = new URL(it.href, document.baseURI);
@@ -212,22 +200,9 @@
         isActive = false;
       }
 
-      const ACTIVE_BG = "rgba(255,255,255,0.06)";
-      const HOVER_BG = "rgba(255,255,255,0.09)";
-
       if (isActive) {
-        a.style.background = ACTIVE_BG;
-        a.style.fontWeight = "600";
+        a.classList.add("is-active");
       }
-
-      a.addEventListener("mouseenter", () => {
-        a.style.background = HOVER_BG;
-        a.style.transform = "translateY(-0.5px)";
-      });
-      a.addEventListener("mouseleave", () => {
-        a.style.background = isActive ? ACTIVE_BG : "transparent";
-        a.style.transform = "none";
-      });
 
       panel.appendChild(a);
     });
@@ -269,7 +244,7 @@
     const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
     const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
 
-    // ✅ 关键：让 tab 自身不再导航（否则必然会跳）
+    // 让 tab 自身不再导航
     a2.setAttribute("href", "#");
 
     a2.textContent = "Random";
@@ -278,12 +253,8 @@
     a2.style.cursor = "pointer";
 
     const caret = document.createElement("span");
+    caret.className = "md-random-dropdown-caret";
     caret.textContent = " ▾";
-    caret.style.marginLeft = "4px";
-    caret.style.fontSize = "0.85em";
-    caret.style.position = "relative";
-    caret.style.top = "1px"; // 稍微再调低一点
-    caret.style.opacity = "0.85";
     a2.appendChild(caret);
 
     function setOpen(open) {
@@ -298,24 +269,32 @@
         return;
       }
 
+      const courseScope = getCourseScopeIfAny();
+
+      // 统一分组逻辑：
+      // - 有 course：Random / Random in course / (sep) / Custom random
+      // - 无 course：Random / (sep) / Custom random
       const items = [
-        { label: "Random", href: new URL(originalHref, document.baseURI).toString() },
-        { label: "Custom random", href: customHref },
+        { kind: "link", label: "Random", href: new URL(originalHref, document.baseURI).toString() },
       ];
 
-      const courseScope = getCourseScopeIfAny();
       if (courseScope) {
-        items.splice(1, 0, {
+        items.push({
+          kind: "link",
           label: "Random in course",
           href: new URL(originalHref, document.baseURI).toString(),
+          scope: "course",
         });
       }
+
+      items.push({ kind: "sep" });
+
+      items.push({ kind: "link", label: "Custom random", href: customHref });
 
       buildPanel(a2, items, caret);
       setOpen(true);
     }
 
-    // ✅ 必须同时拦截 pointerdown + click（否则 click 仍会导航）
     const stop = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -328,10 +307,10 @@
 
     a2.addEventListener("click", (e) => {
       stop(e);
-      // click 不再 toggle，避免一次手势触发两次（pointerdown 已经做了）
+      // pointerdown 已处理 toggle，避免重复触发
     });
 
-    // ✅ 键盘支持：Enter / Space 打开关闭
+    // 键盘支持：Enter / Space 打开关闭
     a2.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         stop(e);
@@ -387,5 +366,6 @@
     init();
   }
 
+  // mkdocs-material instant navigation
   document.addEventListener("DOMContentSwitch", init);
 })();
