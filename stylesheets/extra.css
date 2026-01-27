@@ -693,3 +693,9 @@
   cursor: default;
 }
 
+.md-typeset a.tag-search-link {
+  text-decoration: none !important;
+}
+.md-typeset a.tag-search-link:hover code {
+  text-decoration: underline;
+}
