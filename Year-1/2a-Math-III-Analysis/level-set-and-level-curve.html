@@ -23,7 +23,7 @@
     
     
       
-        <title>Image and Preimage - BSc EOR Wiki</title>
+        <title>Level Set and Level Curve - BSc EOR Wiki</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#image-and-preimage" class="md-skip">
+        <a href="#level-set-and-level-curve" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Image and Preimage
+              Level Set and Level Curve
             
           </span>
         </div>
@@ -7550,7 +7550,7 @@
   <span class="md-ellipsis">
     
   
-    Image and Preimage
+    Level Set and Level Curve
   
 
     
@@ -7568,7 +7568,7 @@
   <span class="md-ellipsis">
     
   
-    Image and Preimage
+    Level Set and Level Curve
   
 
     
@@ -10163,23 +10163,20 @@
 
 
 
-<h1 id="image-and-preimage">Image and Preimage<a class="headerlink" href="#image-and-preimage" title="Permanent link">&para;</a></h1>
+<h1 id="level-set-and-level-curve">Level Set and Level Curve<a class="headerlink" href="#level-set-and-level-curve" title="Permanent link">&para;</a></h1>
 <h2 id="definition">📘 Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h2>
-<p>Let <span class="arithmatex">\(\boldsymbol{X}\)</span> and <span class="arithmatex">\(\boldsymbol{Y}\)</span> be two sets in <a href="metric-and-metric-space.html">metric spaces</a>, and let <span class="arithmatex">\(\boldsymbol{f}\colon \boldsymbol{X}\to\boldsymbol{Y}\)</span> be a <a href="../1a-Math-I-Calculus/function.html">function</a>. Let <span class="arithmatex">\(\boldsymbol{C}\)</span> be a subset of the <a href="../1a-Math-I-Calculus/domain.html">domain</a> <span class="arithmatex">\(\boldsymbol{X}\)</span>, the <strong>image of</strong> <span class="arithmatex">\(\boldsymbol{C}\)</span> <strong>under</strong> <span class="arithmatex">\(\boldsymbol{f}\)</span> is defined as:</p>
+<p>Let <span class="arithmatex">\(\boldsymbol{f}\colon  \boldsymbol{X} \to \mathbb R\)</span> be a real-valued function defined on a set <span class="arithmatex">\(\boldsymbol{X}\subseteq \mathbb R^n\)</span>. A <strong>level set</strong> is defined as the preimage of a singleton set <span class="arithmatex">\(\{k\}\)</span>, i.e.,</p>
 <div class="arithmatex">\[
-\boldsymbol{f}(\boldsymbol{C})=\{\boldsymbol{y}\in\boldsymbol{Y}\colon \text{there exists some } \boldsymbol{x}\in\boldsymbol{C} \text{ such that } \boldsymbol{y}=\boldsymbol{f}(\boldsymbol{x})\}.
+L_k(f)=f^{-1}(\{k\})=\{(x_1,x_2,\ldots,x_n)\in\mathbb{R}^n\colon f(x_1,x_2,\ldots,x_n)=k\}.
 \]</div>
-<p>Let <span class="arithmatex">\(\boldsymbol{V}\)</span> be a subset of the <a href="../1a-Math-I-Calculus/codomain.html">codomain</a> <span class="arithmatex">\(\boldsymbol{Y}\)</span>, the <strong>preimage of</strong> <span class="arithmatex">\(\boldsymbol{V}\)</span> <strong>under</strong> <span class="arithmatex">\(\boldsymbol{f}\)</span> includes all points in the domain that give results in <span class="arithmatex">\(\boldsymbol{V}\)</span>:</p>
-<div class="arithmatex">\[
-\boldsymbol{f}^{-1}(\boldsymbol{V})=\{\boldsymbol{x}\in\boldsymbol{X}\colon\boldsymbol{f}(\boldsymbol{x})\in\boldsymbol{V}\}.
-\]</div>
+<p>When the number of independent variables is two, a level set is called a <strong>level curve</strong>, also known as <strong>contour line</strong>.</p>
 <hr />
 <h2 id="interpretation">🧠 Interpretation<a class="headerlink" href="#interpretation" title="Permanent link">&para;</a></h2>
+<p>A level curve is the set of all real-valued solutions of an equation in two variables <span class="arithmatex">\(x_1\)</span> and <span class="arithmatex">\(x_2\)</span>.</p>
 <hr />
 <h2 id="key-results">⭐ Key Results<a class="headerlink" href="#key-results" title="Permanent link">&para;</a></h2>
 <ul>
-<li><span class="arithmatex">\(\boldsymbol{V}\)</span> only needs to be a part of the codomain of <span class="arithmatex">\(\boldsymbol{f}\)</span>. This means there might be some <span class="arithmatex">\(\boldsymbol{y}\)</span> in <span class="arithmatex">\(\boldsymbol{V}\)</span> that doesn't match any <span class="arithmatex">\(\boldsymbol{x}\)</span> in the domain <span class="arithmatex">\(\boldsymbol{X}\)</span>.</li>
-<li>We have <span class="arithmatex">\(\boldsymbol{C} \subseteq \boldsymbol{f}^{-1}(\boldsymbol{f}(\boldsymbol{C}))\)</span> and <span class="arithmatex">\(\boldsymbol{f}(\boldsymbol{f}^{-1}(\boldsymbol{V})) \subseteq \boldsymbol{V}\)</span>.</li>
+<li></li>
 </ul>
 <hr />
 <h2 id="examples">✏️ Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
@@ -10190,15 +10187,13 @@
 <h2 id="prerequisites">📎 Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../1a-Math-I-Calculus/function.html">Function</a></li>
-<li><a href="../1a-Math-I-Calculus/domain.html">Domain</a></li>
-<li><a href="../1a-Math-I-Calculus/codomain.html">Codomain</a></li>
+<li><a href="../1a-Math-I-Calculus/singleton-set.html">Singleton Set</a></li>
+<li><a href="image-and-preimage.html">Image and Preimage</a></li>
 </ul>
 <hr />
 <h2 id="related-concepts">🔗 Related Concepts<a class="headerlink" href="#related-concepts" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../1a-Math-I-Calculus/range.html">Range</a></li>
-<li><a href="../1a-Math-I-Calculus/bijection-and-inverse-function.html">Bijection and Inverse Function</a></li>
-<li><a href="level-set-and-level-curve.html">Level Set and Level Curve</a></li>
+<li></li>
 </ul>
 <hr />
 <h2 id="sources">🏷️ Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>

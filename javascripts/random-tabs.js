@@ -37,6 +37,7 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
+  // 课程页才返回 scope；Home / Year index 不返回
   function getCourseScopeIfAny() {
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
@@ -54,43 +55,22 @@
   function findGlobalRandomItem() {
     const list = findTabsList();
     if (!list) return null;
-
-    const links = Array.from(list.querySelectorAll("a.md-tabs__link"));
-    const target =
-      links.find(a => {
-        const h = (a.getAttribute("href") || "").toLowerCase().split("#")[0].split("?")[0];
-        if (!h) return false;
-        if (h.includes("custom-random")) return false;
-        return h.includes("/random/") || h.endsWith("random.html") || h.endsWith("random/");
-      }) || list.querySelector(GLOBAL_LINK_SELECTOR);
-
-    return target ? target.closest(".md-tabs__item") : null;
+    const a = list.querySelector(GLOBAL_LINK_SELECTOR);
+    return a ? a.closest(".md-tabs__item") : null;
   }
 
   function removeAllTrendingItems(list) {
-    if (!list) return;
-
-    list.querySelectorAll(`#${TRENDING_ITEM_ID}`).forEach(el => el.remove());
-    list.querySelectorAll('a.md-tabs__link[href*="trending"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
-    });
+    list.querySelectorAll(`#${TRENDING_ITEM_ID}`).forEach(n => n.remove());
   }
 
   function removeOldRandomRelatedItems(list) {
-    if (!list) return;
-
-    list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
+    // 清掉旧的 custom/random in course（如果你之前做过插入）
+    list.querySelectorAll(
+      'a.md-tabs__link[href*="custom-random"], a.md-tabs__link[href*="random-in-course"]'
+    ).forEach(a => {
+      const li = a.closest(".md-tabs__item");
+      if (li) li.remove();
     });
-
-    list.querySelectorAll('a.md-tabs__link[data-random-scope="course"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
-    });
-
-    list.querySelectorAll(`#${RANDOM_DROPDOWN_ITEM_ID}`).forEach(el => el.remove());
   }
 
   function createTrendingItem() {
@@ -100,23 +80,38 @@
 
     const a = document.createElement("a");
     a.className = "md-tabs__link";
-    a.href = new URL("trending.html", getSiteRootUrl()).toString();
+    a.href = new URL("trending/", getSiteRootUrl()).toString();
     a.textContent = "Trending";
 
     li.appendChild(a);
     return li;
   }
 
-  function closePanel() {
-    const p = document.getElementById(PANEL_ID);
-    if (p) {
-      if (typeof p._cleanup === "function") p._cleanup();
-      p.remove();
-    }
-  }
-
   function isPanelOpen() {
     return !!document.getElementById(PANEL_ID);
+  }
+
+  function closePanel() {
+    const p = document.getElementById(PANEL_ID);
+    if (!p) return;
+
+    // 触发 leave 动画（配合你 CSS 的 .open）
+    p.classList.remove("open");
+
+    // 动画结束再移除，避免“瞬间消失”
+    const rm = () => {
+      if (p && p.parentNode) p.parentNode.removeChild(p);
+    };
+
+    // transitionend 可能不触发（极少数情况），加兜底
+    let done = false;
+    const onEnd = () => {
+      if (done) return;
+      done = true;
+      rm();
+    };
+    p.addEventListener("transitionend", onEnd, { once: true });
+    setTimeout(onEnd, 220);
   }
 
   function normalizePathname(u) {
@@ -125,129 +120,59 @@
     return p;
   }
 
-  function getPx(value) {
-    const n = parseFloat(String(value || "0"));
-    return Number.isFinite(n) ? n : 0;
-  }
-
   function buildPanel(anchorEl, items, caretEl) {
     closePanel();
 
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
 
-    const ITEM_PAD_X = 12;
-
-    Object.assign(panel.style, {
-      position: "fixed",
-      zIndex: "9999",
-      background: "rgba(30, 33, 41, 0.96)",
-      borderRadius: "14px",
-      padding: "6px",
-      boxShadow: "0 8px 24px rgba(0,0,0,.28)",
-      fontSize: "14px",
-      lineHeight: "1.35",
-      backdropFilter: "blur(6px)",
-      maxWidth: "260px",
-      overflow: "hidden",
-    });
-
+    // 只负责定位，样式交给 CSS（否则你改不动字体/间距）
     const rect = anchorEl.getBoundingClientRect();
-    const cs = window.getComputedStyle(anchorEl);
-    const anchorPadL = getPx(cs.paddingLeft);
-
-    // tab 文字起点
-    const tabTextLeft = rect.left + anchorPadL;
-
-    // dropdown 文字起点 = panel.left + ITEM_PAD_X
-    let left = tabTextLeft - ITEM_PAD_X;
-
-    const minW = Math.max(150, Math.round(rect.width));
-    panel.style.minWidth = `${minW}px`;
-
-    const maxLeft = window.innerWidth - Math.min(260, minW) - 8;
-    left = Math.max(8, Math.min(left, maxLeft));
-
-    // 往下挪，避免面板压住 tab
-    const top = Math.min(rect.bottom + 12, window.innerHeight - 80);
+    const maxW = 320;
+    const left = Math.max(8, Math.min(rect.left, window.innerWidth - maxW - 8));
+    const top = Math.min(rect.bottom + 10, window.innerHeight - 120);
 
     panel.style.left = `${left}px`;
     panel.style.top = `${top}px`;
 
     const cur = new URL(window.location.href);
 
-    items.forEach((it, i) => {
-      if (i === 1) {
-        const hr = document.createElement("div");
-        hr.style.height = "1px";
-        hr.style.margin = "6px 10px";
-        hr.style.background = "rgba(255,255,255,0.05)";
-        panel.appendChild(hr);
-      }
-
+    items.forEach((it) => {
       const a = document.createElement("a");
       a.className = "item";
       a.href = it.href;
       a.textContent = it.label;
 
-      Object.assign(a.style, {
-        display: "block",
-        padding: `6px ${ITEM_PAD_X}px`,
-        borderRadius: "10px",
-        textDecoration: "none",
-        color: "inherit",
-        fontSize: "14px",
-        lineHeight: "1.35",
-        fontWeight: "400",
-        whiteSpace: "nowrap",
-        cursor: "pointer",
-        transition: "background 120ms ease, transform 120ms ease",
-      });
-
-      let isActive = false;
+      // 当前页标记（给 CSS 用，也更语义化）
       try {
         const target = new URL(it.href, document.baseURI);
-        isActive = normalizePathname(cur) === normalizePathname(target);
-      } catch (_) {
-        isActive = false;
-      }
-
-      const ACTIVE_BG = "rgba(255,255,255,0.06)";
-      const HOVER_BG = "rgba(255,255,255,0.09)";
-
-      if (isActive) {
-        a.style.background = ACTIVE_BG;
-        a.style.fontWeight = "600";
-      }
-
-      a.addEventListener("mouseenter", () => {
-        a.style.background = HOVER_BG;
-        a.style.transform = "translateY(-0.5px)";
-      });
-      a.addEventListener("mouseleave", () => {
-        a.style.background = isActive ? ACTIVE_BG : "transparent";
-        a.style.transform = "none";
-      });
+        const isActive = normalizePathname(cur) === normalizePathname(target);
+        if (isActive) a.setAttribute("aria-current", "page");
+      } catch (_) {}
 
       panel.appendChild(a);
     });
 
     document.body.appendChild(panel);
 
-    // 点击外部关闭
-    const onDocPointerDown = (e) => {
-      if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
-        closePanel();
-        anchorEl.setAttribute("aria-expanded", "false");
-        if (caretEl) caretEl.textContent = " ▾";
-      }
-    };
-    document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
+    // enter 动效：下一帧加 open
+    requestAnimationFrame(() => {
+      panel.classList.add("open");
+    });
 
-    panel._cleanup = () => {
-      document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
-    };
+    // outside click close
+    setTimeout(() => {
+      const onDocClick = (e) => {
+        if (!panel.contains(e.target) && e.target !== anchorEl) {
+          closePanel();
+          anchorEl.setAttribute("aria-expanded", "false");
+          if (caretEl) caretEl.textContent = " ▾";
+        }
+      };
+      document.addEventListener("click", onDocClick, { once: true, capture: true });
+    }, 0);
 
+    // scroll/resize close
     const onClose = () => {
       closePanel();
       anchorEl.setAttribute("aria-expanded", "false");
@@ -261,86 +186,53 @@
     const a = globalItem.querySelector("a.md-tabs__link");
     if (!a) return;
 
-    // 避免重复绑定：替换成 clone
+    // clone 避免重复绑定
     const a2 = a.cloneNode(true);
     a.replaceWith(a2);
 
-    // 原链接，用于 dropdown 第一个 item
     const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
     const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
 
-    // ✅ 关键：让 tab 自身不再导航（否则必然会跳）
-    a2.setAttribute("href", "#");
-
+    // 关键：Random tab 点击不跳转，而是开关菜单
     a2.textContent = "Random";
+    a2.setAttribute("href", "#");
     a2.setAttribute("aria-haspopup", "menu");
     a2.setAttribute("aria-expanded", "false");
-    a2.style.cursor = "pointer";
 
     const caret = document.createElement("span");
     caret.textContent = " ▾";
     caret.style.marginLeft = "4px";
     caret.style.fontSize = "0.85em";
     caret.style.position = "relative";
-    caret.style.top = "1px"; // 稍微再调低一点
-    caret.style.opacity = "0.85";
+    caret.style.top = "0px"; // 你说偏高：这里稍微往下就是 0 或 1
     a2.appendChild(caret);
 
-    function setOpen(open) {
-      a2.setAttribute("aria-expanded", open ? "true" : "false");
-      caret.textContent = open ? " ▴" : " ▾";
-    }
+    a2.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    function toggle() {
       if (isPanelOpen()) {
         closePanel();
-        setOpen(false);
+        a2.setAttribute("aria-expanded", "false");
+        caret.textContent = " ▾";
         return;
       }
 
       const items = [
         { label: "Random", href: new URL(originalHref, document.baseURI).toString() },
-        { label: "Custom random", href: customHref },
       ];
 
       const courseScope = getCourseScopeIfAny();
       if (courseScope) {
-        items.splice(1, 0, {
-          label: "Random in course",
-          href: new URL(originalHref, document.baseURI).toString(),
-        });
+        // Random in course 复用同一 random 页面（random.js 会读 scope）
+        items.push({ label: "Random in course", href: new URL(originalHref, document.baseURI).toString() });
       }
+
+      items.push({ label: "Custom random", href: customHref });
 
       buildPanel(a2, items, caret);
-      setOpen(true);
-    }
-
-    // ✅ 必须同时拦截 pointerdown + click（否则 click 仍会导航）
-    const stop = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-
-    a2.addEventListener("pointerdown", (e) => {
-      stop(e);
-      toggle();
-    });
-
-    a2.addEventListener("click", (e) => {
-      stop(e);
-      // click 不再 toggle，避免一次手势触发两次（pointerdown 已经做了）
-    });
-
-    // ✅ 键盘支持：Enter / Space 打开关闭
-    a2.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        stop(e);
-        toggle();
-      } else if (e.key === "Escape") {
-        stop(e);
-        closePanel();
-        setOpen(false);
-      }
+      a2.setAttribute("aria-expanded", "true");
+      caret.textContent = " ▴";
     });
   }
 
