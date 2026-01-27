@@ -962,7 +962,6 @@ html[data-md-color-scheme="slate"]
 .md-tabs__link[href*="random"],
 #course-random-link {
   border: 0 !important;
-  box-shadow: none;
 }
 
 /* open 状态不做“框框”，只做非常轻的呼吸感 */
