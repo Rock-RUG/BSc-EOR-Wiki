@@ -696,98 +696,33 @@
   text-decoration: underline;
 }
 
-/* ================================
-   Random dropdown (tabs) - revised
-   Fix:
-   1) consistent vertical spacing
-   2) separators always visible
-   ================================ */
+/* === FORCE FIX for Random dropdown spacing + separators === */
 
-html[data-md-color-scheme="default"] {
-  --random-dd-bg: rgba(255, 255, 255, 0.96);
-  --random-dd-border: rgba(0, 0, 0, 0.10);
-  --random-dd-shadow: rgba(0, 0, 0, 0.18);
-  --random-dd-hover: rgba(0, 0, 0, 0.06);
-  --random-dd-active: rgba(0, 0, 0, 0.04);
-  --random-dd-sep: rgba(0, 0, 0, 0.14);
+/* Menu items: identical row height, no inherited margins */
+#random-dropdown-panel .md-random-dropdown-item{
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+
+  height: 42px !important;        /* 关键：直接固定高度，不用 min-height */
+  padding: 0 14px !important;
+
+  line-height: 20px !important;
+  font-size: 14px !important;
+  border-radius: 10px !important;
 }
 
-html[data-md-color-scheme="slate"] {
-  --random-dd-bg: rgba(30, 33, 41, 0.96);
-  --random-dd-border: rgba(255, 255, 255, 0.10);
-  --random-dd-shadow: rgba(0, 0, 0, 0.28);
-  --random-dd-hover: rgba(255, 255, 255, 0.10);
-  --random-dd-active: rgba(255, 255, 255, 0.07);
-  --random-dd-sep: rgba(255, 255, 255, 0.14);
-}
+/* Separator: make it a real 1px bar (so it can't "disappear") */
+#random-dropdown-panel .md-random-dropdown-sep{
+  display: block !important;
 
-/* Panel */
-#random-dropdown-panel.md-random-dropdown-panel {
-  position: fixed;
-  z-index: 9999;
-  background: var(--random-dd-bg);
-  border: 1px solid var(--random-dd-border);
-  border-radius: 14px;
+  height: 1px !important;         /* 关键：让它本身就是 1px 高 */
+  margin: 8px 12px !important;    /* 控制上下间距 */
 
-  /* padding 稍微加大，让分隔线不贴边 */
-  padding: 8px;
+  background: var(--random-dd-sep) !important;  /* 直接画线 */
+  border: 0 !important;
 
-  box-shadow: 0 10px 28px var(--random-dd-shadow);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  max-width: 320px;
-  overflow: hidden;
-}
-
-/* Items: make every row visually identical in height */
-#random-dropdown-panel .md-random-dropdown-item {
-  display: flex;
-  align-items: center;
-
-  /* 关键：统一高度感 */
-  min-height: 40px;
-
-  /* 关键：统一左右内边距 */
-  padding: 0 14px;
-
-  border-radius: 10px;
-  text-decoration: none;
-  color: inherit;
-
-  /* 字体你可以继续调，但保持 line-height 固定 */
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-
-  white-space: nowrap;
-  cursor: pointer;
-
-  transition: background 120ms ease, transform 120ms ease;
-}
-
-#random-dropdown-panel .md-random-dropdown-item:hover {
-  background: var(--random-dd-hover);
-  transform: translateY(-0.5px);
-}
-
-#random-dropdown-panel .md-random-dropdown-item.is-active {
-  background: var(--random-dd-active);
-  font-weight: 600;
-}
-
-/* Separator: use border-top instead of background 1px (more robust) */
-#random-dropdown-panel .md-random-dropdown-sep {
-  height: 0;
-  margin: 8px 12px;
-  border-top: 1px solid var(--random-dd-sep);
-}
-
-/* Caret on the Random tab */
-.md-random-dropdown-caret {
-  margin-left: 4px;
-  font-size: 0.85em;
-  position: relative;
-  top: 1px;
-  opacity: 0.85;
+  padding: 0 !important;
+  line-height: 0 !important;      /* 防止它继承行高导致额外空隙 */
+  font-size: 0 !important;
 }
