@@ -567,10 +567,9 @@
 }
 
 /* Push the random-related tab group to the far right */
-.md-tabs__item.random-right-start {
+.md-tabs__list .md-tabs__item.random-right-start {
   margin-left: auto;
 }
-
 
 
 /* ===== Trending page ===== */
@@ -697,60 +696,3 @@
   text-decoration: underline;
 }
 
-/* ===== Random dropdown: FORCE styling ===== */
-#random-dropdown-panel {
-  position: fixed !important;
-  z-index: 9999 !important;
-
-  min-width: 220px !important;
-  max-width: 320px !important;
-
-  background: rgba(25, 28, 33, 0.92) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 14px !important;
-
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45) !important;
-  backdrop-filter: blur(10px) !important;
-
-  padding: 0.25rem 0 !important;
-
-  opacity: 0 !important;
-  transform: translateY(-6px) scale(0.98) !important;
-  pointer-events: none !important;
-  transition: opacity 160ms ease, transform 180ms cubic-bezier(.2,.9,.2,1) !important;
-
-  /* 关键：强制字体继承与你站点一致 */
-  font-family: var(--md-text-font-family) !important;
-}
-
-#random-dropdown-panel.open {
-  opacity: 1 !important;
-  transform: translateY(0) scale(1) !important;
-  pointer-events: auto !important;
-}
-
-#random-dropdown-panel a.item {
-  display: flex !important;
-  align-items: center !important;
-
-  /* 关键：强制字号 */
-  font-size: 0.875rem !important;
-  font-weight: 400 !important;
-  line-height: 1.25 !important;
-
-  color: var(--md-default-fg-color) !important;
-  text-decoration: none !important;
-  white-space: nowrap !important;
-
-  /* 关键：等距 */
-  padding: 0.55rem 0.9rem !important;
-  margin: 0 !important;
-}
-
-#random-dropdown-panel a.item + a.item {
-  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-}
-
-#random-dropdown-panel a.item:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-}
