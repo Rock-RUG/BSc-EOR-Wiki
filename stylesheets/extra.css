@@ -830,3 +830,70 @@ html[data-md-color-scheme="slate"] {
 #random-dropdown-panel .md-random-dropdown-item:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
+
+
+/* ================================
+   Random dropdown – unified brand blue
+   (independent of day / night mode)
+   ================================ */
+
+#random-dropdown-panel.md-random-dropdown-panel {
+  /* 主色调：顶部蓝 */
+  --brand-blue: rgb(63, 81, 181);
+
+  background: rgba(63, 81, 181, 0.88);  /* 主蓝 + 轻透明 */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 6px;
+
+  /* 毛玻璃保留 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* 阴影更偏“浮在蓝色之上” */
+  box-shadow:
+    0 12px 30px rgba(20, 30, 90, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+  color: #ffffff;
+}
+
+/* Dropdown items */
+#random-dropdown-panel .md-random-dropdown-item {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Hover */
+#random-dropdown-panel .md-random-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+/* Active */
+#random-dropdown-panel .md-random-dropdown-item.is-active {
+  background: rgba(255, 255, 255, 0.20);
+  font-weight: 600;
+}
+
+/* 左侧强调条（你原来就有） */
+#random-dropdown-panel .md-random-dropdown-item::before {
+  background: transparent;
+}
+
+#random-dropdown-panel
+.md-random-dropdown-item:hover::before,
+#random-dropdown-panel
+.md-random-dropdown-item.is-active::before {
+  background: #ffffff;
+}
+
+/* 分隔线 */
+#random-dropdown-panel .md-random-dropdown-sep {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+
+html[data-md-color-scheme="slate"]
+#random-dropdown-panel.md-random-dropdown-panel {
+  background: rgba(48, 62, 140, 0.90);
+}
