@@ -698,48 +698,45 @@
 }
 
 /* ================================
-   Random dropdown (final)
-   Target: #random-dropdown-panel + .item
+   Random dropdown (top nav)
+   Works with: #random-dropdown-panel > a.item
    ================================ */
 
-/* panel */
-#random-dropdown-panel{
+#random-dropdown-panel {
   position: fixed;
-  z-index: 999;
-  min-width: 220px;
+  z-index: 9999;
 
-  padding: 6px 0;
+  min-width: 220px;
+  max-width: 320px;
+
+  background: rgba(25, 28, 33, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
 
-  background: rgba(26, 28, 33, 0.92);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 18px 45px rgba(0,0,0,.35);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+
+  padding: 0.25rem 0;
 
   /* enter/leave animation base */
   opacity: 0;
-  transform: translateY(-8px) scale(.985);
+  transform: translateY(-6px) scale(0.98);
   pointer-events: none;
-
-  transition:
-    opacity 140ms ease,
-    transform 180ms cubic-bezier(.2,.9,.2,1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  transition: opacity 160ms ease, transform 180ms cubic-bezier(.2,.9,.2,1);
 }
 
-/* when open */
-#random-dropdown-panel.open{
+#random-dropdown-panel.open {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
-/* items */
-#random-dropdown-panel a.item{
+/* Items: match md-tabs__link size/feel */
+#random-dropdown-panel a.item {
   display: flex;
   align-items: center;
 
-  font-size: 0.875rem;
+  font-size: 0.875rem;           /* match top tabs scale */
   font-weight: 400;
   line-height: 1.25;
 
@@ -748,31 +745,22 @@
   white-space: nowrap;
 
   padding: 0.55rem 0.9rem;
-  margin: 0; /* keep equal spacing */
 }
 
-/* separators between every two items */
-#random-dropdown-panel a.item + a.item{
-  border-top: 1px solid rgba(255,255,255,.08);
+/* Equal spacing + divider between every two items */
+#random-dropdown-panel a.item + a.item {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* hover / focus */
-#random-dropdown-panel a.item:hover,
-#random-dropdown-panel a.item:focus{
-  background: rgba(255,255,255,.06);
+/* Hover: subtle highlight */
+#random-dropdown-panel a.item:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
-/* optional: make active page slightly highlighted */
-#random-dropdown-panel a.item[aria-current="page"]{
-  background: rgba(255,255,255,.08);
+/* Active/current page */
+#random-dropdown-panel a.item[aria-current="page"] {
+  color: var(--md-accent-fg-color);
 }
 
-/* reduce “big card” feel on very small screens */
-@media (max-width: 500px){
-  #random-dropdown-panel{
-    min-width: 200px;
-  }
-  #random-dropdown-panel a.item{
-    padding: 0.5rem 0.85rem;
-  }
-}
+/* Align dropdown with the Random tab text better (optional)
+   If you still feel it is shifted, we can fine-tune in JS by using rect.left + offset. */

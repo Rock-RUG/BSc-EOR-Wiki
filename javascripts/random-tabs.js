@@ -124,7 +124,7 @@
 
     const rect = anchorEl.getBoundingClientRect();
     const maxW = 320;
-    const left = Math.max(8, Math.min(rect.left, window.innerWidth - maxW - 8));
+    const left = Math.max(8, Math.min(rect.left - 12, window.innerWidth - maxW - 8));
     const top = Math.min(rect.bottom + 10, window.innerHeight - 120);
 
     panel.style.left = `${left}px`;
