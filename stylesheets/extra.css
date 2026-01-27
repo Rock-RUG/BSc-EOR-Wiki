@@ -696,3 +696,83 @@
   text-decoration: underline;
 }
 
+/* ================================
+   Random dropdown (tabs)
+   - theme-aware via data-md-color-scheme
+   - consistent vertical rhythm
+   ================================ */
+
+/* Per-scheme tokens (match Material palette feel) */
+html[data-md-color-scheme="default"] {
+  --random-dd-bg: rgba(255, 255, 255, 0.96);
+  --random-dd-border: rgba(0, 0, 0, 0.10);
+  --random-dd-shadow: rgba(0, 0, 0, 0.18);
+  --random-dd-hover: rgba(0, 0, 0, 0.06);
+  --random-dd-active: rgba(0, 0, 0, 0.04);
+  --random-dd-sep: rgba(0, 0, 0, 0.10);
+}
+
+html[data-md-color-scheme="slate"] {
+  --random-dd-bg: rgba(30, 33, 41, 0.96);
+  --random-dd-border: rgba(255, 255, 255, 0.10);
+  --random-dd-shadow: rgba(0, 0, 0, 0.28);
+  --random-dd-hover: rgba(255, 255, 255, 0.09);
+  --random-dd-active: rgba(255, 255, 255, 0.06);
+  --random-dd-sep: rgba(255, 255, 255, 0.08);
+}
+
+/* Panel */
+#random-dropdown-panel.md-random-dropdown-panel {
+  position: fixed;
+  z-index: 9999;
+  background: var(--random-dd-bg);
+  border: 1px solid var(--random-dd-border);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 10px 28px var(--random-dd-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  max-width: 280px;
+  overflow: hidden;
+}
+
+/* Items: enforce consistent vertical spacing */
+#random-dropdown-panel .md-random-dropdown-item {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease;
+}
+
+#random-dropdown-panel .md-random-dropdown-item:hover {
+  background: var(--random-dd-hover);
+  transform: translateY(-0.5px);
+}
+
+#random-dropdown-panel .md-random-dropdown-item.is-active {
+  background: var(--random-dd-active);
+  font-weight: 600;
+}
+
+/* Separator: always present before Custom random */
+#random-dropdown-panel .md-random-dropdown-sep {
+  height: 1px;
+  margin: 6px 10px;
+  background: var(--random-dd-sep);
+}
+
+/* Caret on the Random tab */
+.md-random-dropdown-caret {
+  margin-left: 4px;
+  font-size: 0.85em;
+  position: relative;
+  top: 1px;
+  opacity: 0.85;
+}
