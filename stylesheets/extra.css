@@ -941,8 +941,11 @@ html[data-md-color-scheme="slate"]
 .md-tabs__link:hover {
   background: rgba(255, 255, 255, 0.10);
   transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.16),
+    0 0 0 6px rgba(255, 255, 255, 0.10);
 }
+
 
 /* active 不要变成一块死板背景，改成更轻的“气质强调” */
 .md-tabs__link--active {
