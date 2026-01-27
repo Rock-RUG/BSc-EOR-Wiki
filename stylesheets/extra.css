@@ -1033,3 +1033,16 @@ html[data-md-color-scheme="slate"]
 .md-tabs__link[aria-expanded="true"]{
   background: rgba(255, 255, 255, 0.10);
 }
+
+/* ================================
+   Tabs highlight shape: rounded only
+   (match dropdown item style)
+   ================================ */
+
+/* active / open / hover 统一成圆角胶囊 */
+.md-tabs__link:hover,
+.md-tabs__link--active,
+.md-tabs__link.is-open,
+.md-tabs__link[aria-expanded="true"] {
+  border-radius: 999px;
+}
