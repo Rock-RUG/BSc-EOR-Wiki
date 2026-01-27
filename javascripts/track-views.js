@@ -24,71 +24,66 @@
     return p.replace(/^\/+/, "");
   }
 
-  function isConceptRelPath(rel) {
-  const p = String(rel || "").replace(/^\/+/, "");
-  const low = p.toLowerCase();
-  if (!low) return false;
+  // 只统计 concept 内容页（你可以继续按需加规则）
+  function isConceptRelPath(relPath) {
+    const p = String(relPath || "").replace(/^\/+/, "");
+    const low = p.toLowerCase();
+    if (!low) return false;
 
-  // 排除明显非内容页
-  const bad = ["assets/", "search", "sitemap", "404", "random", "trending"];
-  if (bad.some(x => low.includes(x))) return false;
+    // 只统计 html
+    if (!low.endsWith(".html")) return false;
 
-  // 关键：排除所有目录 index（包括 Year-1/index.html）
-  if (low === "index.html" || low.endsWith("/index.html")) return false;
+    // 排除所有目录 index（包括 Year-1/index.html）
+    if (low === "index.html" || low.endsWith("/index.html")) return false;
 
-  // 只统计 html 内容页
-  if (!low.endsWith(".html")) return false;
+    // 排除明显非内容页（按你的实际路径可继续加）
+    const badSubstr = ["assets/", "search", "sitemap", "404", "random", "trending"];
+    if (badSubstr.some((x) => low.includes(x))) return false;
 
-  // 可选：排除目录/课程 landing 页（如果你的课程页不是 concept）
-  // 例如 Year-1/1a-xxx/index.html 已被上面挡掉
-const rel = relPath.replace(/^\//, "").toLowerCase();
+    // 排除 about / how-it-works（按你的实际路径）
+    if (
+      low.startsWith("about/") ||
+      low === "about.html" ||
+      low.startsWith("how-it-works/") ||
+      low === "how-it-works.html" ||
+      low.includes("about-this-wiki")
+    ) {
+      return false;
+    }
 
-// 排除 about / how-it-works（按你的实际路径改关键词）
-if (
-  rel.startsWith("about/") ||
-  rel === "about.html" ||
-  rel.startsWith("how-it-works/") ||
-  rel === "how-it-works.html" ||
-  rel.includes("about-this-wiki") // 保险：标题页/旧路径
-) {
-  return false;
-}
-  return true;
-}
-
+    return true;
+  }
 
   function send(path, title) {
-  const payload = JSON.stringify({ path, title });
+    const payload = JSON.stringify({ path, title });
 
-  fetch(TRACK_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: payload,
-    keepalive: true,
-  })
-    .then(async (r) => {
-      const t = await r.text().catch(() => "");
-      console.log("[track] POST", r.status, t);
+    fetch(TRACK_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+      keepalive: true,
     })
-    .catch((e) => console.error("[track] POST failed", e));
-}
-
+      .then(async (r) => {
+        const t = await r.text().catch(() => "");
+        console.log("[track] POST", r.status, t);
+      })
+      .catch((e) => console.error("[track] POST failed", e));
+  }
 
   function trackOncePerPage() {
-  const rel = relPathFromSiteRoot(window.location.pathname);
-  if (!isConceptRelPath(rel)) return;
+    const rel = relPathFromSiteRoot(window.location.pathname);
+    if (!isConceptRelPath(rel)) return;
 
-  const key = "view_last_v1:" + rel;
-  const now = Date.now();
-  try {
-    const last = Number(localStorage.getItem(key) || "0");
-    if (now - last < 60_000) return; // 60 秒冷却
-    localStorage.setItem(key, String(now));
-  } catch (_) {}
+    const key = "view_last_v1:" + rel;
+    const now = Date.now();
+    try {
+      const last = Number(localStorage.getItem(key) || "0");
+      if (now - last < 60_000) return; // 60 秒冷却
+      localStorage.setItem(key, String(now));
+    } catch (_) {}
 
-  send(rel, document.title || "");
-}
-
+    send(rel, document.title || "");
+  }
 
   function init() {
     console.log("[track] init fired", window.location.pathname);
