@@ -697,70 +697,60 @@
   text-decoration: underline;
 }
 
-/* ================================
-   Random dropdown (top nav)
-   Works with: #random-dropdown-panel > a.item
-   ================================ */
-
+/* ===== Random dropdown: FORCE styling ===== */
 #random-dropdown-panel {
-  position: fixed;
-  z-index: 9999;
+  position: fixed !important;
+  z-index: 9999 !important;
 
-  min-width: 220px;
-  max-width: 320px;
+  min-width: 220px !important;
+  max-width: 320px !important;
 
-  background: rgba(25, 28, 33, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+  background: rgba(25, 28, 33, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
 
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(10px) !important;
 
-  padding: 0.25rem 0;
+  padding: 0.25rem 0 !important;
 
-  /* enter/leave animation base */
-  opacity: 0;
-  transform: translateY(-6px) scale(0.98);
-  pointer-events: none;
-  transition: opacity 160ms ease, transform 180ms cubic-bezier(.2,.9,.2,1);
+  opacity: 0 !important;
+  transform: translateY(-6px) scale(0.98) !important;
+  pointer-events: none !important;
+  transition: opacity 160ms ease, transform 180ms cubic-bezier(.2,.9,.2,1) !important;
+
+  /* 关键：强制字体继承与你站点一致 */
+  font-family: var(--md-text-font-family) !important;
 }
 
 #random-dropdown-panel.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
 }
 
-/* Items: match md-tabs__link size/feel */
 #random-dropdown-panel a.item {
-  display: flex;
-  align-items: center;
+  display: flex !important;
+  align-items: center !important;
 
-  font-size: 0.875rem;           /* match top tabs scale */
-  font-weight: 400;
-  line-height: 1.25;
+  /* 关键：强制字号 */
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
 
-  color: var(--md-default-fg-color);
-  text-decoration: none;
-  white-space: nowrap;
+  color: var(--md-default-fg-color) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
 
-  padding: 0.55rem 0.9rem;
+  /* 关键：等距 */
+  padding: 0.55rem 0.9rem !important;
+  margin: 0 !important;
 }
 
-/* Equal spacing + divider between every two items */
 #random-dropdown-panel a.item + a.item {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Hover: subtle highlight */
 #random-dropdown-panel a.item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.06) !important;
 }
-
-/* Active/current page */
-#random-dropdown-panel a.item[aria-current="page"] {
-  color: var(--md-accent-fg-color);
-}
-
-/* Align dropdown with the Random tab text better (optional)
-   If you still feel it is shifted, we can fine-tune in JS by using rect.left + offset. */
