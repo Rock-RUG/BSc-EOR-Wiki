@@ -567,9 +567,10 @@
 }
 
 /* Push the random-related tab group to the far right */
-.md-tabs__list .md-tabs__item.random-right-start {
+.md-tabs__item.random-right-start {
   margin-left: auto;
 }
+
 
 
 /* ===== Trending page ===== */
