@@ -982,3 +982,22 @@ html[data-md-color-scheme="slate"]
   transform: rotate(180deg);
   opacity: 1;
 }
+
+/* ================================
+   Tabs spacing: restore Material default
+   ================================ */
+
+/* 恢复接近原生的左右 padding */
+.md-tabs__link {
+  padding: 0.25rem 0.55rem;  /* 比 Material 默认只轻微圆润 */
+}
+
+/* 不允许 tab 本身影响布局间距 */
+.md-tabs__item {
+  margin: 0 !important;
+}
+
+/* 不使用 gap 控制 tab 距离，完全交还给 Material */
+.md-tabs__list {
+  gap: 0 !important;
+}
