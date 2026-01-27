@@ -699,3 +699,42 @@
 .md-typeset a.tag-search-link:hover code {
   text-decoration: underline;
 }
+
+/* ================================
+   Random dropdown — final spacing fix
+   ================================ */
+
+#random-dropdown-panel {
+  padding: 0.4rem 0;
+  min-width: 220px;
+}
+
+/* All items */
+#random-dropdown-panel a.item {
+  display: block;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Hover */
+#random-dropdown-panel a.item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ---- GROUPING LOGIC ---- */
+
+/* Everything except the first item belongs to "secondary group" */
+#random-dropdown-panel a.item:not(:first-child) {
+  margin-top: 0.15rem;
+}
+
+/* Visual separator before secondary group */
+#random-dropdown-panel a.item:nth-child(2) {
+  margin-top: 0.45rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
