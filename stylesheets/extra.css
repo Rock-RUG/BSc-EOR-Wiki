@@ -929,7 +929,7 @@ html[data-md-color-scheme="slate"]
 
 .md-tabs__link {
   border-radius: 999px;
-  padding: 0.28rem 0.70rem;
+  padding: revert;
   transition:
     background 160ms ease,
     transform 160ms ease,
