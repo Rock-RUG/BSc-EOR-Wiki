@@ -782,7 +782,7 @@ html[data-md-color-scheme="slate"] {
 /* 1) 统一 item 的节奏，避免在不同页面出现上下间距不一致 */
 #random-dropdown-panel.md-random-dropdown-panel .md-random-dropdown-item {
   display: block;
-  padding: 10px 12px;   /* 你可以 8-12 之间微调，但要固定 */
+  padding: 8px 10px;   /* 你可以 8-12 之间微调，但要固定 */
   line-height: 1.1;
   margin: 0;            /* 强制不要用 margin 参与排版 */
 }
