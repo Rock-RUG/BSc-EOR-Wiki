@@ -29,7 +29,6 @@ function displayTitle(item) {
   return course ? `${page} - ${course}` : page;
 }
 
-
 (function () {
   const API_BASE = "https://mkdocs-hot.eorwikihot.workers.dev";
   const PAGE_PATH = "trending.html";
@@ -43,11 +42,12 @@ function displayTitle(item) {
   }
 
   function isTrendingPage() {
-  return !!document.getElementById("trending-app");
-}
+    return !!document.getElementById("trending-app");
+  }
 
   const PERIODS = [
-    { key: "24h", label: "Today", limit: 10 },
+    // Note: "Today" is a UTC calendar day (not a rolling last-24-hours window)
+    { key: "today", label: "Today", limit: 10 },
     { key: "7d", label: "This week", limit: 10 },
     { key: "30d", label: "This month", limit: 10 },
     { key: "all", label: "All time", limit: 20 },
@@ -66,40 +66,38 @@ function displayTitle(item) {
     const header = el("div", "trending-block-header");
     header.appendChild(el("h2", "trending-block-title", title));
     // 仅 Most views 显示右侧数字含义
-if (metric === "views") {
-  header.appendChild(el("div", "trending-metahead", "Total views"));
-}
-
+    if (metric === "views") {
+      header.appendChild(el("div", "trending-metahead", "Total views"));
+    }
 
     const tabs = el("div", "trending-tabs");
-PERIODS.forEach(p => {
-  const btn = el("button", "trending-tab", p.label);
-  btn.type = "button";
-  btn.dataset.period = p.key;
-  tabs.appendChild(btn);
-});
+    PERIODS.forEach((p) => {
+      const btn = el("button", "trending-tab", p.label);
+      btn.type = "button";
+      btn.dataset.period = p.key;
+      tabs.appendChild(btn);
+    });
 
     header.appendChild(tabs);
 
     const list = el("ol", "trending-list");
     const footer = el("div", "trending-footer");
 
-const prev = el("button", "trending-page-btn");
-prev.type = "button";
-prev.setAttribute("aria-label", "Previous page");
-prev.textContent = "←";
+    const prev = el("button", "trending-page-btn");
+    prev.type = "button";
+    prev.setAttribute("aria-label", "Previous page");
+    prev.textContent = "←";
 
-const pages = el("div", "trending-pages");   // 👈 页码容器
+    const pages = el("div", "trending-pages"); // 👈 页码容器
 
-const next = el("button", "trending-page-btn");
-next.type = "button";
-next.setAttribute("aria-label", "Next page");
-next.textContent = "→";
+    const next = el("button", "trending-page-btn");
+    next.type = "button";
+    next.setAttribute("aria-label", "Next page");
+    next.textContent = "→";
 
-footer.appendChild(prev);
-footer.appendChild(pages);
-footer.appendChild(next);
-
+    footer.appendChild(prev);
+    footer.appendChild(pages);
+    footer.appendChild(next);
 
     block.appendChild(header);
     block.appendChild(list);
@@ -113,7 +111,7 @@ footer.appendChild(next);
     };
 
     async function load() {
-      const periodConfig = PERIODS.find(x => x.key === state.period) || PERIODS[2];
+      const periodConfig = PERIODS.find((x) => x.key === state.period) || PERIODS[2];
       const limit = periodConfig.limit;
 
       list.innerHTML = "";
@@ -121,14 +119,12 @@ footer.appendChild(next);
 
       // popular/comments 暂时占位
       if (metric !== "views") {
-  list.innerHTML = "";
-  list.style.listStyle = "none";
-  list.appendChild(el("li", "trending-empty", "Coming soon"));
-  footer.style.display = "none";
-  return;
-}
-
-
+        list.innerHTML = "";
+        list.style.listStyle = "none";
+        list.appendChild(el("li", "trending-empty", "Coming soon"));
+        footer.style.display = "none";
+        return;
+      }
 
       const url = new URL(API_BASE + "/hot");
       url.searchParams.set("metric", metric);
@@ -161,39 +157,38 @@ footer.appendChild(next);
       }
 
       if (state.period === "all") {
-  footer.style.display = "flex";
+        footer.style.display = "flex";
 
-  const totalPages = Math.max(1, Math.ceil(state.total / limit));
-  const currentPage = Math.floor(state.offset / limit) + 1;
+        const totalPages = Math.max(1, Math.ceil(state.total / limit));
+        const currentPage = Math.floor(state.offset / limit) + 1;
 
-  prev.disabled = currentPage <= 1;
-  next.disabled = currentPage >= totalPages;
+        prev.disabled = currentPage <= 1;
+        next.disabled = currentPage >= totalPages;
 
-  // 渲染页码：1 2 3 ... totalPages，当前高亮
-  pages.innerHTML = "";
-  for (let p = 1; p <= totalPages; p++) {
-    const b = el("button", "trending-page-num", String(p));
-    b.type = "button";
-    b.dataset.page = String(p);
-    if (p === currentPage) b.classList.add("is-active");
-    pages.appendChild(b);
-  }
-} else {
-  footer.style.display = "none";
-  pages.innerHTML = "";
-}
-// 🔢 MathJax：对动态插入的标题重新 typeset
-if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
-  window.MathJax.typesetPromise([list]).catch(() => {});
-}
+        // 渲染页码：1 2 3 ... totalPages，当前高亮
+        pages.innerHTML = "";
+        for (let p = 1; p <= totalPages; p++) {
+          const b = el("button", "trending-page-num", String(p));
+          b.type = "button";
+          b.dataset.page = String(p);
+          if (p === currentPage) b.classList.add("is-active");
+          pages.appendChild(b);
+        }
+      } else {
+        footer.style.display = "none";
+        pages.innerHTML = "";
+      }
 
+      // 🔢 MathJax：对动态插入的标题重新 typeset
+      if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
+        window.MathJax.typesetPromise([list]).catch(() => {});
+      }
     }
 
     function setActiveTab() {
-      tabs.querySelectorAll(".trending-tab").forEach(btn => {
-  btn.classList.toggle("is-active", btn.dataset.period === state.period);
-});
-
+      tabs.querySelectorAll(".trending-tab").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.dataset.period === state.period);
+      });
     }
 
     tabs.addEventListener("click", (e) => {
@@ -206,26 +201,25 @@ if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
     });
 
     prev.addEventListener("click", () => {
-      const limit = (PERIODS.find(x => x.key === state.period) || PERIODS[2]).limit;
+      const limit = (PERIODS.find((x) => x.key === state.period) || PERIODS[2]).limit;
       state.offset = Math.max(0, state.offset - limit);
       load();
     });
 
     next.addEventListener("click", () => {
-      const limit = (PERIODS.find(x => x.key === state.period) || PERIODS[2]).limit;
+      const limit = (PERIODS.find((x) => x.key === state.period) || PERIODS[2]).limit;
       state.offset = state.offset + limit;
       load();
     });
 
     pages.addEventListener("click", (e) => {
-  const btn = e.target && e.target.closest(".trending-page-num");
-  if (!btn) return;
-  const p = Number(btn.dataset.page || "1");
-  const limit = (PERIODS.find(x => x.key === state.period) || PERIODS[2]).limit;
-  state.offset = (p - 1) * limit;
-  load();
-});
-
+      const btn = e.target && e.target.closest(".trending-page-num");
+      if (!btn) return;
+      const p = Number(btn.dataset.page || "1");
+      const limit = (PERIODS.find((x) => x.key === state.period) || PERIODS[2]).limit;
+      state.offset = (p - 1) * limit;
+      load();
+    });
 
     // 默认 this month
     setActiveTab();
