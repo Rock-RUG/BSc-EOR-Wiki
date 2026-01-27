@@ -794,3 +794,19 @@ html[data-md-color-scheme="slate"] {
   background: var(--random-dd-sep);
   pointer-events: none;
 }
+/* ===== Random dropdown: tighter spacing + visible dividers ===== */
+
+/* item：整体调紧一点 */
+#random-dropdown-panel .md-random-dropdown-item {
+  padding: 7px 12px;    /* 比之前小 */
+  line-height: 1.3;
+}
+
+/* separator：强制画线 */
+#random-dropdown-panel .md-random-dropdown-sep {
+  display: block;
+  height: 1px;
+  margin: 4px 10px;     /* 比之前紧 */
+  background-color: currentColor;
+  opacity: 0.15;        /* 很淡，但一定可见 */
+}
