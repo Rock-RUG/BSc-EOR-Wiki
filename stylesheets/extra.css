@@ -922,3 +922,63 @@ html[data-md-color-scheme="slate"]
   display: inline-block;
   transition: transform 140ms ease;
 }
+
+/* ================================
+   Tabs: soft pill + lively hover
+   ================================ */
+
+.md-tabs__link {
+  border-radius: 999px;
+  padding: 0.28rem 0.70rem;
+  transition:
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+/* 所有 tabs 的 hover 都有“灵气”的轻跳动 */
+.md-tabs__link:hover {
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+}
+
+/* active 不要变成一块死板背景，改成更轻的“气质强调” */
+.md-tabs__link--active {
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+}
+
+/* ================================
+   Dropdown trigger tabs: NO box distinction
+   ================================ */
+
+/* 不管是 random 还是未来 login，下拉触发器不要额外边框 */
+.md-tabs__link.md-tab-dropdown,
+.md-tabs__link[href*="random"],
+#course-random-link {
+  border: 0 !important;
+  box-shadow: none;
+}
+
+/* open 状态不做“框框”，只做非常轻的呼吸感 */
+.md-tabs__link.md-tab-dropdown.is-open,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0,0,0,.18);
+}
+
+/* caret 动起来，但不要吵 */
+.md-random-dropdown-caret {
+  display: inline-block;
+  transition: transform 160ms ease, opacity 160ms ease;
+  opacity: 0.85;
+}
+
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
