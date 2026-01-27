@@ -5,6 +5,21 @@
 
   const GLOBAL_LINK_SELECTOR = 'a.md-tabs__link[href*="random"]';
 
+  // ===== Tab dropdown open/close state (for unified component styling) =====
+  function markDropdownOpen(triggerEl) {
+    document.body.classList.add("has-tab-dropdown-open");
+    if (!triggerEl) return;
+    triggerEl.classList.add("is-open");
+    triggerEl.setAttribute("aria-expanded", "true");
+  }
+
+  function markDropdownClosed(triggerEl) {
+    document.body.classList.remove("has-tab-dropdown-open");
+    if (!triggerEl) return;
+    triggerEl.classList.remove("is-open");
+    triggerEl.setAttribute("aria-expanded", "false");
+  }
+
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
     const link =
@@ -144,7 +159,7 @@
   }
 
   // items: { kind: "link", label, href, scope? } or { kind:"sep" }
-  function buildPanel(anchorEl, items, caretEl) {
+  function buildPanel(anchorEl, items, caretEl, onCloseCb) {
     closePanel();
 
     const panel = document.createElement("div");
@@ -209,12 +224,15 @@
 
     document.body.appendChild(panel);
 
+    const closeAll = () => {
+      closePanel();
+      if (typeof onCloseCb === "function") onCloseCb();
+    };
+
     // 点击外部关闭
     const onDocPointerDown = (e) => {
       if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
-        closePanel();
-        anchorEl.setAttribute("aria-expanded", "false");
-        if (caretEl) caretEl.textContent = " ▾";
+        closeAll();
       }
     };
     document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
@@ -223,13 +241,8 @@
       document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
     };
 
-    const onClose = () => {
-      closePanel();
-      anchorEl.setAttribute("aria-expanded", "false");
-      if (caretEl) caretEl.textContent = " ▾";
-    };
-    window.addEventListener("scroll", onClose, { passive: true, once: true });
-    window.addEventListener("resize", onClose, { passive: true, once: true });
+    window.addEventListener("scroll", closeAll, { passive: true, once: true });
+    window.addEventListener("resize", closeAll, { passive: true, once: true });
   }
 
   function attachDropdownToRandomTab(globalItem) {
@@ -252,14 +265,20 @@
     a2.setAttribute("aria-expanded", "false");
     a2.style.cursor = "pointer";
 
+    a2.classList.add("md-tab-dropdown");
+
     const caret = document.createElement("span");
     caret.className = "md-random-dropdown-caret";
     caret.textContent = " ▾";
     a2.appendChild(caret);
 
     function setOpen(open) {
-      a2.setAttribute("aria-expanded", open ? "true" : "false");
       caret.textContent = open ? " ▴" : " ▾";
+      if (open) {
+        markDropdownOpen(a2);
+      } else {
+        markDropdownClosed(a2);
+      }
     }
 
     function toggle() {
@@ -292,7 +311,7 @@ items.push({ kind: "sep" });
 items.push({ kind: "link", label: "Custom random", href: customHref });
 
 
-      buildPanel(a2, items, caret);
+      buildPanel(a2, items, caret, () => setOpen(false));
       setOpen(true);
     }
 

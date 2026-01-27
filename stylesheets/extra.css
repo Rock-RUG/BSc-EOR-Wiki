@@ -897,3 +897,28 @@ html[data-md-color-scheme="slate"]
 #random-dropdown-panel.md-random-dropdown-panel {
   background: rgba(48, 62, 140, 0.90);
 }
+
+/* ================================
+   Tab dropdown component
+   - trigger: .md-tab-dropdown
+   - open: .is-open or [aria-expanded="true"]
+   ================================ */
+
+.md-tabs__link.md-tab-dropdown {
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+/* open 状态，比 active 更明确一点 */
+.md-tabs__link.md-tab-dropdown.is-open,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] {
+  background: rgba(255,255,255,.18);
+  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+
+/* open 时 caret 翻转 */
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret {
+  transform: rotate(180deg);
+  display: inline-block;
+  transition: transform 140ms ease;
+}
