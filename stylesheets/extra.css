@@ -984,20 +984,52 @@ html[data-md-color-scheme="slate"]
 }
 
 /* ================================
-   Tabs spacing: restore Material default
+   Tabs: keep Material default spacing
+   Only add "lively" hover/open feel
    ================================ */
 
-/* 恢复接近原生的左右 padding */
-.md-tabs__link {
-  padding: 0.25rem 0.55rem;  /* 比 Material 默认只轻微圆润 */
+/* 1) 强制把我之前改过的 padding / 圆角 / 阴影等还原为主题默认 */
+.md-tabs__link{
+  padding: revert !important;
+  border-radius: revert !important;
+  box-shadow: revert !important;
+  transform: revert !important;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
 }
 
-/* 不允许 tab 本身影响布局间距 */
-.md-tabs__item {
-  margin: 0 !important;
+/* 2) 右侧分组靠右：恢复你原来的机制（random-right-start） */
+.md-tabs__list > .md-tabs__item.random-right-start{
+  margin-left: auto;
 }
 
-/* 不使用 gap 控制 tab 距离，完全交还给 Material */
-.md-tabs__list {
-  gap: 0 !important;
+/* 3) 只做交互，不动布局：hover 像 dropdown item 那样“灵气”一点 */
+.md-tabs__link:hover{
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+}
+
+/* 4) active 轻一点，别变成死板大块 */
+.md-tabs__link--active{
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+}
+
+/* 5) dropdown caret 仅做轻微动效（不加“框框”区分） */
+.md-random-dropdown-caret{
+  display: inline-block;
+  transition: transform 160ms ease, opacity 160ms ease;
+  opacity: 0.85;
+}
+
+.md-tabs__link.is-open .md-random-dropdown-caret,
+.md-tabs__link[aria-expanded="true"] .md-random-dropdown-caret{
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* 6) open 状态：保持统一风格，只给一点点提示（不搞边框框） */
+.md-tabs__link.is-open,
+.md-tabs__link[aria-expanded="true"]{
+  background: rgba(255, 255, 255, 0.10);
 }
