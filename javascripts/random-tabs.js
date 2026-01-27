@@ -279,17 +279,18 @@
       ];
 
       if (courseScope) {
-        items.push({
-          kind: "link",
-          label: "Random in course",
-          href: new URL(originalHref, document.baseURI).toString(),
-          scope: "course",
-        });
-      }
+  items.push({ kind: "sep" });
+  items.push({
+    kind: "link",
+    label: "Random in course",
+    href: new URL(originalHref, document.baseURI).toString(),
+    scope: "course",
+  });
+}
 
-      items.push({ kind: "sep" });
+items.push({ kind: "sep" });
+items.push({ kind: "link", label: "Custom random", href: customHref });
 
-      items.push({ kind: "link", label: "Custom random", href: customHref });
 
       buildPanel(a2, items, caret);
       setOpen(true);

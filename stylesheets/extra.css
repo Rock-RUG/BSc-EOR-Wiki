@@ -776,3 +776,21 @@ html[data-md-color-scheme="slate"] {
   top: 1px;
   opacity: 0.85;
 }
+
+/* ===== Random dropdown: consistent vertical rhythm + dividers ===== */
+
+/* 1) 统一 item 的节奏，避免在不同页面出现上下间距不一致 */
+#random-dropdown-panel.md-random-dropdown-panel .md-random-dropdown-item {
+  display: block;
+  padding: 10px 12px;   /* 你可以 8-12 之间微调，但要固定 */
+  line-height: 1.35;
+  margin: 0;            /* 强制不要用 margin 参与排版 */
+}
+
+/* 2) 每两个之间的横线（divider） */
+#random-dropdown-panel.md-random-dropdown-panel .md-random-dropdown-sep {
+  height: 1px;
+  margin: 6px 10px;               /* divider 上下留白，左右内缩 */
+  background: var(--random-dd-sep);
+  pointer-events: none;
+}
