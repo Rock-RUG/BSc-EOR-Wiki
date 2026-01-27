@@ -696,27 +696,3 @@
   text-decoration: underline;
 }
 
-#random-dropdown-panel {
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.35;
-}
-
-#random-dropdown-panel a.item {
-  font-size: 0.875rem !important;
-  font-weight: 500 !important;
-  color: rgba(255,255,255,0.86) !important;
-}
-
-#random-dropdown-panel a.item + a.item {
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-#random-dropdown-panel a.item:hover {
-  background: rgba(255,255,255,0.06);
-}
-
-#random-dropdown-panel a.item.is-active {
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.95) !important;
-}

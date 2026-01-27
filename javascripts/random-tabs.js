@@ -110,6 +110,7 @@
   function closePanel() {
     const p = document.getElementById(PANEL_ID);
     if (p) {
+      if (typeof p._cleanup === "function") p._cleanup();
       p.remove();
     }
   }
@@ -135,7 +136,6 @@
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
 
-    // 这里不要再用 JS 插 hr，横线交给 CSS: a.item + a.item { border-top: ... }
     const ITEM_PAD_X = 12;
 
     Object.assign(panel.style, {
@@ -143,8 +143,10 @@
       zIndex: "9999",
       background: "rgba(30, 33, 41, 0.96)",
       borderRadius: "14px",
-      padding: "6px 0",
+      padding: "6px",
       boxShadow: "0 8px 24px rgba(0,0,0,.28)",
+      fontSize: "14px",
+      lineHeight: "1.35",
       backdropFilter: "blur(6px)",
       maxWidth: "260px",
       overflow: "hidden",
@@ -160,7 +162,7 @@
     // dropdown 文字起点 = panel.left + ITEM_PAD_X
     let left = tabTextLeft - ITEM_PAD_X;
 
-    const minW = Math.max(170, Math.round(rect.width));
+    const minW = Math.max(150, Math.round(rect.width));
     panel.style.minWidth = `${minW}px`;
 
     const maxLeft = window.innerWidth - Math.min(260, minW) - 8;
@@ -174,20 +176,32 @@
 
     const cur = new URL(window.location.href);
 
-    items.forEach((it) => {
+    items.forEach((it, i) => {
+      if (i === 1) {
+        const hr = document.createElement("div");
+        hr.style.height = "1px";
+        hr.style.margin = "6px 10px";
+        hr.style.background = "rgba(255,255,255,0.05)";
+        panel.appendChild(hr);
+      }
+
       const a = document.createElement("a");
       a.className = "item";
       a.href = it.href;
       a.textContent = it.label;
 
-      // 保留最小 inline，避免和你的 CSS 冲突
       Object.assign(a.style, {
         display: "block",
-        padding: `10px ${ITEM_PAD_X}px`,
+        padding: `6px ${ITEM_PAD_X}px`,
+        borderRadius: "10px",
         textDecoration: "none",
         color: "inherit",
+        fontSize: "14px",
+        lineHeight: "1.35",
+        fontWeight: "400",
         whiteSpace: "nowrap",
         cursor: "pointer",
+        transition: "background 120ms ease, transform 120ms ease",
       });
 
       let isActive = false;
@@ -198,29 +212,42 @@
         isActive = false;
       }
 
-      if (isActive) a.classList.add("is-active");
+      const ACTIVE_BG = "rgba(255,255,255,0.06)";
+      const HOVER_BG = "rgba(255,255,255,0.09)";
+
+      if (isActive) {
+        a.style.background = ACTIVE_BG;
+        a.style.fontWeight = "600";
+      }
+
+      a.addEventListener("mouseenter", () => {
+        a.style.background = HOVER_BG;
+        a.style.transform = "translateY(-0.5px)";
+      });
+      a.addEventListener("mouseleave", () => {
+        a.style.background = isActive ? ACTIVE_BG : "transparent";
+        a.style.transform = "none";
+      });
+
       panel.appendChild(a);
     });
 
-    // ✅ 关键修复：必须插入 DOM
     document.body.appendChild(panel);
 
-    // 开启动效 class（如果你 CSS 里写了 #random-dropdown-panel.open）
-    requestAnimationFrame(() => panel.classList.add("open"));
-
     // 点击外部关闭
-    setTimeout(() => {
-      const onDocClick = (e) => {
-        if (!panel.contains(e.target) && e.target !== anchorEl) {
-          closePanel();
-          anchorEl.setAttribute("aria-expanded", "false");
-          if (caretEl) caretEl.textContent = " ▾";
-        }
-      };
-      document.addEventListener("click", onDocClick, { once: true, capture: true });
-    }, 0);
+    const onDocPointerDown = (e) => {
+      if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
+        closePanel();
+        anchorEl.setAttribute("aria-expanded", "false");
+        if (caretEl) caretEl.textContent = " ▾";
+      }
+    };
+    document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
 
-    // scroll/resize close
+    panel._cleanup = () => {
+      document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
+    };
+
     const onClose = () => {
       closePanel();
       anchorEl.setAttribute("aria-expanded", "false");
@@ -234,36 +261,40 @@
     const a = globalItem.querySelector("a.md-tabs__link");
     if (!a) return;
 
-    // clone 清掉旧 listener
+    // 避免重复绑定：替换成 clone
     const a2 = a.cloneNode(true);
     a.replaceWith(a2);
 
+    // 原链接，用于 dropdown 第一个 item
     const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
     const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
+
+    // ✅ 关键：让 tab 自身不再导航（否则必然会跳）
+    a2.setAttribute("href", "#");
 
     a2.textContent = "Random";
     a2.setAttribute("aria-haspopup", "menu");
     a2.setAttribute("aria-expanded", "false");
+    a2.style.cursor = "pointer";
 
-    // caret
     const caret = document.createElement("span");
     caret.textContent = " ▾";
     caret.style.marginLeft = "4px";
     caret.style.fontSize = "0.85em";
     caret.style.position = "relative";
-    caret.style.top = "0px"; // 需要更低就改成 1px
-
+    caret.style.top = "1px"; // 稍微再调低一点
+    caret.style.opacity = "0.85";
     a2.appendChild(caret);
 
-    a2.addEventListener("click", (e) => {
-      // ✅ 防止跳转
-      e.preventDefault();
-      e.stopPropagation();
+    function setOpen(open) {
+      a2.setAttribute("aria-expanded", open ? "true" : "false");
+      caret.textContent = open ? " ▴" : " ▾";
+    }
 
+    function toggle() {
       if (isPanelOpen()) {
         closePanel();
-        a2.setAttribute("aria-expanded", "false");
-        caret.textContent = " ▾";
+        setOpen(false);
         return;
       }
 
@@ -274,16 +305,42 @@
 
       const courseScope = getCourseScopeIfAny();
       if (courseScope) {
-        // 插到中间
         items.splice(1, 0, {
           label: "Random in course",
-          href: new URL(originalHref, document.baseURI).toString()
+          href: new URL(originalHref, document.baseURI).toString(),
         });
       }
 
       buildPanel(a2, items, caret);
-      a2.setAttribute("aria-expanded", "true");
-      caret.textContent = " ▴";
+      setOpen(true);
+    }
+
+    // ✅ 必须同时拦截 pointerdown + click（否则 click 仍会导航）
+    const stop = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    a2.addEventListener("pointerdown", (e) => {
+      stop(e);
+      toggle();
+    });
+
+    a2.addEventListener("click", (e) => {
+      stop(e);
+      // click 不再 toggle，避免一次手势触发两次（pointerdown 已经做了）
+    });
+
+    // ✅ 键盘支持：Enter / Space 打开关闭
+    a2.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        stop(e);
+        toggle();
+      } else if (e.key === "Escape") {
+        stop(e);
+        closePanel();
+        setOpen(false);
+      }
     });
   }
 
