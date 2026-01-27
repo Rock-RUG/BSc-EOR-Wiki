@@ -696,33 +696,3 @@
   text-decoration: underline;
 }
 
-/* === FORCE FIX for Random dropdown spacing + separators === */
-
-/* Menu items: identical row height, no inherited margins */
-#random-dropdown-panel .md-random-dropdown-item{
-  margin: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-
-  height: 42px !important;        /* 关键：直接固定高度，不用 min-height */
-  padding: 0 14px !important;
-
-  line-height: 20px !important;
-  font-size: 14px !important;
-  border-radius: 10px !important;
-}
-
-/* Separator: make it a real 1px bar (so it can't "disappear") */
-#random-dropdown-panel .md-random-dropdown-sep{
-  display: block !important;
-
-  height: 1px !important;         /* 关键：让它本身就是 1px 高 */
-  margin: 8px 12px !important;    /* 控制上下间距 */
-
-  background: var(--random-dd-sep) !important;  /* 直接画线 */
-  border: 0 !important;
-
-  padding: 0 !important;
-  line-height: 0 !important;      /* 防止它继承行高导致额外空隙 */
-  font-size: 0 !important;
-}
