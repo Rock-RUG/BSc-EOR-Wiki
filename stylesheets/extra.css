@@ -970,7 +970,9 @@ html[data-md-color-scheme="slate"]
 .md-tabs__link.md-tab-dropdown[aria-expanded="true"] {
   background: rgba(255, 255, 255, 0.10);
   transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(0,0,0,.18);
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.18),
+    0 0 0 6px rgba(255, 255, 255, 0.10);
 }
 
 /* caret 动起来，但不要吵 */
