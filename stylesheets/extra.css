@@ -786,3 +786,47 @@ html[data-md-color-scheme="slate"] {
   line-height: 1.1;
   margin: 0;            /* 强制不要用 margin 参与排版 */
 }
+
+
+#random-dropdown-panel .md-random-dropdown-item {
+  position: relative;
+  transition:
+    background 140ms ease,
+    transform 140ms ease,
+    padding-left 140ms ease;
+}
+
+#random-dropdown-panel .md-random-dropdown-item:hover {
+  background: var(--random-dd-hover);
+  transform: translateX(3px);
+  padding-left: 14px;
+  font-weight: 500;
+}
+#random-dropdown-panel .md-random-dropdown-item::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 3px;
+  background: transparent;
+  transition: background 140ms ease;
+}
+
+#random-dropdown-panel .md-random-dropdown-item:hover::before {
+  background: var(--md-accent-fg-color);
+}
+
+#random-dropdown-panel .md-random-dropdown-item.is-active {
+  background: var(--random-dd-active);
+  font-weight: 600;
+}
+
+#random-dropdown-panel .md-random-dropdown-item.is-active::before {
+  background: var(--md-accent-fg-color);
+}
+
+#random-dropdown-panel .md-random-dropdown-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
