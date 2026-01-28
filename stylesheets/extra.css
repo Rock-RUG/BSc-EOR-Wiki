@@ -1,945 +1,748 @@
-.hero {
-  padding: 2.2rem 1.5rem;
-  border-radius: 18px;
-  margin-bottom: 1.2rem;
-  background: linear-gradient(135deg, rgba(63,81,181,.14), rgba(0,150,136,.12));
+/* =========================================================
+   extra.css (cleaned + organised by purpose)
+   Notes:
+   - Structure rules first, then visual styling, then components, then patches.
+   - Light/Dark overrides are scoped with html[data-md-color-scheme="..."].
+   ========================================================= */
+
+
+/* =========================================================
+   10) Global layout tweaks
+   ========================================================= */
+
+/* Tabs left aligned */
+.md-tabs__list{
+  justify-content:flex-start;
 }
 
-.hero-inner h1 {
-  margin-top: 0;
+/* On smaller screens keep tabs visible */
+@media screen and (max-width: 76.1875em){
+  .md-tabs{ display:block; }
 }
 
-.hero-actions {
-  margin-top: 1rem;
-  display: flex;
-  gap: .6rem;
-  flex-wrap: wrap;
+/* Hide tags shown above the page title */
+.md-content__inner .md-tags,
+.md-content__inner .md-tag{
+  display:none !important;
 }
 
-/* Tabs 左对齐 */
-.md-tabs__list { 
-  justify-content: flex-start; 
+/* Hide search aliases widget if present */
+.search-aliases{
+  display:none;
 }
 
 
+/* =========================================================
+   20) Typography & links
+   ========================================================= */
 
-/* Year landing hero */
-.hero.hero--year {
-  padding: 2.2rem 1.6rem;
-  border-radius: 18px;
-  margin-bottom: 1.2rem;
-  background: linear-gradient(135deg, rgba(63,81,181,.14), rgba(0,150,136,.12));
+/* Page title (H1) readability */
+.md-content__inner h1{
+  font-weight:900;
+  letter-spacing:-0.01em;
+  color:var(--md-default-fg-color);
 }
 
-.hero .hero-inner h1 {
-  margin-top: 0;
+/* Underline links in normal text */
+.md-typeset p a,
+.md-typeset li a{
+  text-decoration:underline;
 }
 
-.hero .hero-actions {
-  margin-top: 1rem;
-  display: flex;
-  gap: .6rem;
-  flex-wrap: wrap;
+/* Exclude hero/cards/buttons */
+.md-typeset .hero a,
+.md-typeset .grid.cards a,
+.md-typeset a.md-button{
+  text-decoration:none !important;
 }
 
-/* Cards: slightly rounder */
-.md-typeset .grid.cards > ul > li {
-  border-radius: 16px;
-}
-.md-typeset .grid.cards > ul > li:hover {
-  transform: translateY(-2px);
-  transition: 120ms ease;
-}
 
-/* ================================
-   Primary sidebar nav (macaron, minimal, academic)
-   ================================ */
+/* =========================================================
+   30) Primary sidebar nav (hierarchy + readability)
+   ========================================================= */
 
-/* ===== Level 1: Year ===== */
-.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
-  color: #b7b3d8 !important;          /* Dusty lavender */
-  font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  letter-spacing: 0.03em;
+/* Hide the Year line in the sidebar list (you use the top selector "Year 1" already) */
+.md-sidebar--primary .md-nav--primary
+> .md-nav__list
+> .md-nav__item
+> .md-nav__link{
+  display:none !important;
 }
 
-/* Year indicator */
-.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item {
-  border-left: 2px solid rgba(183, 179, 216, 0.6);
-  padding-left: 0.5rem;
-  margin-bottom: 0.3rem;
+/* Remove the Year wrapper indent/line */
+.md-sidebar--primary .md-nav--primary
+> .md-nav__list
+> .md-nav__item{
+  border-left:none !important;
+  padding-left:0 !important;
+  margin-bottom:0 !important;
 }
 
-/* ===== Level 2: Course (light mode) ===== */
+/* Level 2: Course links (light mode) */
 html[data-md-color-scheme="default"]
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
-> .md-nav__item > .md-nav__link {
-  color: #1f2a2a !important;   /* 深灰绿：白天清晰 */
-  font-weight: 650 !important;
+> .md-nav__item > .md-nav__link{
+  color:#1f2a2a !important;      /* darker than the old mint */
+  font-weight:650 !important;
 }
 
-/* ===== Level 2: Course (dark mode) ===== */
+/* Level 2: Course links (dark mode) */
 html[data-md-color-scheme="slate"]
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
-> .md-nav__item > .md-nav__link {
-  color: rgba(255,255,255,0.78) !important;
-  font-weight: 600 !important;
+> .md-nav__item > .md-nav__link{
+  color:rgba(255,255,255,0.78) !important;
+  font-weight:600 !important;
 }
 
-/* Course indicator */
+/* Course indicator line */
+html[data-md-color-scheme="default"]
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
-> .md-nav__item {
-  border-left: 2px solid rgba(159, 207, 190, 0.6);
-  padding-left: 0.5rem;
+> .md-nav__item{
+  border-left:3px solid rgba(20,40,40,0.22);
+  padding-left:0.55rem;
 }
 
-/* ===== Level 3+: Knowledge pages ===== */
+html[data-md-color-scheme="slate"]
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
-> .md-nav__item > nav.md-nav .md-nav__link {
-  color: var(--md-default-fg-color) !important;
-  font-weight: 400 !important;
-  line-height: 1.45;
+> .md-nav__item{
+  border-left:2px solid rgba(255,255,255,0.14);
+  padding-left:0.55rem;
 }
 
-/* Make Concept pages (Level 3+) change colour on hover/focus */
+/* Level 3+: Knowledge pages */
+.md-sidebar--primary .md-nav--primary > .md-nav__list
+> .md-nav__item > nav.md-nav > .md-nav__list
+> .md-nav__item > nav.md-nav .md-nav__link{
+  color:var(--md-default-fg-color) !important;
+  font-weight:400 !important;
+  line-height:1.45;
+}
+
+/* Hover/focus on concept pages */
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
 > .md-nav__item > nav.md-nav .md-nav__link:hover,
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
-> .md-nav__item > nav.md-nav .md-nav__link:focus {
-  color: var(--md-accent-fg-color) !important;
+> .md-nav__item > nav.md-nav .md-nav__link:focus{
+  color:var(--md-accent-fg-color) !important;
 }
 
-/* Optional: keep active Concept page consistent */
+/* Active concept page */
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
-> .md-nav__item > nav.md-nav .md-nav__link--active {
-  color: var(--md-accent-fg-color) !important;
+> .md-nav__item > nav.md-nav .md-nav__link--active{
+  color:var(--md-accent-fg-color) !important;
 }
 
 /* Extra spacing for calm rhythm */
-.md-sidebar--primary .md-nav__item .md-nav__item {
-  margin-top: 0.15rem;
+.md-sidebar--primary .md-nav__item .md-nav__item{
+  margin-top:0.15rem;
 }
 
-/* ================================
-   Nav tweak: hide Year level visually
-   ================================ */
-
-/* 1) 隐藏 Year 这一行文字（例如 Year 1） */
-.md-sidebar--primary .md-nav--primary
-> .md-nav__list
-> .md-nav__item
-> .md-nav__link {
-  display: none !important;
-}
-
-/* 2) 去掉 Year 那一层的竖线和缩进 */
-.md-sidebar--primary .md-nav--primary
-> .md-nav__list
-> .md-nav__item {
-  border-left: none !important;
-  padding-left: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-
-/* 3) Topics level: add indicator line (second vertical line) */
+/* Topics level indicator (second vertical line) */
+html[data-md-color-scheme="default"]
 .md-sidebar--primary .md-nav--primary
 > .md-nav__list
 > .md-nav__item
 > nav.md-nav > .md-nav__list
 > .md-nav__item
 > nav.md-nav > .md-nav__list
-> .md-nav__item {
-  border-left: 2px solid rgba(159, 207, 190, 0.35);
-  padding-left: 0.5rem;
+> .md-nav__item{
+  border-left:3px solid rgba(20,40,40,0.14);
+  padding-left:0.55rem;
+}
+
+html[data-md-color-scheme="slate"]
+.md-sidebar--primary .md-nav--primary
+> .md-nav__list
+> .md-nav__item
+> nav.md-nav > .md-nav__list
+> .md-nav__item
+> nav.md-nav > .md-nav__list
+> .md-nav__item{
+  border-left:2px solid rgba(255,255,255,0.10);
+  padding-left:0.55rem;
 }
 
 
+/* =========================================================
+   40) Landing heroes + cards
+   ========================================================= */
 
-@media (min-width: 76.25em) {
-  #current-course-bar {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: var(--md-default-bg-color);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.35rem 0.5rem;
+.hero{
+  padding:2.2rem 1.5rem;
+  border-radius:18px;
+  margin-bottom:1.2rem;
+  background:linear-gradient(135deg, rgba(63,81,181,.14), rgba(0,150,136,.12));
+}
+.hero-inner h1{ margin-top:0; }
+.hero-actions{
+  margin-top:1rem;
+  display:flex;
+  gap:.6rem;
+  flex-wrap:wrap;
+}
+
+/* Year landing hero (slightly roomier) */
+.hero.hero--year{
+  padding:2.2rem 1.6rem;
+}
+
+/* Cards: slightly rounder + subtle lift */
+.md-typeset .grid.cards > ul > li{
+  border-radius:16px;
+}
+.md-typeset .grid.cards > ul > li:hover{
+  transform:translateY(-2px);
+  transition:120ms ease;
+}
+
+
+/* =========================================================
+   50) Sticky current course bar (desktop)
+   ========================================================= */
+
+@media (min-width: 76.25em){
+  #current-course-bar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:var(--md-default-bg-color);
+    border-bottom:1px solid rgba(0,0,0,0.10);
+    padding:0.35rem 0.5rem;
   }
 
-  #current-course-bar .ccb-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: transparent;
-    border: 0;
-    color: inherit;
-    padding: 0.35rem 0.25rem;
-    cursor: pointer;
-    text-align: left;
-    font-size: 0.95rem;
+  #current-course-bar .ccb-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    background:transparent;
+    border:0;
+    color:inherit;
+    padding:0.35rem 0.25rem;
+    cursor:pointer;
+    text-align:left;
+    font-size:0.95rem;
   }
 
-  #current-course-bar .ccb-title {
-    flex: 1;
-    font-weight: 600;
-    opacity: 0.95;
+  #current-course-bar .ccb-title{
+    flex:1;
+    font-weight:600;
+    opacity:0.95;
   }
 
-  #current-course-bar .ccb-icon {
-    opacity: 0.8;
-  }
-}
-
-
-@media screen and (max-width: 76.1875em) {
-  .md-tabs {
-    display: block;
-  }
-}
-
-/* Hide tags shown above the page title */
-.md-content__inner .md-tags,
-.md-content__inner .md-tag {
-  display: none !important;
-}
-
-
-.search-aliases {
-  display: none;
-}
-
-/* 只给正文段落/列表链接加下划线 */
-.md-typeset p a,
-.md-typeset li a {
-  text-decoration: underline;
-}
-
-/* 排除 hero、cards、button 这些 landing 页常用区域 */
-.md-typeset .hero a,
-.md-typeset .grid.cards a,
-.md-typeset a.md-button {
-  text-decoration: none !important;
-}
-
-
-
-/* ===== Year index layout ===== */
-.year-hero {
-  padding: 2.4rem 1.6rem;
-  border-radius: 18px;
-  margin: 0 0 1.4rem 0;
-  background: linear-gradient(135deg, rgba(63,81,181,.20), rgba(0,150,136,.16));
-  border: 1px solid rgba(255,255,255,.06);
-}
-
-.year-hero__inner h1 {
-  margin-top: 0;
-}
-
-.year-block {
-  border-radius: 18px;
-  margin: 0 0 1.2rem 0;
-  border: 1px solid rgba(255,255,255,.06);
-  overflow: hidden;
-}
-
-.year-block__inner {
-  padding: 1.6rem 1.4rem;
-}
-
-.year-block__desc {
-  margin-top: -0.4rem;
-  margin-bottom: 0.9rem;
-  opacity: 0.85;
-  font-size: 0.95rem;
-}
-
-/* Block backgrounds: subtle but distinct */
-.year-block--1a {
-  background: linear-gradient(135deg, rgba(63,81,181,.10), rgba(63,81,181,.04));
-}
-.year-block--1b {
-  background: linear-gradient(135deg, rgba(0,150,136,.10), rgba(0,150,136,.04));
-}
-.year-block--2a {
-  background: linear-gradient(135deg, rgba(156,39,176,.10), rgba(156,39,176,.04));
-}
-.year-block--2b {
-  background: linear-gradient(135deg, rgba(255,152,0,.10), rgba(255,152,0,.04));
-}
-
-/* Topic pills (clickable links) */
-.md-typeset a.topic-pill {
-  display: inline-block;
-  padding: 0.15rem 0.45rem;
-  margin: 0.15rem 0.25rem 0.15rem 0;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-  font-size: 0.78rem;
-  opacity: 0.95;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: background .15s ease, border-color .15s ease;
-}
-
-.md-typeset a.topic-pill:hover {
-  background: rgba(255,255,255,.10);
-  border-color: rgba(255,255,255,.25);
-}
-
-/* Make cards feel slightly tighter */
-.md-typeset .grid.cards > ul > li {
-  border-radius: 16px;
-}
-
-
-/* ===== Year index: course name vs content layout ===== */
-.year-block .grid.cards > ul {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  gap: 0.8rem 0.9rem;
-}
-
-/* 防止小屏幕挤爆 */
-@media (max-width: 900px) {
-  .year-block .grid.cards > ul {
-    grid-template-columns: 1fr;
+  #current-course-bar .ccb-icon{
+    opacity:0.8;
   }
 }
 
 
-/* Search results page */
-.search-hit {
-  padding: 0.9rem 1rem;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.03);
-  margin: 0.7rem 0;
+/* =========================================================
+   60) Year index layout
+   ========================================================= */
+
+.year-hero{
+  padding:2.4rem 1.6rem;
+  border-radius:18px;
+  margin:0 0 1.4rem 0;
+  background:linear-gradient(135deg, rgba(63,81,181,.20), rgba(0,150,136,.16));
+  border:1px solid rgba(0,0,0,.10);
 }
 
-.search-hit__title a {
-  font-weight: 700;
-  text-decoration: none;
+.year-hero__inner h1{ margin-top:0; }
+
+.year-block{
+  border-radius:18px;
+  margin:0 0 1.2rem 0;
+  border:1px solid rgba(0,0,0,.10);
+  overflow:hidden;
 }
 
-.search-hit__meta {
-  opacity: 0.7;
-  font-size: 0.78rem;
-  margin-top: 0.15rem;
+.year-block__inner{ padding:1.6rem 1.4rem; }
+
+.year-block__desc{
+  margin-top:-0.4rem;
+  margin-bottom:0.9rem;
+  opacity:0.85;
+  font-size:0.95rem;
 }
 
-.search-hit__snippet {
-  margin-top: 0.5rem;
-  opacity: 0.92;
+/* Block backgrounds */
+.year-block--1a{ background:linear-gradient(135deg, rgba(63,81,181,.10), rgba(63,81,181,.04)); }
+.year-block--1b{ background:linear-gradient(135deg, rgba(0,150,136,.10), rgba(0,150,136,.04)); }
+.year-block--2a{ background:linear-gradient(135deg, rgba(156,39,176,.10), rgba(156,39,176,.04)); }
+.year-block--2b{ background:linear-gradient(135deg, rgba(255,152,0,.10), rgba(255,152,0,.04)); }
+
+/* Topic pills */
+.md-typeset a.topic-pill{
+  display:inline-block;
+  padding:0.15rem 0.45rem;
+  margin:0.15rem 0.25rem 0.15rem 0;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background:rgba(0,0,0,.03);
+  font-size:0.78rem;
+  opacity:0.95;
+  white-space:nowrap;
+  text-decoration:none;
+  transition:background .15s ease, border-color .15s ease;
+}
+.md-typeset a.topic-pill:hover{
+  background:rgba(0,0,0,.06);
+  border-color:rgba(0,0,0,.18);
 }
 
-.search-hit__snippet mark {
-  padding: 0 0.15rem;
-  border-radius: 6px;
+/* Course name vs content layout */
+.year-block .grid.cards > ul{
+  display:grid;
+  grid-template-columns:40% 60%;
+  gap:0.8rem 0.9rem;
 }
-
-
-/* ===== Search results page (find.html) ===== */
-#search-results .sr-top {
-  padding: 1.1rem 1.1rem;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: linear-gradient(135deg, rgba(63,81,181,.16), rgba(0,150,136,.10));
-  margin: 0 0 1rem 0;
-}
-
-#search-results .sr-top__title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  margin-bottom: 0.25rem;
-}
-
-#search-results .sr-top__q {
-  font-size: 0.95rem;
-  opacity: 0.9;
-}
-
-#search-results .sr-top__count {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  opacity: 0.75;
-}
-
-#search-results .sr-loading {
-  opacity: 0.8;
-  padding: 0.5rem 0.2rem;
-}
-
-#search-results .sr-empty {
-  padding: 1rem 0.2rem;
-  opacity: 0.85;
-}
-
-#search-results .sr-hint {
-  opacity: 0.8;
-  font-size: 0.9rem;
-}
-
-#search-results .sr-list {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.8rem;
-}
-
-#search-results .sr-item {
-  padding: 0.95rem 1rem;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.03);
-  box-shadow: 0 6px 18px rgba(0,0,0,.18) inset;
-}
-
-#search-results .sr-head {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  justify-content: space-between;
-}
-
-#search-results .sr-title {
-  font-weight: 800;
-  text-decoration: none;
-  font-size: 1.05rem;
-}
-
-#search-results .sr-title:hover {
-  text-decoration: underline;
-}
-
-#search-results .sr-chip {
-  font-size: 0.72rem;
-  padding: 0.12rem 0.5rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-  opacity: 0.9;
-  white-space: nowrap;
-}
-
-#search-results .sr-meta {
-  margin-top: 0.25rem;
-  font-size: 0.78rem;
-  opacity: 0.7;
-}
-
-#search-results .sr-snippet {
-  margin-top: 0.55rem;
-  font-size: 0.92rem;
-  opacity: 0.92;
-  line-height: 1.45;
-}
-
-#search-results .sr-snippet mark {
-  padding: 0 0.18rem;
-  border-radius: 6px;
+@media (max-width: 900px){
+  .year-block .grid.cards > ul{ grid-template-columns:1fr; }
 }
 
 
+/* =========================================================
+   70) Search UI (find.html)
+   ========================================================= */
+
+.search-hit{
+  padding:0.9rem 1rem;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.10);
+  background:rgba(0,0,0,.02);
+  margin:0.7rem 0;
+}
+.search-hit__title a{
+  font-weight:700;
+  text-decoration:none;
+}
+.search-hit__meta{
+  opacity:0.7;
+  font-size:0.78rem;
+  margin-top:0.15rem;
+}
+.search-hit__snippet{
+  margin-top:0.5rem;
+  opacity:0.92;
+}
+.search-hit__snippet mark{
+  padding:0 0.15rem;
+  border-radius:6px;
+}
+
+/* Search results page (find.html) */
+#search-results .sr-top{
+  padding:1.1rem 1.1rem;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.10);
+  background:linear-gradient(135deg, rgba(63,81,181,.16), rgba(0,150,136,.10));
+  margin:0 0 1rem 0;
+}
+#search-results .sr-top__title{
+  font-size:1.2rem;
+  font-weight:800;
+  margin-bottom:0.25rem;
+}
+#search-results .sr-top__q{ font-size:0.95rem; opacity:0.9; }
+#search-results .sr-top__count{ margin-top:0.5rem; font-size:0.8rem; opacity:0.75; }
+#search-results .sr-loading{ opacity:0.8; padding:0.5rem 0.2rem; }
+#search-results .sr-empty{ padding:1rem 0.2rem; opacity:0.85; }
+#search-results .sr-hint{ opacity:0.8; font-size:0.9rem; }
+
+#search-results .sr-list{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0.8rem;
+}
+#search-results .sr-item{
+  padding:0.95rem 1rem;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.10);
+  background:rgba(0,0,0,.02);
+}
+#search-results .sr-head{
+  display:flex;
+  align-items:baseline;
+  gap:0.6rem;
+  justify-content:space-between;
+}
+#search-results .sr-title{
+  font-weight:800;
+  text-decoration:none;
+  font-size:1.05rem;
+}
+#search-results .sr-title:hover{ text-decoration:underline; }
+#search-results .sr-chip{
+  font-size:0.72rem;
+  padding:0.12rem 0.5rem;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background:rgba(0,0,0,.03);
+  opacity:0.9;
+  white-space:nowrap;
+}
+#search-results .sr-meta{
+  margin-top:0.25rem;
+  font-size:0.78rem;
+  opacity:0.7;
+}
+#search-results .sr-snippet{
+  margin-top:0.55rem;
+  font-size:0.92rem;
+  opacity:0.92;
+  line-height:1.45;
+}
+#search-results .sr-snippet mark{
+  padding:0 0.18rem;
+  border-radius:6px;
+}
 
 /* Hide Search tab completely (remove its layout space) */
 .md-tabs__list li.md-tabs__item:has(a[href*="search"]),
-.md-tabs__list li.md-tabs__item:has(a[href*="find"]) {
-  display: none !important;
+.md-tabs__list li.md-tabs__item:has(a[href*="find"]){
+  display:none !important;
+}
+
+/* Search hero */
+.search-hero{
+  padding:1.4rem 1.4rem 1.2rem;
+  margin-bottom:1rem;
+  border-radius:18px;
+  border:1px solid rgba(0,0,0,.10);
+  background:linear-gradient(135deg, rgba(63,81,181,.18), rgba(0,150,136,.10));
+}
+.search-hero__form{ display:flex; gap:0.6rem; }
+.search-hero__input{
+  flex:1;
+  font-size:1.05rem;
+  padding:0.7rem 0.9rem;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.18);
+  background:rgba(255,255,255,.75);
+  color:inherit;
+}
+.search-hero__input:focus{
+  outline:none;
+  border-color:rgba(63,81,181,.55);
+}
+.search-hero__button{
+  padding:0.65rem 1.1rem;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.18);
+  background:rgba(255,255,255,.55);
+  cursor:pointer;
 }
 
 
-/* ===== Search hero ===== */
-.search-hero {
-  padding: 1.4rem 1.4rem 1.2rem;
-  margin-bottom: 1rem;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: linear-gradient(135deg, rgba(63,81,181,.18), rgba(0,150,136,.10));
+/* =========================================================
+   80) Course index layout
+   ========================================================= */
+
+.course-nav{
+  display:grid;
+  gap:0.9rem;
+  margin-top:0.6rem;
+  margin-bottom:1.2rem;
 }
-
-.search-hero__form {
-  display: flex;
-  gap: 0.6rem;
+.course-nav__row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:1rem;
+  padding:1rem 1.1rem;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.12);
+  background:var(--md-default-bg-color);
+  align-items:center;
 }
-
-.search-hero__input {
-  flex: 1;
-  font-size: 1.05rem;
-  padding: 0.7rem 0.9rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.18);
-  color: inherit;
+.course-nav__left{ min-width:0; }
+.course-nav__title{
+  font-weight:700;
+  font-size:1.1rem;
+  line-height:1.2;
 }
-
-.search-hero__input:focus {
-  outline: none;
-  border-color: rgba(120,140,255,.6);
+.course-nav__desc{
+  margin-top:0.25rem;
+  opacity:0.85;
+  font-size:0.95rem;
 }
-
-.search-hero__button {
-  padding: 0.65rem 1.1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.08);
-  cursor: pointer;
+.course-nav__right{
+  display:flex;
+  justify-content:flex-end;
+  min-width:120px;
 }
-
-
-/* ===== Course index layout ===== */
-
-.course-nav {
-  display: grid;
-  gap: 0.9rem;
-  margin-top: 0.6rem;
-  margin-bottom: 1.2rem;
-}
-
-.course-nav__row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  padding: 1rem 1.1rem;
-  border-radius: 14px;
-  border: 1px solid var(--md-default-fg-color--lighter);
-  background: var(--md-default-bg-color);
-  align-items: center;
-}
-
-.course-nav__left {
-  min-width: 0;
-}
-
-.course-nav__title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  line-height: 1.2;
-}
-
-.course-nav__desc {
-  margin-top: 0.25rem;
-  opacity: 0.85;
-  font-size: 0.95rem;
-}
-
-.course-nav__right {
-  display: flex;
-  justify-content: flex-end;
-  min-width: 120px;
-}
-
-.course-nav__btn {
-  padding: 0.45rem 1.05rem;
-  border-radius: 999px;
-  font-weight: 600;
+.course-nav__btn{
+  padding:0.45rem 1.05rem;
+  border-radius:999px;
+  font-weight:600;
 }
 
 /* Big block container */
-.course-block {
-  border-radius: 16px;
-  border: 1px solid var(--md-default-fg-color--lighter);
-  background: var(--md-default-bg-color);
-  padding: 1rem 1.1rem 0.4rem 1.1rem;
-  margin-top: 0.6rem;
-  margin-bottom: 1.2rem;
+.course-block{
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.12);
+  background:var(--md-default-bg-color);
+  padding:1rem 1.1rem 0.4rem 1.1rem;
+  margin-top:0.6rem;
+  margin-bottom:1.2rem;
 }
+.course-block__top{ margin-bottom:0.6rem; }
+.course-block__kicker{ opacity:0.85; }
+.course-block .grid.cards{ margin-top:0.4rem; }
 
-.course-block__top {
-  margin-bottom: 0.6rem;
-}
-
-.course-block__kicker {
-  opacity: 0.85;
-}
-
-/* Make the inner "grid cards" breathe a bit more */
-.course-block .grid.cards {
-  margin-top: 0.4rem;
-}
-
-/* Better spacing on small screens */
-@media (max-width: 700px) {
-  .course-nav__row {
-    grid-template-columns: 1fr;
-  }
-  .course-nav__right {
-    justify-content: flex-start;
-  }
+@media (max-width: 700px){
+  .course-nav__row{ grid-template-columns:1fr; }
+  .course-nav__right{ justify-content:flex-start; }
 }
 
 /* Push the random-related tab group to the far right */
-.md-tabs__list .md-tabs__item.random-right-start {
-  margin-left: auto;
+.md-tabs__list .md-tabs__item.random-right-start{
+  margin-left:auto;
 }
 
 
-/* ===== Trending page ===== */
-#trending-app .trending-tabs {
-  display: flex;
-  gap: .45rem;
-  flex-wrap: wrap;
-  margin: .4rem 0 .8rem;
-}
+/* =========================================================
+   90) Trending page
+   ========================================================= */
 
-#trending-app .trending-tab {
-  appearance: none;
-  border: 1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.06);
-  color: inherit;
-  padding: .28rem .55rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: .82rem;
-  line-height: 1.2;
+#trending-app .trending-block-header{
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto;
+  column-gap:1rem;
 }
-
-#trending-app .trending-tab:hover {
-  background: rgba(255,255,255,.10);
-  border-color: rgba(255,255,255,.24);
+#trending-app .trending-block-title{
+  grid-column:1;
+  grid-row:1;
 }
-
-#trending-app .trending-tab.is-active,
-#trending-app .trending-tab.active {
-  background: rgba(255,255,255,.16);
-  border-color: rgba(255,255,255,.35);
+#trending-app .trending-tabs{
+  grid-column:1;
+  grid-row:2;
+  display:flex;
+  gap:.45rem;
+  flex-wrap:wrap;
+  margin:.4rem 0 .8rem;
 }
-
-#trending-app .trending-item {
-  display: flex;
-  justify-content: space-between;
-  gap: .7rem;
-}
-
-#trending-app .trending-meta {
-  opacity: .7;
-  font-variant-numeric: tabular-nums;
-}
-
 #trending-app .trending-metahead{
-  text-align: right;
-  opacity: .65;
-  font-size: .78rem;
-  margin: .2rem 0 .35rem;
+  grid-column:2;
+  grid-row:2;
+  align-self:center;
+  text-align:right;
+  opacity:.65;
+  font-size:.78rem;
+  margin:.2rem 0 .35rem;
 }
 
-#trending-app .trending-block-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  column-gap: 1rem;
+#trending-app .trending-tab{
+  appearance:none;
+  border:1px solid rgba(0,0,0,.14);
+  background:rgba(0,0,0,.03);
+  color:inherit;
+  padding:.28rem .55rem;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:.82rem;
+  line-height:1.2;
+}
+#trending-app .trending-tab:hover{
+  background:rgba(0,0,0,.05);
+  border-color:rgba(0,0,0,.22);
+}
+#trending-app .trending-tab.is-active,
+#trending-app .trending-tab.active{
+  background:rgba(0,0,0,.07);
+  border-color:rgba(0,0,0,.30);
 }
 
-
-/* 标题占左上 */
-#trending-app .trending-block-title {
-  grid-column: 1;
-  grid-row: 1;
+#trending-app .trending-item{
+  display:flex;
+  justify-content:space-between;
+  gap:.7rem;
 }
-
-/* tabs 在左下 */
-#trending-app .trending-tabs {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-/* Total views 在右下，和 tabs 齐平 */
-#trending-app .trending-metahead {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: center;      /* 纵向居中对齐 tabs */
-  text-align: right;
+#trending-app .trending-meta{
+  opacity:.7;
+  font-variant-numeric:tabular-nums;
 }
 
 #trending-app .trending-footer{
-  display: flex;
-  align-items: center;
-  gap: .6rem;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
 }
-
 #trending-app .trending-pages{
-  display: flex;
-  gap: .35rem;
-  align-items: center;
+  display:flex;
+  gap:.35rem;
+  align-items:center;
 }
-
 #trending-app .trending-page-num{
-  background: transparent;
-  border: 0;
-  padding: .15rem .35rem;
-  opacity: .55;
-  cursor: pointer;
-  font-size: .9rem;
+  background:transparent;
+  border:0;
+  padding:.15rem .35rem;
+  opacity:.55;
+  cursor:pointer;
+  font-size:.9rem;
 }
-
 #trending-app .trending-page-num.is-active{
-  opacity: 1;
-  font-weight: 700;
+  opacity:1;
+  font-weight:700;
 }
-
 #trending-app .trending-page-btn{
-  background: transparent;
-  border: 0;
-  padding: .15rem .35rem;
-  cursor: pointer;
-  font-size: 1.1rem;
-  opacity: .75;
+  background:transparent;
+  border:0;
+  padding:.15rem .35rem;
+  cursor:pointer;
+  font-size:1.1rem;
+  opacity:.75;
 }
-
 #trending-app .trending-page-btn:disabled{
-  opacity: .25;
-  cursor: default;
+  opacity:.25;
+  cursor:default;
 }
 
-.md-typeset a.tag-search-link {
-  text-decoration: none !important;
-}
-.md-typeset a.tag-search-link:hover code {
-  text-decoration: underline;
-}
-
-/* ================================
-   Random dropdown (tabs)
-   - theme-aware via data-md-color-scheme
-   - consistent vertical rhythm
-   ================================ */
-
-/* Per-scheme tokens (match Material palette feel) */
-html[data-md-color-scheme="default"] {
-  --random-dd-bg: rgba(255, 255, 255, 0.96);
-  --random-dd-border: rgba(0, 0, 0, 0.10);
-  --random-dd-shadow: rgba(0, 0, 0, 0.18);
-  --random-dd-hover: rgba(0, 0, 0, 0.06);
-  --random-dd-active: rgba(0, 0, 0, 0.04);
-  --random-dd-sep: rgba(0, 0, 0, 0.10);
-}
-
-html[data-md-color-scheme="slate"] {
-  --random-dd-bg: rgba(30, 33, 41, 0.96);
-  --random-dd-border: rgba(255, 255, 255, 0.10);
-  --random-dd-shadow: rgba(0, 0, 0, 0.28);
-  --random-dd-hover: rgba(255, 255, 255, 0.09);
-  --random-dd-active: rgba(255, 255, 255, 0.06);
-  --random-dd-sep: rgba(255, 255, 255, 0.08);
-}
-
-/* Panel */
-#random-dropdown-panel.md-random-dropdown-panel {
-  position: fixed;
-  z-index: 9999;
-  background: var(--random-dd-bg);
-  border: 1px solid var(--random-dd-border);
-  border-radius: 14px;
-  padding: 6px;
-  box-shadow: 0 10px 28px var(--random-dd-shadow);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  max-width: 280px;
-  overflow: hidden;
-}
-
-/* Items: enforce consistent vertical spacing */
-#random-dropdown-panel .md-random-dropdown-item {
-  display: block;
-  padding: 8px 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: inherit;
-  font-size: 14px;
-  line-height: 1.35;
-  font-weight: 400;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background 120ms ease, transform 120ms ease;
-}
-
-#random-dropdown-panel .md-random-dropdown-item:hover {
-  background: var(--random-dd-hover);
-  transform: translateY(-0.5px);
-}
-
-#random-dropdown-panel .md-random-dropdown-item.is-active {
-  background: var(--random-dd-active);
-  font-weight: 600;
-}
-
-/* Separator: always present before Custom random */
-#random-dropdown-panel .md-random-dropdown-sep {
-  height: 1px;
-  margin: 6px 10px;
-  background: var(--random-dd-sep);
-}
-
-/* Caret on the Random tab */
-.md-random-dropdown-caret {
-  margin-left: 4px;
-  font-size: 0.85em;
-  position: relative;
-  top: 1px;
-  opacity: 0.85;
-}
-
-/* ===== Random dropdown: consistent vertical rhythm + dividers ===== */
-
-/* 1) 统一 item 的节奏，避免在不同页面出现上下间距不一致 */
-#random-dropdown-panel.md-random-dropdown-panel .md-random-dropdown-item {
-  display: block;
-  padding: 8px 10px;   /* 你可以 8-12 之间微调，但要固定 */
-  line-height: 1.1;
-  margin: 0;            /* 强制不要用 margin 参与排版 */
+.trending-list.is-loading{
+  list-style:none;
+  padding-left:0;
 }
 
 
-#random-dropdown-panel .md-random-dropdown-item {
-  position: relative;
-  transition:
-    background 140ms ease,
-    transform 140ms ease,
-    padding-left 140ms ease;
-}
+/* =========================================================
+   100) Tag search link
+   ========================================================= */
 
-#random-dropdown-panel .md-random-dropdown-item:hover {
-  background: var(--random-dd-hover);
-  transform: translateX(3px);
-  padding-left: 14px;
-  font-weight: 500;
+.md-typeset a.tag-search-link{
+  text-decoration:none !important;
 }
-#random-dropdown-panel .md-random-dropdown-item::before {
-  content: "";
-  position: absolute;
-  left: 6px;
-  top: 6px;
-  bottom: 6px;
-  width: 3px;
-  border-radius: 3px;
-  background: transparent;
-  transition: background 140ms ease;
-}
-
-#random-dropdown-panel .md-random-dropdown-item:hover::before {
-  background: var(--md-accent-fg-color);
-}
-
-#random-dropdown-panel .md-random-dropdown-item.is-active {
-  background: var(--random-dd-active);
-  font-weight: 600;
-}
-
-#random-dropdown-panel .md-random-dropdown-item.is-active::before {
-  background: var(--md-accent-fg-color);
-}
-
-#random-dropdown-panel .md-random-dropdown-item:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+.md-typeset a.tag-search-link:hover code{
+  text-decoration:underline;
 }
 
 
-/* ================================
-   Random dropdown – unified brand blue
-   (independent of day / night mode)
-   ================================ */
+/* =========================================================
+   110) Random dropdown (tabs)
+   - structural panel styles + brand blue theme
+   ========================================================= */
 
-#random-dropdown-panel.md-random-dropdown-panel {
-  /* 主色调：顶部蓝 */
+/* Panel positioning and structure */
+#random-dropdown-panel.md-random-dropdown-panel{
+  position:fixed;
+  z-index:9999;
+  border-radius:14px;
+  padding:6px;
+  max-width:280px;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+/* Brand blue theme (independent of scheme) */
+#random-dropdown-panel.md-random-dropdown-panel{
   --brand-blue: rgb(63, 81, 181);
 
-  background: rgba(63, 81, 181, 0.88);  /* 主蓝 + 轻透明 */
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 14px;
-  padding: 6px;
+  background:rgba(63, 81, 181, 0.88);
+  border:1px solid rgba(255, 255, 255, 0.18);
 
-  /* 毛玻璃保留 */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  /* 阴影更偏“浮在蓝色之上” */
   box-shadow:
     0 12px 30px rgba(20, 30, 90, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
-  color: #ffffff;
+  color:#ffffff;
 }
 
-/* Dropdown items */
-#random-dropdown-panel .md-random-dropdown-item {
-  color: rgba(255, 255, 255, 0.92);
-}
-
-/* Hover */
-#random-dropdown-panel .md-random-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-}
-
-/* Active */
-#random-dropdown-panel .md-random-dropdown-item.is-active {
-  background: rgba(255, 255, 255, 0.20);
-  font-weight: 600;
-}
-
-/* 左侧强调条（你原来就有） */
-#random-dropdown-panel .md-random-dropdown-item::before {
-  background: transparent;
-}
-
-#random-dropdown-panel
-.md-random-dropdown-item:hover::before,
-#random-dropdown-panel
-.md-random-dropdown-item.is-active::before {
-  background: #ffffff;
-}
-
-/* 分隔线 */
-#random-dropdown-panel .md-random-dropdown-sep {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-
+/* Dark scheme: slightly deeper */
 html[data-md-color-scheme="slate"]
-#random-dropdown-panel.md-random-dropdown-panel {
-  background: rgba(48, 62, 140, 0.90);
+#random-dropdown-panel.md-random-dropdown-panel{
+  background:rgba(48, 62, 140, 0.90);
 }
 
-/* ================================
-   Tab dropdown component
-   - trigger: .md-tab-dropdown
-   - open: .is-open or [aria-expanded="true"]
-   ================================ */
+/* Items (single consolidated definition) */
+#random-dropdown-panel .md-random-dropdown-item{
+  display:block;
+  position:relative;
 
-.md-tabs__link.md-tab-dropdown {
-  border: 1px solid rgba(255,255,255,.18);
+  padding:8px 10px;
+  margin:0;
+  border-radius:10px;
+  text-decoration:none;
+
+  color:rgba(255, 255, 255, 0.92);
+  font-size:14px;
+  line-height:1.1;
+  font-weight:400;
+  white-space:nowrap;
+  cursor:pointer;
+
+  transition:
+    background 140ms ease,
+    transform 140ms ease,
+    padding-left 140ms ease,
+    box-shadow 140ms ease;
 }
 
-/* open 状态，比 active 更明确一点 */
-.md-tabs__link.md-tab-dropdown.is-open,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] {
-  background: rgba(255,255,255,.18);
-  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+/* Left accent bar */
+#random-dropdown-panel .md-random-dropdown-item::before{
+  content:"";
+  position:absolute;
+  left:6px;
+  top:6px;
+  bottom:6px;
+  width:3px;
+  border-radius:3px;
+  background:transparent;
+  transition:background 140ms ease;
 }
 
-/* open 时 caret 翻转 */
-.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret {
-  transform: rotate(180deg);
-  display: inline-block;
-  transition: transform 140ms ease;
+#random-dropdown-panel .md-random-dropdown-item:hover{
+  background:rgba(255, 255, 255, 0.14);
+  transform:translateX(3px);
+  padding-left:14px;
+  box-shadow:0 4px 12px rgba(0, 0, 0, 0.18);
+  font-weight:500;
+}
+#random-dropdown-panel .md-random-dropdown-item:hover::before{
+  background:#ffffff;
 }
 
-/* ================================
-   Tabs: soft pill + lively hover
-   ================================ */
+#random-dropdown-panel .md-random-dropdown-item.is-active{
+  background:rgba(255, 255, 255, 0.20);
+  font-weight:600;
+}
+#random-dropdown-panel .md-random-dropdown-item.is-active::before{
+  background:#ffffff;
+}
 
-.md-tabs__link {
-  border-radius: 999px;
-  padding: revert;
+/* Separator */
+#random-dropdown-panel .md-random-dropdown-sep{
+  height:1px;
+  margin:6px 10px;
+  background:rgba(255, 255, 255, 0.25);
+}
+
+/* Caret on the Random tab */
+.md-random-dropdown-caret{
+  margin-left:4px;
+  font-size:0.85em;
+  position:relative;
+  top:1px;
+  opacity:0.85;
+  display:inline-block;
+  transition:transform 160ms ease, opacity 160ms ease;
+}
+
+
+/* =========================================================
+   120) Tabs styling (pills + dropdown trigger behaviour)
+   ========================================================= */
+
+.md-tabs__link{
+  border-radius:999px;
+  padding:revert;
   transition:
     background 160ms ease,
     transform 160ms ease,
@@ -947,121 +750,79 @@ html[data-md-color-scheme="slate"]
     opacity 160ms ease;
 }
 
-/* 所有 tabs 的 hover 都有“灵气”的轻跳动 */
-.md-tabs__link:hover {
-  background: rgba(255, 255, 255, 0.10);
-  transform: translateY(-2px);
+.md-tabs__link:hover{
+  background:rgba(255, 255, 255, 0.10);
+  transform:translateY(-2px);
   box-shadow:
     0 10px 22px rgba(0, 0, 0, 0.16),
     0 0 0 6px rgba(255, 255, 255, 0.10);
 }
 
-
-/* active 不要变成一块死板背景，改成更轻的“气质强调” */
-.md-tabs__link--active {
-  background: rgba(255, 255, 255, 0.08);
-  font-weight: 700;
+.md-tabs__link--active{
+  background:rgba(255, 255, 255, 0.08);
+  font-weight:700;
 }
 
-/* ================================
-   Dropdown trigger tabs: NO box distinction
-   ================================ */
-
-/* 不管是 random 还是未来 login，下拉触发器不要额外边框 */
+/* Dropdown trigger: no extra border box */
 .md-tabs__link.md-tab-dropdown,
 .md-tabs__link[href*="random"],
-#course-random-link {
-  border: 0 !important;
+#course-random-link{
+  border:0 !important;
 }
 
-/* open 状态不做“框框”，只做非常轻的呼吸感 */
+/* Open state */
 .md-tabs__link.md-tab-dropdown.is-open,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] {
-  background: rgba(255, 255, 255, 0.10);
-  transform: translateY(-2px);
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"]{
+  background:rgba(255, 255, 255, 0.10);
+  transform:translateY(-2px);
   box-shadow:
     0 12px 26px rgba(0,0,0,.18),
     0 0 0 6px rgba(255, 255, 255, 0.10);
 }
 
-/* caret 动起来，但不要吵 */
-.md-random-dropdown-caret {
-  display: inline-block;
-  transition: transform 160ms ease, opacity 160ms ease;
-  opacity: 0.85;
-}
-
+/* Caret rotation */
 .md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret {
-  transform: rotate(180deg);
-  opacity: 1;
-}
-
-.trending-list.is-loading {
-  list-style: none;
-  padding-left: 0;
-}
-
-
-/* ===== Page title (H1) readability ===== */
-.md-content__inner h1 {
-  font-weight: 900;            /* 更粗 */
-  letter-spacing: -0.01em;
-  color: var(--md-default-fg-color); /* 跟随主题的最高对比文本色 */
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
+  transform:rotate(180deg);
+  opacity:1;
 }
 
 
 /* =========================================================
-   PATCH: Light mode border + divider contrast boost
-   Put this at END of extra.css
+   900) Patch: Light mode border + divider contrast boost
+   - This section is allowed to be a bit broad, because it is a "last wins" patch.
    ========================================================= */
 
-/* 统一：白天模式下所有“线条/边框”更清晰 */
-html[data-md-color-scheme="default"] {
+html[data-md-color-scheme="default"]{
   --patch-border-strong: rgba(20, 40, 40, 0.28);
   --patch-border-mid:    rgba(20, 40, 40, 0.20);
   --patch-border-soft:   rgba(20, 40, 40, 0.14);
   --patch-divider:       rgba(20, 40, 40, 0.16);
 }
 
-/* 1) 左侧导航的层级竖线、分隔线（你截图里最淡的那种） */
-html[data-md-color-scheme="default"] .md-nav__link {
-  border-left-color: var(--patch-border-soft) !important;
-}
-
-/* 2) 侧栏/主内容区的通用 divider */
-html[data-md-color-scheme="default"] .md-sidebar,
-html[data-md-color-scheme="default"] .md-header,
-html[data-md-color-scheme="default"] .md-tabs,
-html[data-md-color-scheme="default"] .md-nav,
-html[data-md-color-scheme="default"] .md-content {
-  border-color: var(--patch-divider);
-}
-
-/* 3) 你 index 用的 cards：边框和底色托起来 */
-html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li {
-  border: 1px solid var(--patch-border-mid) !important;
+/* Cards: make borders readable in light mode */
+html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li{
+  border-color: var(--patch-border-mid) !important;
   background: linear-gradient(135deg,
     rgba(210, 224, 240, 0.45),
     rgba(205, 235, 225, 0.40)
   ) !important;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
-
-html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover {
+html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover{
   border-color: var(--patch-border-strong) !important;
   box-shadow: 0 10px 26px rgba(0,0,0,0.10);
 }
 
-/* 4) admonition / details / blockquote 等常见“框框” */
+/* Common boxed elements */
 html[data-md-color-scheme="default"] .md-typeset details,
 html[data-md-color-scheme="default"] .md-typeset .admonition,
-html[data-md-color-scheme="default"] .md-typeset blockquote {
+html[data-md-color-scheme="default"] .md-typeset blockquote{
   border-color: var(--patch-border-mid) !important;
 }
 
-/* 5) 表格边线（白天常见“看不见”） */
+/* Tables */
 html[data-md-color-scheme="default"] .md-typeset table:not([class]) th,
-html[data-md-color-scheme="default"] .md-typeset table:not([class]) td {
+html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
   border-color: var(--patch-border-soft) !important;
 }
