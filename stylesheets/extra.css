@@ -70,12 +70,22 @@
   margin-bottom: 0.3rem;
 }
 
-/* ===== Level 2: Course ===== */
+/* ===== Level 2: Course (light mode) ===== */
+html[data-md-color-scheme="default"]
 .md-sidebar--primary .md-nav--primary > .md-nav__list
 > .md-nav__item > nav.md-nav > .md-nav__list
 > .md-nav__item > .md-nav__link {
-  color: #9fcfbe !important;          /* Sage mint */
-  font-weight: 500 !important;
+  color: #1f2a2a !important;   /* 深灰绿：白天清晰 */
+  font-weight: 650 !important;
+}
+
+/* ===== Level 2: Course (dark mode) ===== */
+html[data-md-color-scheme="slate"]
+.md-sidebar--primary .md-nav--primary > .md-nav__list
+> .md-nav__item > nav.md-nav > .md-nav__list
+> .md-nav__item > .md-nav__link {
+  color: rgba(255,255,255,0.78) !important;
+  font-weight: 600 !important;
 }
 
 /* Course indicator */
@@ -999,39 +1009,3 @@ html[data-md-color-scheme="slate"]
   letter-spacing: -0.01em;
   color: var(--md-default-fg-color); /* 跟随主题的最高对比文本色 */
 }
-
-/* 白天模式：略微更“实”一点 */
-html[data-md-color-scheme="default"] .md-content__inner h1 {
-  opacity: 1;
-}
-
-/* 夜间模式：避免灰掉，保持亮度 */
-html[data-md-color-scheme="slate"] .md-content__inner h1 {
-  opacity: 1;
-}
-
-/* ===== Sidebar nav readability (light mode only) ===== */
-html[data-md-color-scheme="default"] .md-nav__link {
-  color: #023939;          /* 主体深灰绿，替代现在的淡绿 */
-  font-weight: 500;
-}
-
-/* 非 active、非 hover 的状态，避免“发虚” */
-html[data-md-color-scheme="default"]
-.md-nav__link:not(.md-nav__link--active):not(:hover) {
-  color: #042828;
-}
-
-/* ===== Sidebar nav: make default text darker (light mode only) ===== */
-html[data-md-color-scheme="default"] .md-nav--primary .md-nav__link {
-  color: #1f2a2a;        /* 更深，更清晰 */
-  font-weight: 550;
-}
-
-/* 当前页、hover 保持更强对比 */
-html[data-md-color-scheme="default"] .md-nav--primary .md-nav__link--active,
-html[data-md-color-scheme="default"] .md-nav--primary .md-nav__link:hover {
-  color: #0f1a1a;
-  font-weight: 800;
-}
-
