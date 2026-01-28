@@ -38,16 +38,13 @@
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
 
-    // "/" or "index.html"
     if (segs.length === 0) return { year: "", course: "" };
     if (segs.length === 1) return { year: segs[0], course: "" };
 
-    // "/<year>/index.html" counts as year landing
     if (segs.length === 2 && String(segs[1]).toLowerCase() === "index.html") {
       return { year: segs[0], course: "" };
     }
 
-    // course scope uses first two segments
     return { year: segs[0], course: segs[1] };
   }
 
@@ -85,17 +82,20 @@
     }
   }
 
-  function findYearTitleNode(yearSeg) {
+  function findYearNodeByPath(yearSeg) {
     if (!yearSeg) return null;
 
     const root = getSiteRootUrl();
     const wantA = `${yearSeg}/`;
     const wantB = `${yearSeg}/index.html`;
 
-    const links = Array.from(document.querySelectorAll(".md-sidebar--primary a.md-nav__link, .md-sidebar--primary label.md-nav__link"));
+    const links = Array.from(
+      document.querySelectorAll(".md-sidebar--primary a.md-nav__link, .md-sidebar--primary label.md-nav__link")
+    );
+
     for (const el of links) {
       const href = el.getAttribute && el.getAttribute("href");
-      const rel = normaliseHrefToRel(href ? new URL(href, root).toString() : "");
+      const rel = href ? normaliseHrefToRel(new URL(href, root).toString()) : "";
       if (rel === wantA || rel === wantB) {
         return el.closest(".md-nav__item") || null;
       }
@@ -103,46 +103,36 @@
     return null;
   }
 
-  function findCourseNodeByPath(yearSeg, courseSeg) {
-    if (!yearSeg || !courseSeg) return null;
+  // Fallback: from active link, climb up and pick the HIGHEST nested ancestor
+  // that still contains links under year/course.
+  function findCourseNodeFromActive(activeLink, yearSeg, courseSeg) {
+    if (!activeLink || !yearSeg || !courseSeg) return null;
 
-    const root = getSiteRootUrl();
-    const wantA = `${yearSeg}/${courseSeg}/`;
-    const wantB = `${yearSeg}/${courseSeg}/index.html`;
-
-    const links = Array.from(document.querySelectorAll(".md-sidebar--primary a.md-nav__link, .md-sidebar--primary label.md-nav__link"));
-
-    // Prefer exact course landing link if possible
-    let best = null;
-
-    for (const el of links) {
-      const href = el.getAttribute && el.getAttribute("href");
-      if (!href) continue;
-
-      const abs = new URL(href, root).toString();
-      const rel = normaliseHrefToRel(abs);
-
-      if (rel === wantA || rel === wantB) {
-        best = el;
-        break;
-      }
-
-      // fallback: anything that starts with year/course (rarely needed)
-      if (!best && rel.startsWith(`${yearSeg}/${courseSeg}/`)) best = el;
-    }
-
-    if (!best) return null;
-
-    // Course node should be the nested item containing the toggle
-    const item = best.closest(".md-nav__item");
+    const prefix = `${yearSeg}/${courseSeg}/`;
+    const item = activeLink.closest(".md-nav__item");
     if (!item) return null;
 
-    // If this is not nested, walk up to nearest nested (course container)
-    let node = item;
-    while (node && !node.classList.contains("md-nav__item--nested")) {
-      node = node.parentElement ? node.parentElement.closest(".md-nav__item") : null;
+    let cur = item;
+    let best = null;
+
+    while (cur) {
+      if (cur.classList && cur.classList.contains("md-nav__item--nested")) {
+        const anchors = Array.from(cur.querySelectorAll("a.md-nav__link[href]"));
+        const ok = anchors.some(a => normaliseHrefToRel(a.getAttribute("href")).startsWith(prefix));
+        if (ok) best = cur; // keep updating as we go up -> ends up the highest matching
+      }
+      cur = cur.parentElement ? cur.parentElement.closest(".md-nav__item") : null;
     }
-    return node;
+
+    // If nothing matched by prefix, just use the nearest nested ancestor
+    if (best) return best;
+
+    cur = item;
+    while (cur) {
+      if (cur.classList && cur.classList.contains("md-nav__item--nested")) return cur;
+      cur = cur.parentElement ? cur.parentElement.closest(".md-nav__item") : null;
+    }
+    return null;
   }
 
   function apply() {
@@ -153,7 +143,11 @@
     const titleSpan = bar.querySelector(".ccb-title");
     const iconSpan = bar.querySelector(".ccb-icon");
 
-    const activeLink = document.querySelector(".md-sidebar--primary .md-nav__link--active");
+    // More robust active link selector for Material
+    const activeLink =
+      document.querySelector(".md-sidebar--primary a.md-nav__link--active, .md-sidebar--primary a.md-nav__link[aria-current='page']") ||
+      document.querySelector(".md-sidebar--primary .md-nav__link--active");
+
     if (!activeLink) {
       bar.style.display = "none";
       return;
@@ -161,17 +155,16 @@
 
     const { year, course } = inferYearCourse();
 
-    // Decide which node/title we show
     let scopeNode = null;
     let showArrow = false;
 
     if (!course) {
       // Year landing: show Year title, hide arrow
-      scopeNode = findYearTitleNode(year) || activeLink.closest(".md-nav__item");
+      scopeNode = findYearNodeByPath(year) || activeLink.closest(".md-nav__item");
       showArrow = false;
     } else {
-      // Course or course content: show Course title, show arrow (if toggle exists)
-      scopeNode = findCourseNodeByPath(year, course);
+      // Course/content: derive course container from active path (works even if course is a label without href)
+      scopeNode = findCourseNodeFromActive(activeLink, year, course);
       showArrow = true;
     }
 
@@ -194,19 +187,16 @@
     titleSpan.textContent = titleText;
     bar.style.display = "";
 
-    // Toggle belongs to the scope node (works for both year and course if nested)
     const toggle =
       scopeNode.querySelector(":scope > input.md-nav__toggle") ||
       scopeNode.querySelector("input.md-nav__toggle");
 
-    // Year landing: no arrow at all
     if (!showArrow) {
       iconSpan.style.display = "none";
       btn.onclick = null;
       return;
     }
 
-    // Course/content: only show arrow if there is a toggle to control
     if (!toggle) {
       iconSpan.style.display = "none";
       btn.onclick = null;
@@ -215,7 +205,6 @@
 
     iconSpan.style.display = "";
 
-    // Sync icon direction with open/closed
     const isOpen = !!toggle.checked;
     iconSpan.setAttribute("data-md-icon", isOpen ? "chevron-down" : "chevron-right");
 
