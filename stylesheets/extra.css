@@ -924,21 +924,20 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
    90) Tool panels (self-test + custom random)
    ========================================================= */
 
-/* Self-test mode banner */
-.custom-random-banner{
-  background: var(--grad-tool-a);
+
+/* Self-test bar (custom-random page) */
+.cr-selftest-bar{
+  background: linear-gradient(135deg, rgba(63,81,181,.12), rgba(63,81,181,.05));
   border: 1px solid var(--line-soft);
   border-radius: 16px;
-  padding: 1rem 1.2rem;
-  box-shadow: var(--shadow-soft);
+  padding: 12px 14px;
 }
 
-/* Custom random panel */
-#custom-random-app{
-  background: var(--grad-tool-b);
-  border: 1px solid var(--line-soft);
-  border-radius: 18px;
-  padding: 1.2rem 1.4rem;
+/* Custom random banner (on concept pages) */
+#custom-random-banner{
+  background: linear-gradient(135deg, rgba(0,150,136,.12), rgba(0,150,136,.05));
+  border: 1px solid var(--line-soft) !important;
+  border-radius: 16px !important;
+  padding: 12px 14px !important;
   box-shadow: var(--shadow-soft);
-  margin-top: 0.6rem;
 }
