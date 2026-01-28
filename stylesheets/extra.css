@@ -933,11 +933,12 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
   padding: 12px 14px;
 }
 
-/* Custom random banner (on concept pages) */
+/* Self-test banner inserted by custom-random-banner.js */
 #custom-random-banner{
-  background: linear-gradient(135deg, rgba(0,150,136,.12), rgba(0,150,136,.05));
+  background: var(--grad-tool-a) !important;  /* 关键：覆盖 inline background */
   border: 1px solid var(--line-soft) !important;
   border-radius: 16px !important;
   padding: 12px 14px !important;
   box-shadow: var(--shadow-soft);
+  margin-top: 0.4rem;
 }
