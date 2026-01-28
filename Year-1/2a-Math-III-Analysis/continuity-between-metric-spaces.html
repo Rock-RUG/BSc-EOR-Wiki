@@ -10435,14 +10435,14 @@
 
 <h1 id="continuity-between-metric-spaces">Continuity between Metric Spaces<a class="headerlink" href="#continuity-between-metric-spaces" title="Permanent link">&para;</a></h1>
 <h2 id="definition">📘 Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h2>
-<p>Consider two <a href="metric-and-metric-space.html">metric spaces</a> <span class="arithmatex">\((\boldsymbol{X},d_{\boldsymbol{X}})\)</span> and <span class="arithmatex">\((\boldsymbol{Y},d_{\boldsymbol{Y}})\text{,}\)</span> and a function <span class="arithmatex">\(\boldsymbol{f}\colon \boldsymbol{E}\to\boldsymbol{Y}\)</span> where <span class="arithmatex">\(\boldsymbol{E}\subseteq\boldsymbol{X}\text{.}\)</span> Let <span class="arithmatex">\(\boldsymbol{x}_0\in\boldsymbol{X}\text{.}\)</span> Assume there exists an <span class="arithmatex">\(r&gt;0\)</span> such that <span class="arithmatex">\(\boldsymbol{B}_{(\boldsymbol{X},d_{\boldsymbol{X}})}(\boldsymbol{x}_0,r)\subseteq \boldsymbol{E}\text{.}\)</span> We say that <span class="arithmatex">\(\boldsymbol{f}\)</span> is <strong>continuous at</strong> <span class="arithmatex">\(\boldsymbol{x}=\boldsymbol{x}_0\)</span> if, for any <span class="arithmatex">\(\varepsilon &gt; 0\text{,}\)</span> there exists a <span class="arithmatex">\(0&lt;\delta \leq r\)</span> such that whenever <span class="arithmatex">\(d_{\boldsymbol{X}}(\boldsymbol{x},\boldsymbol{x}_0)&lt;\delta\text{,}\)</span> we have <span class="arithmatex">\(d_{\boldsymbol{Y}}(\boldsymbol{f}(\boldsymbol{x}),\boldsymbol{f}(\boldsymbol{x}_0))&lt;\varepsilon\text{.}\)</span></p>
+<p>Consider two <a href="metric-and-metric-space.html">metric spaces</a> <span class="arithmatex">\((\boldsymbol{X},d_{\boldsymbol{X}})\)</span> and <span class="arithmatex">\((\boldsymbol{Y},d_{\boldsymbol{Y}})\text{,}\)</span> and a <a href="function-between-spaces.html">function</a> <span class="arithmatex">\(\boldsymbol{f}\colon \boldsymbol{E}\to\boldsymbol{Y}\)</span> where <span class="arithmatex">\(\boldsymbol{E}\subseteq\boldsymbol{X}\text{.}\)</span> Let <span class="arithmatex">\(\boldsymbol{x}_0\in\boldsymbol{X}\text{.}\)</span> Assume there exists an <span class="arithmatex">\(r&gt;0\)</span> such that <span class="arithmatex">\(\boldsymbol{B}_{(\boldsymbol{X},d_{\boldsymbol{X}})}(\boldsymbol{x}_0,r)\subseteq \boldsymbol{E}\text{.}\)</span> We say that <span class="arithmatex">\(\boldsymbol{f}\)</span> is <strong>continuous at</strong> <span class="arithmatex">\(\boldsymbol{x}=\boldsymbol{x}_0\)</span> if, for any <span class="arithmatex">\(\varepsilon &gt; 0\text{,}\)</span> there exists a <span class="arithmatex">\(0&lt;\delta \leq r\)</span> such that whenever <span class="arithmatex">\(d_{\boldsymbol{X}}(\boldsymbol{x},\boldsymbol{x}_0)&lt;\delta\text{,}\)</span> we have <span class="arithmatex">\(d_{\boldsymbol{Y}}(\boldsymbol{f}(\boldsymbol{x}),\boldsymbol{f}(\boldsymbol{x}_0))&lt;\varepsilon\text{.}\)</span></p>
 <hr />
 <h2 id="interpretation">🧠 Interpretation<a class="headerlink" href="#interpretation" title="Permanent link">&para;</a></h2>
 <hr />
 <h2 id="key-results">⭐ Key Results<a class="headerlink" href="#key-results" title="Permanent link">&para;</a></h2>
 <ul>
 <li>If one path approaching the point has a different limit, then the function's limit at that point does not exist, and therefore the function is not continuous at that point.</li>
-<li>A vector-valued function is continuous if and only if each of its component functions is continuous.</li>
+<li>A <a href="function-between-spaces.html">vector-valued function</a> is continuous if and only if each of its component functions is continuous.</li>
 <li>Most properties of real-valued functions of one real variable are preserved under continuity. In particular, continuity is preserved under addition, subtraction, multiplication, division (where the denominator is nonzero), as well as taking the maximum, minimum, and composition of functions.</li>
 </ul>
 <hr />
@@ -10454,6 +10454,7 @@
 <h2 id="prerequisites">📎 Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="metric-and-metric-space.html">Metric and Metric Spaces</a></li>
+<li><a href="open-metric-ball.html">Open Metric Ball</a></li>
 <li><a href="../1a-Math-I-Calculus/continuity.html">Continuity</a></li>
 </ul>
 <hr />

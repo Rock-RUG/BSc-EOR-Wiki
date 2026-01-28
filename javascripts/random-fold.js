@@ -40,9 +40,15 @@
     const chip = document.createElement("div");
     chip.className = "md-typeset";
     chip.style.margin = "12px 0 16px 0";
-    chip.style.padding = "10px 12px";
-    chip.style.border = "1px solid var(--md-default-fg-color--lightest)";
-    chip.style.borderRadius = "12px";
+    chip.style.padding = "14px 16px";
+chip.style.border = "1px solid var(--md-default-fg-color--lightest)";
+chip.style.borderRadius = "16px";
+
+/* 新增：渐变背景 + 轻微阴影 */
+chip.style.background =
+  "linear-gradient(135deg, rgba(63,81,181,.12), rgba(63,81,181,.05))";
+chip.style.boxShadow = "0 10px 26px rgba(0,0,0,.10)";
+
     chip.innerHTML = `
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
         <div style="opacity:.85">
