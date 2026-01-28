@@ -994,19 +994,28 @@ html[data-md-color-scheme="slate"]
 
 
 /* ================================
-   Page title (h1) readability
+   FIX: Page title (H1) weight + colour (day/night)
+   Put this at the VERY END of extra.css
    ================================ */
 
 /* Light mode */
-html[data-md-color-scheme="default"] .md-content__inner h1 {
-  font-weight: 800;
-  color: rgba(0, 0, 0, 0.92);
-  letter-spacing: -0.01em;
+html[data-md-color-scheme="default"] .md-typeset h1,
+html[data-md-color-scheme="default"] article.md-content__inner h1 {
+  font-weight: 800 !important;
+  color: rgba(0, 0, 0, 0.92) !important;
+  opacity: 1 !important;
 }
 
 /* Dark mode */
-html[data-md-color-scheme="slate"] .md-content__inner h1 {
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: -0.01em;
+html[data-md-color-scheme="slate"] .md-typeset h1,
+html[data-md-color-scheme="slate"] article.md-content__inner h1 {
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  opacity: 1 !important;
+}
+
+/* Optional: keep "Definition / Interpretation" headings readable too */
+html[data-md-color-scheme="default"] .md-typeset h2,
+html[data-md-color-scheme="slate"] .md-typeset h2 {
+  font-weight: 700;
 }

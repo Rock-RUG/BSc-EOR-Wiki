@@ -5,6 +5,9 @@
   const TOKENS_KEY = "random_custom_tokens_v1";
   const TOKENMAP_KEY = "random_custom_token_map_v1";
 
+  // 新增：只在 Start random / Continue random 导航时出现 banner 的一次性标记
+  const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
+
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
     const link =
@@ -82,6 +85,19 @@
     return p.endsWith("/custom-random.html") || p.endsWith("custom-random.html");
   }
 
+  // 本次页面是否由 Start/Continue random 导航而来
+  function consumeNavFlag() {
+    try {
+      const v = sessionStorage.getItem(NAV_FLAG_KEY);
+      if (v !== "1") return false;
+      sessionStorage.removeItem(NAV_FLAG_KEY);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // 把当前 pathname 转成相对 site root 的路径（不带开头 /）
   function currentRelPath() {
     const siteRoot = new URL(getSiteRootUrl());
     const rootPath = siteRoot.pathname.endsWith("/") ? siteRoot.pathname : (siteRoot.pathname + "/");
@@ -109,11 +125,18 @@
   }
 
   function insertBanner(cands, tokens, matchedTokens) {
+    const inner = document.querySelector("article.md-content__inner");
+    if (!inner) return;
+
     if (document.getElementById("custom-random-banner")) return;
 
     const box = document.createElement("div");
     box.id = "custom-random-banner";
-    box.className = "cr-banner";
+    box.className = "md-typeset";
+    box.style.margin = "12px 0 18px 0";
+    box.style.padding = "12px 14px";
+    box.style.border = "1px solid var(--md-default-fg-color--lightest)";
+    box.style.borderRadius = "12px";
 
     const count = cands.length;
 
@@ -121,86 +144,74 @@
       ? tokens
           .map((t) => {
             const isHit = matchedTokens.includes(t);
-            return `<span class="cr-chip ${isHit ? "is-hit" : ""}">${escapeHtml(t)}${isHit ? " ✓" : ""}</span>`;
+            return `<span style="display:inline-flex;align-items:center;margin:2px 6px 2px 0;padding:3px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);${
+              isHit ? "font-weight:700" : "opacity:.85"
+            }">${escapeHtml(t)}${isHit ? " ✓" : ""}</span>`;
           })
           .join("")
-      : `<span class="cr-muted">No tokens</span>`;
+      : `<span style="opacity:.75">No tokens</span>`;
 
     const matchedText = matchedTokens.length
       ? `This page matches: <strong>${matchedTokens.map(escapeHtml).join(", ")}</strong>`
-      : `This page does not match any token.`;
+      : `This page doesn't match any token (possible if you opened it manually).`;
 
     box.innerHTML = `
-      <div class="cr-row">
-        <div class="cr-left">
-          <div class="cr-title">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between">
+        <div style="min-width:240px">
+          <div>
             <strong>Custom random</strong>
-            <span class="cr-muted">(${count} page(s) in union)</span>
+            <span style="opacity:.75">(${count} page(s) in union)</span>
           </div>
-
-          <div class="cr-chips">${tokenChips}</div>
-
-          <div class="cr-note">${matchedText}</div>
+          <div style="margin-top:8px">
+            ${tokenChips}
+          </div>
+          <div style="margin-top:8px;opacity:.85">
+            ${matchedText}
+          </div>
         </div>
 
-        <div class="cr-actions">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
           <a id="cr-continue" class="md-button md-button--primary" href="#">Continue random</a>
           <a id="cr-change" class="md-button" href="#">Change range</a>
-          <button id="cr-close" class="md-button" type="button">Hide</button>
         </div>
       </div>
     `;
 
-    document.body.appendChild(box);
+    const h1 = inner.querySelector("h1");
+    if (h1 && h1.parentNode) h1.insertAdjacentElement("afterend", box);
+    else inner.insertAdjacentElement("afterbegin", box);
 
-    // Continue random
-    box.querySelector("#cr-continue").addEventListener("click", (e) => {
+    document.getElementById("cr-continue").addEventListener("click", (e) => {
       e.preventDefault();
       const chosen = pickRandom(cands);
       if (!chosen) return;
 
-      // 如果 self-test mode 是开着的，下一页也需要“导航票据”
+      // 关键：下一页也应当显示 banner
       try {
-        if (sessionStorage.getItem("random_review_mode_v1") === "1") {
-          sessionStorage.setItem("random_review_nav_flag_v1", "1");
-        }
-      } catch (_) {}
+  if (sessionStorage.getItem("random_review_mode_v1") === "1") {
+    sessionStorage.setItem("random_review_nav_flag_v1", "1");
+  }
+} catch (_) {}
 
       window.location.assign(toAbsoluteUrl(chosen));
     });
 
-    // Change range
-    box.querySelector("#cr-change").addEventListener("click", (e) => {
+    document.getElementById("cr-change").addEventListener("click", (e) => {
       e.preventDefault();
       const entry = readEntryUrl();
       if (entry) window.location.assign(entry);
       else window.location.assign(new URL("custom-random.html", getSiteRootUrl()).toString());
     });
-
-    // Hide (only hides for this tab session)
-    box.querySelector("#cr-close").addEventListener("click", () => {
-      try {
-        sessionStorage.setItem("random_custom_banner_hidden_v1", "1");
-      } catch (_) {}
-      box.remove();
-    });
-  }
-
-  function isHidden() {
-    try {
-      return sessionStorage.getItem("random_custom_banner_hidden_v1") === "1";
-    } catch (_) {
-      return false;
-    }
   }
 
   function init() {
     if (isOnCustomRandomPage()) return;
 
+    // 关键：不是从 Start/Continue random 导航而来，就不显示 banner
+    if (!consumeNavFlag()) return;
+
     const rel = currentRelPath();
     if (!isConceptPage(rel)) return;
-
-    if (isHidden()) return;
 
     const cands = readCandidates();
     if (!cands.length) return;
