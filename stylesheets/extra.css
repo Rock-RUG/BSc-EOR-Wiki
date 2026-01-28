@@ -828,6 +828,32 @@ html[data-md-color-scheme="slate"]
   transition:transform 160ms ease, opacity 160ms ease;
 }
 
+/* ===== Random dropdown caret: use chevron like sidebar ===== */
+.md-random-dropdown-caret{
+  /* 覆盖原来的小三角，强制用 chevron */
+  font-size: 0;            /* 隐藏原字符 */
+  width: 0.9em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 用 ::before 画出 “>” */
+.md-random-dropdown-caret::before{
+  content: "›";            /* 右箭头风格 */
+  font-size: 0.95rem;      /* 重新给可见字符字号 */
+  display: inline-block;
+  opacity: 0.85;
+  transition: transform 160ms ease, opacity 160ms ease;
+  transform: rotate(0deg);
+}
+
+/* 展开时：旋转 90° 变成向下 */
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret::before,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret::before{
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
 
 /* =========================================================
    120) Tabs styling (pills + dropdown trigger behaviour)
@@ -876,7 +902,7 @@ html[data-md-color-scheme="slate"]
 /* Caret rotation */
 .md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
 .md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
-  transform:rotate(180deg);
+  transform:none;
   opacity:1;
 }
 
