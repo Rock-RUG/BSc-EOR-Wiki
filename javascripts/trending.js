@@ -114,8 +114,9 @@ function displayTitle(item) {
       const periodConfig = PERIODS.find((x) => x.key === state.period) || PERIODS[2];
       const limit = periodConfig.limit;
 
-      list.innerHTML = "";
-      list.appendChild(el("li", "trending-loading", "Loading..."));
+      list.classList.add("is-loading");
+list.innerHTML = "";
+list.appendChild(el("li", "trending-loading", "Loading..."));
 
       // popular/comments 暂时占位
       if (metric !== "views") {
@@ -164,7 +165,7 @@ function displayTitle(item) {
 
         prev.disabled = currentPage <= 1;
         next.disabled = currentPage >= totalPages;
-
+        list.classList.remove("is-loading");
         // 渲染页码：1 2 3 ... totalPages，当前高亮
         pages.innerHTML = "";
         for (let p = 1; p <= totalPages; p++) {

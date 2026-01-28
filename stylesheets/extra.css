@@ -987,3 +987,7 @@ html[data-md-color-scheme="slate"]
   opacity: 1;
 }
 
+.trending-list.is-loading {
+  list-style: none;
+  padding-left: 0;
+}
