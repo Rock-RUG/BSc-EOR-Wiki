@@ -974,51 +974,62 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
   box-shadow: var(--shadow-soft);
 }
 
-/* =========================================
-   Random tab: align + chevron like Material nav
-   ========================================= */
+/* ===============================
+   Random dropdown: remove inner pill + correct chevron
+   =============================== */
 
-/* 1) 让 Random 触发器内部文字/箭头严格垂直居中 */
+/* 1) 去掉“内侧胶囊”的背景/阴影，只保留文字（外观就不会两层） */
 .md-tabs__link.md-tab-dropdown{
-  display:inline-flex;
-  align-items:center;
-  gap:0.35em;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
 }
 
-/* 2) 去掉你目前 caret 的“文字字符 + top 偏移”做法（覆盖原规则） */
+/* 如果你仍想保留 hover 的轻微反馈，可以用非常克制的版本 */
+.md-tabs__link.md-tab-dropdown:hover{
+  background: rgba(255,255,255,.06) !important;
+  box-shadow: none !important;
+}
+
+/* 2) caret 容器：禁止任何 transform（避免跟旧规则叠加导致方向错） */
 .md-random-dropdown-caret{
-  margin-left:0 !important;
-  top:auto !important;
-  position:static !important;
+  transform: none !important;
+  position: static !important;
+  top: auto !important;
 
-  /* 用画出来的 chevron 取代字符 */
-  width:0.55em;
-  height:0.55em;
-  display:inline-block;
+  width: .55em;
+  height: .55em;
+  display: inline-block;
+  vertical-align: middle;
 
-  /* 这两条边就是 Material 那种箭头感 */
-  border-right:2px solid currentColor;
-  border-bottom:2px solid currentColor;
-
-  /* 默认：>（右箭头） */
-  transform:rotate(-45deg);
-  opacity:0.85;
-
-  transition:transform 160ms ease, opacity 160ms ease;
+  /* 关键：彻底隐藏原来的字符（你看到的“点”大概率就是它） */
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden;
 }
 
-/* 3) 展开后：变成向下箭头 */
-.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
-  transform:rotate(45deg);
-  opacity:1;
+/* 3) 用 ::before 画出 Material 风格 chevron（默认 > ） */
+.md-random-dropdown-caret::before{
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;   /* 经典 chevron 画法 */
+
+  opacity: .85;
+  transform: rotate(-45deg);  /* 右箭头 > */
+  transition: transform 160ms ease, opacity 160ms ease;
 }
 
-/* 4) 只对 Random dropdown trigger：去掉那一圈“外发光”，避免两层背景感 */
-.md-tabs__link.md-tab-dropdown:hover,
-.md-tabs__link.md-tab-dropdown.is-open,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"]{
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16) !important; /* 只保留一层阴影 */
-  /* 如果你还觉得“胶囊套胶囊”，把背景也收敛一点 */
-  background: rgba(255,255,255,0.08) !important;
+/* 4) 打开时变成向下 v */
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret::before,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret::before{
+  transform: rotate(45deg);   /* 向下 v */
+  opacity: 1;
 }
