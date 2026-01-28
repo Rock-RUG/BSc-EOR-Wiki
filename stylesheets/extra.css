@@ -267,14 +267,11 @@ html[data-md-color-scheme="slate"]
 
 /* Cards: slightly rounder + subtle lift */
 .md-typeset .grid.cards > ul > li{
-  background: var(--grad-card);
-  border: 1px solid var(--line-soft);
-  box-shadow: var(--shadow-soft);
+  border-radius:16px;
 }
-
 .md-typeset .grid.cards > ul > li:hover{
-  border-color: var(--line-strong);
-  box-shadow: var(--shadow-mid);
+  transform:translateY(-2px);
+  transition:120ms ease;
 }
 
 
@@ -323,20 +320,21 @@ html[data-md-color-scheme="slate"]
    ========================================================= */
 
 .year-hero{
-  background: var(--grad-year);
-  border: 1px solid var(--line-mid);
-  box-shadow: var(--shadow-soft);
+  padding:2.4rem 1.6rem;
+  border-radius:18px;
+  margin:0 0 1.4rem 0;
+  background:linear-gradient(135deg, rgba(63,81,181,.20), rgba(0,150,136,.16));
+  border:1px solid rgba(0,0,0,.10);
 }
-
 
 .year-hero__inner h1{ margin-top:0; }
 
 .year-block{
-  background: var(--grad-block);
-  border: 1px solid var(--line-mid);
-  box-shadow: var(--shadow-soft);
+  border-radius:18px;
+  margin:0 0 1.2rem 0;
+  border:1px solid rgba(0,0,0,.10);
+  overflow:hidden;
 }
-
 
 .year-block__inner{ padding:1.6rem 1.4rem; }
 
@@ -348,11 +346,10 @@ html[data-md-color-scheme="slate"]
 }
 
 /* Block backgrounds */
-.year-block--1a{ background: var(--grad-block); }
-.year-block--1b{ background: var(--grad-block); }
-.year-block--2a{ background: var(--grad-block); }
-.year-block--2b{ background: var(--grad-block); }
-
+.year-block--1a{ background:linear-gradient(135deg, rgba(63,81,181,.10), rgba(63,81,181,.04)); }
+.year-block--1b{ background:linear-gradient(135deg, rgba(0,150,136,.10), rgba(0,150,136,.04)); }
+.year-block--2a{ background:linear-gradient(135deg, rgba(156,39,176,.10), rgba(156,39,176,.04)); }
+.year-block--2b{ background:linear-gradient(135deg, rgba(255,152,0,.10), rgba(255,152,0,.04)); }
 
 /* Topic pills */
 .md-typeset a.topic-pill{
@@ -438,8 +435,10 @@ html[data-md-color-scheme="slate"]
   gap:0.8rem;
 }
 #search-results .sr-item{
-  background: var(--grad-panel);
-  border: 1px solid var(--line-soft);
+  padding:0.95rem 1rem;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.10);
+  background:rgba(0,0,0,.02);
 }
 #search-results .sr-head{
   display:flex;
