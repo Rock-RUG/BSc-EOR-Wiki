@@ -991,3 +991,22 @@ html[data-md-color-scheme="slate"]
   list-style: none;
   padding-left: 0;
 }
+
+
+/* ================================
+   Page title (h1) readability
+   ================================ */
+
+/* Light mode */
+html[data-md-color-scheme="default"] .md-content__inner h1 {
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.92);
+  letter-spacing: -0.01em;
+}
+
+/* Dark mode */
+html[data-md-color-scheme="slate"] .md-content__inner h1 {
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.01em;
+}
