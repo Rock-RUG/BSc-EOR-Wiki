@@ -1009,3 +1009,59 @@ html[data-md-color-scheme="slate"]
   letter-spacing: -0.01em;
   color: var(--md-default-fg-color); /* 跟随主题的最高对比文本色 */
 }
+
+
+/* =========================================================
+   PATCH: Light mode border + divider contrast boost
+   Put this at END of extra.css
+   ========================================================= */
+
+/* 统一：白天模式下所有“线条/边框”更清晰 */
+html[data-md-color-scheme="default"] {
+  --patch-border-strong: rgba(20, 40, 40, 0.28);
+  --patch-border-mid:    rgba(20, 40, 40, 0.20);
+  --patch-border-soft:   rgba(20, 40, 40, 0.14);
+  --patch-divider:       rgba(20, 40, 40, 0.16);
+}
+
+/* 1) 左侧导航的层级竖线、分隔线（你截图里最淡的那种） */
+html[data-md-color-scheme="default"] .md-nav__link {
+  border-left-color: var(--patch-border-soft) !important;
+}
+
+/* 2) 侧栏/主内容区的通用 divider */
+html[data-md-color-scheme="default"] .md-sidebar,
+html[data-md-color-scheme="default"] .md-header,
+html[data-md-color-scheme="default"] .md-tabs,
+html[data-md-color-scheme="default"] .md-nav,
+html[data-md-color-scheme="default"] .md-content {
+  border-color: var(--patch-divider);
+}
+
+/* 3) 你 index 用的 cards：边框和底色托起来 */
+html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li {
+  border: 1px solid var(--patch-border-mid) !important;
+  background: linear-gradient(135deg,
+    rgba(210, 224, 240, 0.45),
+    rgba(205, 235, 225, 0.40)
+  ) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--patch-border-strong) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+}
+
+/* 4) admonition / details / blockquote 等常见“框框” */
+html[data-md-color-scheme="default"] .md-typeset details,
+html[data-md-color-scheme="default"] .md-typeset .admonition,
+html[data-md-color-scheme="default"] .md-typeset blockquote {
+  border-color: var(--patch-border-mid) !important;
+}
+
+/* 5) 表格边线（白天常见“看不见”） */
+html[data-md-color-scheme="default"] .md-typeset table:not([class]) th,
+html[data-md-color-scheme="default"] .md-typeset table:not([class]) td {
+  border-color: var(--patch-border-soft) !important;
+}
