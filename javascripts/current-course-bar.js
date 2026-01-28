@@ -33,18 +33,15 @@
     return (relPath || "").split("/").filter(Boolean);
   }
 
-  // Return { year, course } where course is "" when you're on a year landing.
   function inferYearCourse() {
     const rel = relPathFromSiteRoot(window.location.pathname);
     const segs = splitSegs(rel);
 
     if (segs.length === 0) return { year: "", course: "" };
     if (segs.length === 1) return { year: segs[0], course: "" };
-
     if (segs.length === 2 && String(segs[1]).toLowerCase() === "index.html") {
       return { year: segs[0], course: "" };
     }
-
     return { year: segs[0], course: segs[1] };
   }
 
@@ -103,8 +100,8 @@
     return null;
   }
 
-  // Fallback: from active link, climb up and pick the HIGHEST nested ancestor
-  // that still contains links under year/course.
+  // IMPORTANT: choose the NEAREST nested ancestor that represents the course container,
+  // not the highest one (which tends to be the Year container).
   function findCourseNodeFromActive(activeLink, yearSeg, courseSeg) {
     if (!activeLink || !yearSeg || !courseSeg) return null;
 
@@ -113,20 +110,16 @@
     if (!item) return null;
 
     let cur = item;
-    let best = null;
-
     while (cur) {
       if (cur.classList && cur.classList.contains("md-nav__item--nested")) {
         const anchors = Array.from(cur.querySelectorAll("a.md-nav__link[href]"));
         const ok = anchors.some(a => normaliseHrefToRel(a.getAttribute("href")).startsWith(prefix));
-        if (ok) best = cur; // keep updating as we go up -> ends up the highest matching
+        if (ok) return cur; // nearest match wins
       }
       cur = cur.parentElement ? cur.parentElement.closest(".md-nav__item") : null;
     }
 
-    // If nothing matched by prefix, just use the nearest nested ancestor
-    if (best) return best;
-
+    // fallback: nearest nested ancestor at all
     cur = item;
     while (cur) {
       if (cur.classList && cur.classList.contains("md-nav__item--nested")) return cur;
@@ -143,7 +136,6 @@
     const titleSpan = bar.querySelector(".ccb-title");
     const iconSpan = bar.querySelector(".ccb-icon");
 
-    // More robust active link selector for Material
     const activeLink =
       document.querySelector(".md-sidebar--primary a.md-nav__link--active, .md-sidebar--primary a.md-nav__link[aria-current='page']") ||
       document.querySelector(".md-sidebar--primary .md-nav__link--active");
@@ -159,11 +151,9 @@
     let showArrow = false;
 
     if (!course) {
-      // Year landing: show Year title, hide arrow
       scopeNode = findYearNodeByPath(year) || activeLink.closest(".md-nav__item");
       showArrow = false;
     } else {
-      // Course/content: derive course container from active path (works even if course is a label without href)
       scopeNode = findCourseNodeFromActive(activeLink, year, course);
       showArrow = true;
     }
@@ -191,27 +181,21 @@
       scopeNode.querySelector(":scope > input.md-nav__toggle") ||
       scopeNode.querySelector("input.md-nav__toggle");
 
-    if (!showArrow) {
-      iconSpan.style.display = "none";
-      btn.onclick = null;
-      return;
-    }
-
-    if (!toggle) {
+    if (!showArrow || !toggle) {
       iconSpan.style.display = "none";
       btn.onclick = null;
       return;
     }
 
     iconSpan.style.display = "";
-
-    const isOpen = !!toggle.checked;
-    iconSpan.setAttribute("data-md-icon", isOpen ? "chevron-down" : "chevron-right");
+    iconSpan.setAttribute("data-md-icon", toggle.checked ? "chevron-down" : "chevron-right");
 
     btn.onclick = () => {
-      toggle.checked = !toggle.checked;
-      toggle.dispatchEvent(new Event("change", { bubbles: true }));
-      iconSpan.setAttribute("data-md-icon", toggle.checked ? "chevron-down" : "chevron-right");
+      // use click to trigger mkdocs-material internal handlers
+      toggle.click();
+      requestAnimationFrame(() => {
+        iconSpan.setAttribute("data-md-icon", toggle.checked ? "chevron-down" : "chevron-right");
+      });
     };
   }
 
