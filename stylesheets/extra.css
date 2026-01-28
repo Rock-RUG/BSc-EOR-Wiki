@@ -76,7 +76,28 @@ html[data-md-color-scheme="slate"]{
   );
 }
 
+html[data-md-color-scheme="default"]{
+  /* Tool panel gradients (variants) */
+  --grad-tool-a: linear-gradient(135deg,
+    rgba(63,81,181,.12),
+    rgba(63,81,181,.05)
+  );
+  --grad-tool-b: linear-gradient(135deg,
+    rgba(0,150,136,.12),
+    rgba(0,150,136,.05)
+  );
+}
 
+html[data-md-color-scheme="slate"]{
+  --grad-tool-a: linear-gradient(135deg,
+    rgba(120,140,255,.07),
+    rgba(120,140,255,.03)
+  );
+  --grad-tool-b: linear-gradient(135deg,
+    rgba(80,220,200,.07),
+    rgba(80,220,200,.03)
+  );
+}
 
 /* =========================================================
    10) Global layout tweaks
@@ -897,4 +918,27 @@ html[data-md-color-scheme="default"] .md-typeset blockquote{
 html[data-md-color-scheme="default"] .md-typeset table:not([class]) th,
 html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
   border-color: var(--patch-border-soft) !important;
+}
+
+/* =========================================================
+   90) Tool panels (self-test + custom random)
+   ========================================================= */
+
+/* Self-test mode banner */
+.custom-random-banner{
+  background: var(--grad-tool-a);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Custom random panel */
+#custom-random-app{
+  background: var(--grad-tool-b);
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--shadow-soft);
+  margin-top: 0.6rem;
 }
