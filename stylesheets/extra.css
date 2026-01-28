@@ -5,6 +5,78 @@
    - Light/Dark overrides are scoped with html[data-md-color-scheme="..."].
    ========================================================= */
 
+/* =========================================================
+   Gradient system: Year / Block / Card / Tool panel
+   ========================================================= */
+
+/* Light scheme */
+html[data-md-color-scheme="default"]{
+  /* Base hues (keep your current blue -> teal language) */
+  --g-a: 63, 81, 181;   /* blue */
+  --g-b: 0, 150, 136;   /* teal */
+
+  /* Border + shadow */
+  --line-strong: rgba(20,40,40,.28);
+  --line-mid:    rgba(20,40,40,.20);
+  --line-soft:   rgba(20,40,40,.14);
+  --shadow-soft: 0 6px 18px rgba(0,0,0,.06);
+  --shadow-mid:  0 10px 26px rgba(0,0,0,.10);
+
+  /* 4 levels of gradient intensity */
+  --grad-year: linear-gradient(135deg,
+    rgba(var(--g-a), .22),
+    rgba(var(--g-b), .18)
+  );
+
+  --grad-block: linear-gradient(135deg,
+    rgba(var(--g-a), .14),
+    rgba(var(--g-b), .11)
+  );
+
+  --grad-card: linear-gradient(135deg,
+    rgba(var(--g-a), .08),
+    rgba(var(--g-b), .06)
+  );
+
+  --grad-panel: linear-gradient(135deg,
+    rgba(var(--g-a), .06),
+    rgba(var(--g-b), .05)
+  );
+}
+
+/* Dark scheme (keep it subtle, avoid “glow”) */
+html[data-md-color-scheme="slate"]{
+  --g-a: 120, 140, 255;
+  --g-b: 80, 220, 200;
+
+  --line-strong: rgba(255,255,255,.18);
+  --line-mid:    rgba(255,255,255,.14);
+  --line-soft:   rgba(255,255,255,.10);
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
+  --shadow-mid:  0 14px 38px rgba(0,0,0,.45);
+
+  --grad-year: linear-gradient(135deg,
+    rgba(var(--g-a), .10),
+    rgba(var(--g-b), .08)
+  );
+
+  --grad-block: linear-gradient(135deg,
+    rgba(var(--g-a), .08),
+    rgba(var(--g-b), .06)
+  );
+
+  --grad-card: linear-gradient(135deg,
+    rgba(var(--g-a), .06),
+    rgba(var(--g-b), .045)
+  );
+
+  --grad-panel: linear-gradient(135deg,
+    rgba(var(--g-a), .045),
+    rgba(var(--g-b), .035)
+  );
+}
+
+
 
 /* =========================================================
    10) Global layout tweaks
@@ -195,11 +267,14 @@ html[data-md-color-scheme="slate"]
 
 /* Cards: slightly rounder + subtle lift */
 .md-typeset .grid.cards > ul > li{
-  border-radius:16px;
+  background: var(--grad-card);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-soft);
 }
+
 .md-typeset .grid.cards > ul > li:hover{
-  transform:translateY(-2px);
-  transition:120ms ease;
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-mid);
 }
 
 
@@ -248,21 +323,20 @@ html[data-md-color-scheme="slate"]
    ========================================================= */
 
 .year-hero{
-  padding:2.4rem 1.6rem;
-  border-radius:18px;
-  margin:0 0 1.4rem 0;
-  background:linear-gradient(135deg, rgba(63,81,181,.20), rgba(0,150,136,.16));
-  border:1px solid rgba(0,0,0,.10);
+  background: var(--grad-year);
+  border: 1px solid var(--line-mid);
+  box-shadow: var(--shadow-soft);
 }
+
 
 .year-hero__inner h1{ margin-top:0; }
 
 .year-block{
-  border-radius:18px;
-  margin:0 0 1.2rem 0;
-  border:1px solid rgba(0,0,0,.10);
-  overflow:hidden;
+  background: var(--grad-block);
+  border: 1px solid var(--line-mid);
+  box-shadow: var(--shadow-soft);
 }
+
 
 .year-block__inner{ padding:1.6rem 1.4rem; }
 
@@ -274,10 +348,11 @@ html[data-md-color-scheme="slate"]
 }
 
 /* Block backgrounds */
-.year-block--1a{ background:linear-gradient(135deg, rgba(63,81,181,.10), rgba(63,81,181,.04)); }
-.year-block--1b{ background:linear-gradient(135deg, rgba(0,150,136,.10), rgba(0,150,136,.04)); }
-.year-block--2a{ background:linear-gradient(135deg, rgba(156,39,176,.10), rgba(156,39,176,.04)); }
-.year-block--2b{ background:linear-gradient(135deg, rgba(255,152,0,.10), rgba(255,152,0,.04)); }
+.year-block--1a{ background: var(--grad-block); }
+.year-block--1b{ background: var(--grad-block); }
+.year-block--2a{ background: var(--grad-block); }
+.year-block--2b{ background: var(--grad-block); }
+
 
 /* Topic pills */
 .md-typeset a.topic-pill{
@@ -363,10 +438,8 @@ html[data-md-color-scheme="slate"]
   gap:0.8rem;
 }
 #search-results .sr-item{
-  padding:0.95rem 1rem;
-  border-radius:16px;
-  border:1px solid rgba(0,0,0,.10);
-  background:rgba(0,0,0,.02);
+  background: var(--grad-panel);
+  border: 1px solid var(--line-soft);
 }
 #search-results .sr-head{
   display:flex;
