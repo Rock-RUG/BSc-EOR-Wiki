@@ -1012,14 +1012,14 @@ html[data-md-color-scheme="slate"] .md-content__inner h1 {
 
 /* ===== Sidebar nav readability (light mode only) ===== */
 html[data-md-color-scheme="default"] .md-nav__link {
-  color: #2f3a3a;          /* 主体深灰绿，替代现在的淡绿 */
+  color: #023939;          /* 主体深灰绿，替代现在的淡绿 */
   font-weight: 500;
 }
 
 /* 非 active、非 hover 的状态，避免“发虚” */
 html[data-md-color-scheme="default"]
 .md-nav__link:not(.md-nav__link--active):not(:hover) {
-  color: #344242;
+  color: #042828;
 }
 
 /* ===== Sidebar nav: make default text darker (light mode only) ===== */
@@ -1035,53 +1035,3 @@ html[data-md-color-scheme="default"] .md-nav--primary .md-nav__link:hover {
   font-weight: 800;
 }
 
-/* ===== Sidebar hierarchy lines: increase contrast (light mode only) ===== */
-html[data-md-color-scheme="default"] .md-nav--primary .md-nav__link {
-  border-left: 3px solid rgba(20, 40, 40, 0.22);
-  padding-left: 0.75rem;
-}
-
-/* 更高层级更深一点 */
-html[data-md-color-scheme="default"]
-.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
-  border-left-color: rgba(20, 40, 40, 0.35);
-  font-weight: 850;
-  font-size: 1.06em;
-}
-
-/* 课程级（可展开的项） */
-html[data-md-color-scheme="default"]
-.md-nav--primary .md-nav__item--nested > .md-nav__link {
-  border-left-color: rgba(20, 40, 40, 0.28);
-  font-weight: 750;
-}
-
-/* 页面级（叶子节点） */
-html[data-md-color-scheme="default"]
-.md-nav--primary .md-nav__item:not(.md-nav__item--nested) > .md-nav__link {
-  border-left-color: rgba(20, 40, 40, 0.18);
-  font-weight: 550;
-  font-size: 0.97em;
-}
-
-/* ===== Cards: stronger border + soft gradient background (light mode only) ===== */
-html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li {
-  border: 1px solid rgba(20, 40, 40, 0.22);
-  background: linear-gradient(135deg,
-    rgba(210, 224, 240, 0.45),
-    rgba(205, 235, 225, 0.40)
-  );
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
-
-/* 卡片内文字也稍微加深，避免“灰” */
-html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li,
-html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li * {
-  color: #1f2a2a;
-}
-
-/* 卡片 hover 更明确一点 */
-html[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover {
-  border-color: rgba(20, 40, 40, 0.32);
-  box-shadow: 0 10px 26px rgba(0,0,0,0.10);
-}
