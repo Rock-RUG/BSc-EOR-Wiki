@@ -934,39 +934,3 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
 }
 
 
-/* =========================================================
-   Random dropdown caret — reuse Material native md-icon
-   ========================================================= */
-
-.md-tabs__link.md-tab-dropdown{
-  display: inline-flex;
-  align-items: center;
-  gap: .25rem;
-}
-
-/* 把 caret 直接伪装成 Material icon */
-.md-random-dropdown-caret{
-  width: 1rem;
-  height: 1rem;
-  display: inline-block;
-
-  /* 关键：和 sidebar 完全一致 */
-  background-color: currentColor;
-  -webkit-mask: var(--md-icon--chevron-right) center / contain no-repeat;
-          mask: var(--md-icon--chevron-right) center / contain no-repeat;
-
-  /* 防止任何残留字符 */
-  font-size: 0;
-  line-height: 0;
-  overflow: hidden;
-
-  opacity: .9;
-}
-
-/* 打开状态：向下箭头 */
-.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
-  -webkit-mask: var(--md-icon--chevron-down) center / contain no-repeat;
-          mask: var(--md-icon--chevron-down) center / contain no-repeat;
-  opacity: 1;
-}
