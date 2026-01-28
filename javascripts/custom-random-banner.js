@@ -137,6 +137,8 @@
     box.style.padding = "12px 14px";
     box.style.border = "1px solid var(--md-default-fg-color--lightest)";
     box.style.borderRadius = "12px";
+    box.style.background =
+  "linear-gradient(135deg, rgba(63,81,181,.12), rgba(63,81,181,.05))";
 
     const count = cands.length;
 

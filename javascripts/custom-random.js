@@ -325,31 +325,17 @@
     const selfTestChecked = state.selfTestPref ? "checked" : "";
 
     const startBar = `
-  <div class="cr-selftest-bar"
-       style="
-         display:flex;
-         gap:10px;
-         flex-wrap:wrap;
-         align-items:center;
-         margin-top:14px;
+      <div class="cr-selftest-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
+        <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
+          Start random
+        </button>
 
-         background: var(--grad-tool-a, linear-gradient(135deg, rgba(63,81,181,.12), rgba(63,81,181,.05)));
-         border: 1px solid var(--line-soft, rgba(255,255,255,.12));
-         border-radius: 16px;
-         padding: 12px 14px;
-         box-shadow: var(--shadow-soft, 0 6px 18px rgba(0,0,0,.20));
-       ">
-    <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
-      Start random
-    </button>
-
-    <label style="display:inline-flex;align-items:center;gap:8px;opacity:.9">
-      <input id="cr-selftest" type="checkbox" ${selfTestChecked} />
-      Self-test mode (fold sections)
-    </label>
-  </div>
-`;
-
+        <label style="display:inline-flex;align-items:center;gap:8px;opacity:.9">
+          <input id="cr-selftest" type="checkbox" ${selfTestChecked} />
+          Self-test mode (fold sections)
+        </label>
+      </div>
+    `;
 
     const expandState = state.expandState || {};
     const selectedMap = state.selectedMap || {};
