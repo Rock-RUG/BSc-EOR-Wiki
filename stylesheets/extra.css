@@ -973,3 +973,52 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
   padding: 12px 14px !important;
   box-shadow: var(--shadow-soft);
 }
+
+/* =========================================
+   Random tab: align + chevron like Material nav
+   ========================================= */
+
+/* 1) 让 Random 触发器内部文字/箭头严格垂直居中 */
+.md-tabs__link.md-tab-dropdown{
+  display:inline-flex;
+  align-items:center;
+  gap:0.35em;
+}
+
+/* 2) 去掉你目前 caret 的“文字字符 + top 偏移”做法（覆盖原规则） */
+.md-random-dropdown-caret{
+  margin-left:0 !important;
+  top:auto !important;
+  position:static !important;
+
+  /* 用画出来的 chevron 取代字符 */
+  width:0.55em;
+  height:0.55em;
+  display:inline-block;
+
+  /* 这两条边就是 Material 那种箭头感 */
+  border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor;
+
+  /* 默认：>（右箭头） */
+  transform:rotate(-45deg);
+  opacity:0.85;
+
+  transition:transform 160ms ease, opacity 160ms ease;
+}
+
+/* 3) 展开后：变成向下箭头 */
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
+  transform:rotate(45deg);
+  opacity:1;
+}
+
+/* 4) 只对 Random dropdown trigger：去掉那一圈“外发光”，避免两层背景感 */
+.md-tabs__link.md-tab-dropdown:hover,
+.md-tabs__link.md-tab-dropdown.is-open,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"]{
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16) !important; /* 只保留一层阴影 */
+  /* 如果你还觉得“胶囊套胶囊”，把背景也收敛一点 */
+  background: rgba(255,255,255,0.08) !important;
+}
