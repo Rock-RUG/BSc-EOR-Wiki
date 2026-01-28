@@ -934,3 +934,40 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
 }
 
 
+@media (min-width: 76.25em) {
+  /* Make the bar button align perfectly */
+  #current-course-bar .ccb-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  /* Slightly larger icon => visually "thicker" */
+  #current-course-bar .ccb-icon.md-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+
+    /* default icon colour */
+    color: var(--md-default-fg-color--lighter);
+
+    transition: background-color 120ms ease, color 120ms ease;
+  }
+
+  /* Brighter green circle + arrow colour change */
+  #current-course-bar .ccb-btn:hover .ccb-icon,
+  #current-course-bar .ccb-btn:focus-visible .ccb-icon {
+    background-color: rgba(0, 230, 118, 0.22); /* brighter green */
+    color: rgba(0, 230, 118, 1);
+  }
+
+  /* Optional: slightly stronger press */
+  #current-course-bar .ccb-btn:active .ccb-icon {
+    background-color: rgba(0, 230, 118, 0.28);
+  }
+}
