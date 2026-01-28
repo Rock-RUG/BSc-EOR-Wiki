@@ -974,62 +974,79 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
   box-shadow: var(--shadow-soft);
 }
 
-/* ===============================
-   Random dropdown: remove inner pill + correct chevron
-   =============================== */
+/* =========================================================
+   Tabs: remove INNER fill, keep OUTER ring + shadow (global)
+   ========================================================= */
 
-/* 1) 去掉“内侧胶囊”的背景/阴影，只保留文字（外观就不会两层） */
-.md-tabs__link.md-tab-dropdown{
+/* Base: tabs are pills but no fill */
+.md-tabs__link{
   background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
-
-  display: inline-flex;
-  align-items: center;
-  gap: .35em;
 }
 
-/* 如果你仍想保留 hover 的轻微反馈，可以用非常克制的版本 */
-.md-tabs__link.md-tab-dropdown:hover{
-  background: rgba(255,255,255,.06) !important;
-  box-shadow: none !important;
+/* Hover: keep shadow + outer ring, remove inner fill */
+.md-tabs__link:hover{
+  background: transparent !important; /* remove inner layer */
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.16),
+    0 0 0 6px rgba(255, 255, 255, 0.10) !important; /* keep outer ring */
 }
 
-/* 2) caret 容器：禁止任何 transform（避免跟旧规则叠加导致方向错） */
-.md-random-dropdown-caret{
+/* Active: same idea (no inner fill) */
+.md-tabs__link--active{
+  background: transparent !important;
+  /* 可选：让 active 也有外圈，但比 hover 克制一点 */
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.14),
+    0 0 0 6px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Dropdown open state: no inner fill, keep ring */
+.md-tabs__link.md-tab-dropdown.is-open,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"]{
+  background: transparent !important;
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.18),
+    0 0 0 6px rgba(255, 255, 255, 0.10) !important;
+}
+
+/* =========================================================
+   Random caret: restore (was hidden) + make it chevron-style
+   ========================================================= */
+
+/* Stop old rotate rule from affecting the container */
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
   transform: none !important;
-  position: static !important;
-  top: auto !important;
+}
 
+/* Draw chevron via ::before (so it never disappears) */
+.md-random-dropdown-caret{
+  display: inline-block;
   width: .55em;
   height: .55em;
-  display: inline-block;
+  margin-left: 6px;
   vertical-align: middle;
 
-  /* 关键：彻底隐藏原来的字符（你看到的“点”大概率就是它） */
+  /* make sure any original glyph doesn't show */
   font-size: 0 !important;
   line-height: 0 !important;
   overflow: hidden;
 }
 
-/* 3) 用 ::before 画出 Material 风格 chevron（默认 > ） */
 .md-random-dropdown-caret::before{
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-
+  content:"";
+  display:block;
+  width:100%;
+  height:100%;
   border: solid currentColor;
-  border-width: 0 2px 2px 0;   /* 经典 chevron 画法 */
-
-  opacity: .85;
-  transform: rotate(-45deg);  /* 右箭头 > */
+  border-width: 0 2px 2px 0;
+  opacity:.85;
+  transform: rotate(-45deg); /* default: > */
   transition: transform 160ms ease, opacity 160ms ease;
 }
 
-/* 4) 打开时变成向下 v */
 .md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret::before,
 .md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret::before{
-  transform: rotate(45deg);   /* 向下 v */
+  transform: rotate(45deg); /* open: v */
   opacity: 1;
 }
