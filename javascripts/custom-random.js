@@ -325,8 +325,7 @@
     const selfTestChecked = state.selfTestPref ? "checked" : "";
 
     const startBar = `
-      const startBar = `
-  <div class="cr-selftest-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
+      <div class="cr-selftest-bar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
         <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
           Start random
         </button>
