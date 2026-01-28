@@ -46,9 +46,9 @@ chip.style.borderRadius = "16px";
 
 /* 新增：渐变背景 + 轻微阴影 */
 chip.style.background =
-  "linear-gradient(135deg, rgba(63,81,181,.12), rgba(63,81,181,.05))";
+  "linear-gradient(135deg, rgba(63, 150, 181, 0.12), rgba(63, 134, 181, 0.05))";
 chip.style.boxShadow = "0 10px 26px rgba(0,0,0,.10)";
-
+chip.id = "rf-exit-chip";
     chip.innerHTML = `
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
         <div style="opacity:.85">
