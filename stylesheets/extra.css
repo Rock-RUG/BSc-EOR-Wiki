@@ -934,43 +934,30 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
 }
 
 
-/* =========================================================
-   Random dropdown caret (single source of truth)
-   ========================================================= */
-
-.md-tabs__link.md-tab-dropdown{
-  display:inline-flex;
-  align-items:center;
-  gap:.35em;
-}
-
-/* caret 容器占位 */
+/* Random caret: reuse Material icon mask (match sidebar) */
 .md-random-dropdown-caret{
-  width:.55em;
-  height:.55em;
-  display:inline-block;
-  margin-left:2px;
-  font-size:0;          /* 彻底防止原字符/点露出来 */
-  line-height:0;
-  opacity:.85;
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: .25rem;
+
+  /* hide any original glyph inside */
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+
+  /* draw icon like Material */
+  background-color: currentColor;
+  -webkit-mask: var(--md-icon--chevron-right) center / contain no-repeat;
+          mask: var(--md-icon--chevron-right) center / contain no-repeat;
+  opacity: .9;
 }
 
-/* 默认：右箭头 > （用 border 画，最接近 Material） */
-.md-random-dropdown-caret::before{
-  content:"";
-  display:block;
-  width:100%;
-  height:100%;
-  border:solid currentColor;
-  border-width:0 2px 2px 0;
-  transform:rotate(-45deg);
-  transition:transform 160ms ease, opacity 160ms ease;
-  opacity:.85;
-}
-
-/* 打开：向下 v */
-.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret::before,
-.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret::before{
-  transform:rotate(45deg);
-  opacity:1;
+/* open state: down chevron */
+.md-tabs__link.md-tab-dropdown.is-open .md-random-dropdown-caret,
+.md-tabs__link.md-tab-dropdown[aria-expanded="true"] .md-random-dropdown-caret{
+  -webkit-mask: var(--md-icon--chevron-down) center / contain no-repeat;
+          mask: var(--md-icon--chevron-down) center / contain no-repeat;
+  opacity: 1;
 }
