@@ -949,8 +949,8 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
     align-items: center;
     justify-content: center;
 
-    width: 1.9rem;
-    height: 1.9rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 999px;
 
     /* default icon colour */
