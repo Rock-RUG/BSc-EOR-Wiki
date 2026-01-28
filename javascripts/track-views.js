@@ -37,8 +37,11 @@
     if (low === "index.html" || low.endsWith("/index.html")) return false;
 
     // 排除明显非内容页（按你的实际路径可继续加）
-    const badSubstr = ["assets/", "search", "sitemap", "404", "random", "trending"];
-    if (badSubstr.some((x) => low.includes(x))) return false;
+const badSubstr = ["assets/", "search", "find", "sitemap", "404", "random", "trending"];
+if (badSubstr.some((x) => low.includes(x))) return false;
+
+// extra safety: exclude find.html exactly
+if (low.endsWith("find.html")) return false;
 
     // 排除 about / how-it-works（按你的实际路径）
     if (

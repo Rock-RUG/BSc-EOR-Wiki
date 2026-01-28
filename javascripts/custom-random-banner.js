@@ -182,19 +182,23 @@
     else inner.insertAdjacentElement("afterbegin", box);
 
     document.getElementById("cr-continue").addEventListener("click", (e) => {
-      e.preventDefault();
-      const chosen = pickRandom(cands);
-      if (!chosen) return;
+  e.preventDefault();
+  const chosen = pickRandom(cands);
+  if (!chosen) return;
 
-      // 关键：下一页也应当显示 banner
-      try {
-  if (sessionStorage.getItem("random_review_mode_v1") === "1") {
-    sessionStorage.setItem("random_review_nav_flag_v1", "1");
-  }
-} catch (_) {}
+  // 关键：让下一页也显示 custom random banner
+  try { sessionStorage.setItem(NAV_FLAG_KEY, "1"); } catch (_) {}
 
-      window.location.assign(toAbsoluteUrl(chosen));
-    });
+  // 如果你还需要 review 的逻辑，保留也行（不冲突）
+  try {
+    if (sessionStorage.getItem("random_review_mode_v1") === "1") {
+      sessionStorage.setItem("random_review_nav_flag_v1", "1");
+    }
+  } catch (_) {}
+
+  window.location.assign(toAbsoluteUrl(chosen));
+});
+
 
     document.getElementById("cr-change").addEventListener("click", (e) => {
       e.preventDefault();
