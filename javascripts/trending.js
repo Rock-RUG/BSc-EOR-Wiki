@@ -136,8 +136,25 @@ list.appendChild(el("li", "trending-loading", "Loading..."));
       const resp = await fetch(url.toString()).catch(() => null);
       const data = resp ? await resp.json().catch(() => null) : null;
 
-      const items = data && data.items ? data.items : [];
-      state.total = data && typeof data.total === "number" ? data.total : 0;
+      let items = data && data.items ? data.items : [];
+state.total = data && typeof data.total === "number" ? data.total : 0;
+
+// ---- Scheme A: purge legacy find page from trending UI ----
+const isFindPath = (p) => {
+  const s = String(p || "").toLowerCase();
+  // 兼容 /find.html /find/ 以及带 query/hash 的情况
+  return s.includes("/find.") || s.endsWith("/find.html") || s.endsWith("/find/") || s === "find.html" || s.includes("find.html");
+};
+
+const beforeLen = items.length;
+items = items.filter((it) => !isFindPath(it && it.path));
+
+// 让 all-time 的 total 至少不把 find 计入“可见总数”
+// 注意：这是 UI 层面的抹掉，后端历史数据不会被真正删除
+if (beforeLen !== items.length && typeof state.total === "number") {
+  state.total = Math.max(0, state.total - (beforeLen - items.length));
+}
+
 
       list.innerHTML = "";
       if (!items.length) {
