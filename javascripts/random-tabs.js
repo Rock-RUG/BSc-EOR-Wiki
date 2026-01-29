@@ -2,7 +2,11 @@
   const MENU_LI_ID = "random-dropdown";
   const PANEL_ID = "random-dropdown-panel";
   const BTN_ID = "random-dropdown-btn";
-
+function findTrendingItem(list) {
+  if (!list) return null;
+  const a = list.querySelector('a.md-tabs__link[href*="trending"]');
+  return a ? a.closest(".md-tabs__item") : null;
+}
   // Identify links by href (more robust than text)
   function getTabLinks() {
     return Array.from(document.querySelectorAll(".md-tabs__list a.md-tabs__link[href]"));
@@ -177,6 +181,25 @@
     // Remove the now-redundant tabs
     if (customLi) customLi.remove();
     if (courseLi) courseLi.remove();
+
+    // ===== Keep Trending + Random dropdown as the right-most group =====
+const list = findTabsList();
+if (list) {
+  const trendingItem = findTrendingItem(list);
+  const dropdownItem = document.getElementById(RANDOM_DROPDOWN_ITEM_ID) || document.getElementById("random-dropdown");
+  const courseItem = document.getElementById(COURSE_ITEM_ID);
+
+  // 让 Trending 排在右侧组的最左边（也就是 dropdown 的前面）
+  if (trendingItem && (courseItem || dropdownItem)) {
+    const anchor = courseItem || dropdownItem;
+    if (anchor && trendingItem.nextSibling !== anchor) {
+      list.insertBefore(trendingItem, anchor);
+    }
+  }
+
+  // 右侧组起点：优先 Trending，其次 courseItem，再其次 dropdown/global random
+  setRightGroupStart(trendingItem || courseItem || dropdownItem);
+}
 
     // Toggle
     btn.addEventListener("click", (e) => {
