@@ -1,391 +1,209 @@
 (function () {
-  const TRENDING_ITEM_ID = "trending-item";
-  const RANDOM_DROPDOWN_ITEM_ID = "random-dropdown-item";
+  const MENU_LI_ID = "random-dropdown";
   const PANEL_ID = "random-dropdown-panel";
+  const BTN_ID = "random-dropdown-btn";
 
-  const GLOBAL_LINK_SELECTOR = 'a.md-tabs__link[href*="random"]';
-
-  // ===== Tab dropdown open/close state (for unified component styling) =====
-  function markDropdownOpen(triggerEl) {
-    document.body.classList.add("has-tab-dropdown-open");
-    if (!triggerEl) return;
-    triggerEl.classList.add("is-open");
-    triggerEl.setAttribute("aria-expanded", "true");
+  // Identify links by href (more robust than text)
+  function getTabLinks() {
+    return Array.from(document.querySelectorAll(".md-tabs__list a.md-tabs__link[href]"));
   }
 
-  function markDropdownClosed(triggerEl) {
-    document.body.classList.remove("has-tab-dropdown-open");
-    if (!triggerEl) return;
-    triggerEl.classList.remove("is-open");
-    triggerEl.setAttribute("aria-expanded", "false");
+  function isRandomLink(a) {
+    const h = (a.getAttribute("href") || "").toLowerCase();
+    return h.includes("random") && !h.includes("custom") && !h.includes("course");
+  }
+  function isCustomRandomLink(a) {
+    const h = (a.getAttribute("href") || "").toLowerCase();
+    return h.includes("custom") && h.includes("random");
+  }
+  function isCourseRandomLink(a) {
+    const h = (a.getAttribute("href") || "").toLowerCase();
+    return h.includes("random") && h.includes("course");
   }
 
-  function getSiteRootUrl() {
-    const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
-    const link =
-      document.querySelector('link[href*="assets/stylesheets/main"]') ||
-      document.querySelector('link[href*="assets/stylesheets"]');
+  function cleanupOld() {
+    const oldLi = document.getElementById(MENU_LI_ID);
+    if (oldLi) oldLi.remove();
 
-    const attr = script ? script.getAttribute("src") : (link ? link.getAttribute("href") : null);
-    const assetUrl = attr ? new URL(attr, document.baseURI) : new URL(document.baseURI);
-
-    const p = assetUrl.pathname;
-    const idx = p.indexOf("/assets/");
-    if (idx >= 0) return window.location.origin + p.slice(0, idx + 1);
-
-    const base = new URL(document.baseURI);
-    if (!base.pathname.endsWith("/")) base.pathname += "/";
-    return window.location.origin + base.pathname;
+    const oldPanel = document.getElementById(PANEL_ID);
+    if (oldPanel) oldPanel.remove();
   }
 
-  function relPathFromSiteRoot(absPathname) {
-    const siteRoot = new URL(getSiteRootUrl());
-    const rootPath = siteRoot.pathname.endsWith("/") ? siteRoot.pathname : (siteRoot.pathname + "/");
-
-    let p = String(absPathname || window.location.pathname);
-    if (p.startsWith(rootPath)) p = p.slice(rootPath.length);
-    p = p.replace(/^\/+/, "").replace(/\/+$/, "");
-    return p;
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
   }
 
-  function splitSegs(relPath) {
-    return (relPath || "").split("/").filter(Boolean);
-  }
-
-  // 课程判定：路径至少两段 /<year>/<course>/...
-  // 排除 /<year>/ 或 /<year>/index.html
-  function getCourseScopeIfAny() {
-    const rel = relPathFromSiteRoot(window.location.pathname);
-    const segs = splitSegs(rel);
-
-    if (segs.length < 2) return "";
-    if (segs.length === 2 && segs[1].toLowerCase() === "index.html") return "";
-    if (segs.length === 1) return "";
-    return `${segs[0]}/${segs[1]}/`;
-  }
-
-  function findTabsList() {
-    return document.querySelector(".md-tabs__list");
-  }
-
-  function findGlobalRandomItem() {
-    const list = findTabsList();
-    if (!list) return null;
-
-    const links = Array.from(list.querySelectorAll("a.md-tabs__link"));
-    const target =
-      links.find(a => {
-        const h = (a.getAttribute("href") || "").toLowerCase().split("#")[0].split("?")[0];
-        if (!h) return false;
-        if (h.includes("custom-random")) return false;
-        return h.includes("/random/") || h.endsWith("random.html") || h.endsWith("random/");
-      }) || list.querySelector(GLOBAL_LINK_SELECTOR);
-
-    return target ? target.closest(".md-tabs__item") : null;
-  }
-
-  function removeAllTrendingItems(list) {
-    if (!list) return;
-
-    list.querySelectorAll(`#${TRENDING_ITEM_ID}`).forEach(el => el.remove());
-    list.querySelectorAll('a.md-tabs__link[href*="trending"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
-    });
-  }
-
-  // 清理你之前可能存在的旧实现：
-  // - custom-random tab
-  // - 旧的 Random in course 顶部 tab（如果之前用另一个脚本插入过）
-  // - 旧的 dropdown panel
-  function removeOldRandomRelatedItems(list) {
-    if (!list) return;
-
-    // 旧的 custom-random 顶部 tab
-    list.querySelectorAll('a.md-tabs__link[href*="custom-random"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
-    });
-
-    // 旧的 “Random in course” 顶部 tab（你之前那种实现会带 data-random-scope="course"）
-    list.querySelectorAll('a.md-tabs__link[data-random-scope="course"]').forEach(a => {
-      const item = a.closest(".md-tabs__item");
-      if (item) item.remove();
-    });
-
-    // 旧 dropdown tab id
-    list.querySelectorAll(`#${RANDOM_DROPDOWN_ITEM_ID}`).forEach(el => el.remove());
-
-    // 旧 panel
-    const p = document.getElementById(PANEL_ID);
-    if (p) p.remove();
-  }
-
-  function createTrendingItem() {
-    const li = document.createElement("li");
-    li.className = "md-tabs__item";
-    li.id = TRENDING_ITEM_ID;
-
-    const a = document.createElement("a");
-    a.className = "md-tabs__link";
-    a.href = new URL("trending.html", getSiteRootUrl()).toString();
-    a.textContent = "Trending";
-
-    li.appendChild(a);
-    return li;
-  }
-
-  function closePanel() {
-    const p = document.getElementById(PANEL_ID);
-    if (p) {
-      if (typeof p._cleanup === "function") p._cleanup();
-      p.remove();
+  function buildPanel(items) {
+    let panel = document.getElementById(PANEL_ID);
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.id = PANEL_ID;
+      panel.className = "md-random-dropdown-panel";
+      document.body.appendChild(panel);
     }
+    panel.innerHTML = "";
+
+    const curPath = location.pathname.replace(/\/+$/, "");
+
+    items.forEach((it, idx) => {
+      if (it.kind === "sep") {
+        const sep = el("div", "md-random-dropdown-sep");
+        panel.appendChild(sep);
+        return;
+      }
+
+      const a = el("a", "md-random-dropdown-item", it.label);
+      a.href = it.href;
+
+      try {
+        const tgt = new URL(it.href, document.baseURI).pathname.replace(/\/+$/, "");
+        if (tgt === curPath) a.classList.add("is-active");
+      } catch (_) {}
+
+      panel.appendChild(a);
+
+      if (idx !== items.length - 1) {
+        panel.appendChild(el("div", "md-random-dropdown-sep"));
+      }
+    });
+
+    return panel;
   }
 
-  function isPanelOpen() {
-    return !!document.getElementById(PANEL_ID);
+  function setOpenState(li, isOpen) {
+    const wrap = li.querySelector(".md-tabs__link.md-tab-dropdown");
+    const icon = li.querySelector("#" + BTN_ID + " .rd-icon");
+
+    if (wrap) {
+      wrap.classList.toggle("is-open", !!isOpen);
+      wrap.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+    if (icon) icon.classList.toggle("is-open", !!isOpen);
   }
 
-  function normalizePathname(u) {
-    let p = (u && u.pathname) ? u.pathname : "";
-    if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
-    return p;
+  function close(li) {
+    const panel = document.getElementById(PANEL_ID);
+    if (panel) panel.classList.remove("open");
+    setOpenState(li, false);
   }
 
-  function getPx(value) {
-    const n = parseFloat(String(value || "0"));
-    return Number.isFinite(n) ? n : 0;
-  }
+  function openUnder(li, btn) {
+    const panel = document.getElementById(PANEL_ID);
+    if (!panel) return;
 
-  // items: { kind: "link", label, href, scope? } or { kind:"sep" }
-  function buildPanel(anchorEl, items, caretEl, onCloseCb) {
-    closePanel();
+    panel.classList.add("open");
+    setOpenState(li, true);
 
-    const panel = document.createElement("div");
-    panel.id = PANEL_ID;
-    panel.className = "md-random-dropdown-panel";
+    const r = btn.getBoundingClientRect();
+    const pw = panel.offsetWidth;
+    const ph = panel.offsetHeight;
 
-    // 只在 JS 里管定位和宽度，颜色/字体/间距全部交给 CSS
-    const rect = anchorEl.getBoundingClientRect();
-    const cs = window.getComputedStyle(anchorEl);
-    const anchorPadL = getPx(cs.paddingLeft);
+    let left = Math.max(8, r.right - pw);
+    let top = r.bottom + 8;
 
-    const ITEM_PAD_X = 12;
-    const tabTextLeft = rect.left + anchorPadL;
-
-    let left = tabTextLeft - ITEM_PAD_X;
-    const minW = Math.max(170, Math.round(rect.width));
-    panel.style.minWidth = `${minW}px`;
-
-    const maxW = 280;
-    const maxLeft = window.innerWidth - Math.min(maxW, minW) - 8;
-    left = Math.max(8, Math.min(left, maxLeft));
-
-    const top = Math.min(rect.bottom + 12, window.innerHeight - 80);
+    if (top + ph > window.innerHeight - 8) {
+      top = Math.max(8, r.top - 8 - ph);
+    }
 
     panel.style.left = `${left}px`;
     panel.style.top = `${top}px`;
-
-    const cur = new URL(window.location.href);
-
-    items.forEach((it) => {
-      if (it.kind === "sep") {
-        const hr = document.createElement("div");
-        hr.className = "md-random-dropdown-sep";
-        panel.appendChild(hr);
-        return;
-      }
-
-      const a = document.createElement("a");
-      a.className = "md-random-dropdown-item";
-      a.href = it.href;
-      a.textContent = it.label;
-
-      if (it.scope === "course") {
-        a.setAttribute("data-random-scope", "course");
-      }
-
-      // active 判定
-      let isActive = false;
-      try {
-        const target = new URL(it.href, document.baseURI);
-        isActive = normalizePathname(cur) === normalizePathname(target);
-      } catch (_) {
-        isActive = false;
-      }
-
-      if (isActive) {
-        a.classList.add("is-active");
-      }
-
-      panel.appendChild(a);
-    });
-
-    document.body.appendChild(panel);
-
-    const closeAll = () => {
-      closePanel();
-      if (typeof onCloseCb === "function") onCloseCb();
-    };
-
-    // 点击外部关闭
-    const onDocPointerDown = (e) => {
-      if (!panel.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)) {
-        closeAll();
-      }
-    };
-    document.addEventListener("pointerdown", onDocPointerDown, { capture: true });
-
-    panel._cleanup = () => {
-      document.removeEventListener("pointerdown", onDocPointerDown, { capture: true });
-    };
-
-    window.addEventListener("scroll", closeAll, { passive: true, once: true });
-    window.addEventListener("resize", closeAll, { passive: true, once: true });
   }
 
-  function attachDropdownToRandomTab(globalItem) {
-    const a = globalItem.querySelector("a.md-tabs__link");
-    if (!a) return;
+  function mount() {
+    const tabsList = document.querySelector(".md-tabs__list");
+    if (!tabsList) return;
 
-    // 避免重复绑定：替换成 clone
-    const a2 = a.cloneNode(true);
-    a.replaceWith(a2);
+    // Always upgrade: remove previous dropdown DOM (from any older version)
+    cleanupOld();
 
-    // 原链接，用于 dropdown 第一个 item
-    const originalHref = a2.getAttribute("href") || new URL("random.html", getSiteRootUrl()).toString();
-    const customHref = new URL("custom-random.html", getSiteRootUrl()).toString();
+    const links = getTabLinks();
+    const randomA = links.find(isRandomLink);
+    const customA = links.find(isCustomRandomLink);
+    const courseA = links.find(isCourseRandomLink) || null;
 
-    // 让 tab 自身不再导航
-    a2.setAttribute("href", "#");
+    // If we can't find global random + custom random, do nothing.
+    // (This prevents breaking tabs on pages without those links.)
+    if (!randomA || !customA) return;
 
-    a2.textContent = "Random";
-    a2.setAttribute("aria-haspopup", "menu");
-    a2.setAttribute("aria-expanded", "false");
-    a2.style.cursor = "pointer";
+    const randomLi = randomA.closest("li.md-tabs__item");
+    const customLi = customA.closest("li.md-tabs__item");
+    const courseLi = courseA ? courseA.closest("li.md-tabs__item") : null;
 
-    a2.classList.add("md-tab-dropdown");
+    // Build dropdown <li>
+    const li = el("li", "md-tabs__item");
+    li.id = MENU_LI_ID;
+    li.classList.add("random-right-start");
 
-    const caret = document.createElement("span");
-    caret.className = "md-random-dropdown-caret";
-    caret.textContent = " ▾";
-    a2.appendChild(caret);
+    const wrap = el("span", "md-tabs__link md-tab-dropdown");
+    wrap.setAttribute("aria-expanded", "false");
 
-    function setOpen(open) {
-      caret.textContent = open ? " ▴" : " ▾";
-      if (open) {
-        markDropdownOpen(a2);
-      } else {
-        markDropdownClosed(a2);
-      }
-    }
+    const btn = document.createElement("button");
+    btn.id = BTN_ID;
+    btn.type = "button";
+    btn.className = "md-tabs__link-btn";
+    btn.setAttribute("aria-haspopup", "menu");
+    btn.setAttribute("aria-controls", PANEL_ID);
 
-    function toggle() {
-      if (isPanelOpen()) {
-        closePanel();
-        setOpen(false);
-        return;
-      }
+    btn.appendChild(document.createTextNode("Random"));
 
-      const courseScope = getCourseScopeIfAny();
+    const icon = el("span", "md-nav__icon md-icon rd-icon");
+    icon.setAttribute("aria-hidden", "true");
+    icon.setAttribute("data-md-icon", "chevron-right");
+    btn.appendChild(icon);
 
-      // 统一分组逻辑：
-      // - 有 course：Random / Random in course / (sep) / Custom random
-      // - 无 course：Random / (sep) / Custom random
-      const items = [
-        { kind: "link", label: "Random", href: new URL(originalHref, document.baseURI).toString() },
-      ];
+    wrap.appendChild(btn);
+    li.appendChild(wrap);
 
-      if (courseScope) {
-  items.push({ kind: "sep" });
-  items.push({
-    kind: "link",
-    label: "Random in course",
-    href: new URL(originalHref, document.baseURI).toString(),
-    scope: "course",
-  });
-}
+    // Build panel items
+    const items = [
+      { kind: "link", label: "Random", href: randomA.href },
+      { kind: "link", label: "Custom random", href: customA.href },
+    ];
+    if (courseA) items.push({ kind: "link", label: "Random in course", href: courseA.href });
 
-items.push({ kind: "sep" });
-items.push({ kind: "link", label: "Custom random", href: customHref });
+    const panel = buildPanel(items);
 
-
-      buildPanel(a2, items, caret, () => setOpen(false));
-      setOpen(true);
-    }
-
-    const stop = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-
-    a2.addEventListener("pointerdown", (e) => {
-      stop(e);
-      toggle();
-    });
-
-    a2.addEventListener("click", (e) => {
-      stop(e);
-      // pointerdown 已处理 toggle，避免重复触发
-    });
-
-    // 键盘支持：Enter / Space 打开关闭
-    a2.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        stop(e);
-        toggle();
-      } else if (e.key === "Escape") {
-        stop(e);
-        closePanel();
-        setOpen(false);
-      }
-    });
-  }
-
-  function setRightGroupStart(item) {
-    const list = findTabsList();
-    if (!list) return;
-
-    list.querySelectorAll(".md-tabs__item.random-right-start").forEach(el => {
-      el.classList.remove("random-right-start");
-    });
-
-    if (item) item.classList.add("random-right-start");
-  }
-
-  function ensureTabs() {
-    const list = findTabsList();
-    const globalItem = findGlobalRandomItem();
-    if (!list || !globalItem) return;
-
-    removeOldRandomRelatedItems(list);
-    removeAllTrendingItems(list);
-
-    globalItem.id = RANDOM_DROPDOWN_ITEM_ID;
-    attachDropdownToRandomTab(globalItem);
-
-    const trendingItem = createTrendingItem();
-    if (globalItem.nextSibling) {
-      list.insertBefore(trendingItem, globalItem.nextSibling);
+    // Replace the original Random tab with dropdown
+    if (randomLi) {
+      randomLi.insertAdjacentElement("beforebegin", li);
+      randomLi.remove();
     } else {
-      list.appendChild(trendingItem);
+      tabsList.appendChild(li);
     }
 
-    setRightGroupStart(globalItem);
-    closePanel();
+    // Remove the now-redundant tabs
+    if (customLi) customLi.remove();
+    if (courseLi) courseLi.remove();
+
+    // Toggle
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const isOpen = panel.classList.contains("open");
+      if (isOpen) close(li);
+      else openUnder(li, btn);
+    });
+
+    // Outside click close
+    document.addEventListener("click", (e) => {
+      if (!panel.classList.contains("open")) return;
+      if (li.contains(e.target) || panel.contains(e.target)) return;
+      close(li);
+    });
+
+    // ESC close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close(li);
+    });
+
+    // Instant navigation close
+    document.addEventListener("DOMContentSwitch", () => close(li));
   }
 
-  function init() {
-    ensureTabs();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-
-  // mkdocs-material instant navigation
-  document.addEventListener("DOMContentSwitch", init);
+  const fire = () => setTimeout(mount, 0);
+  document.addEventListener("DOMContentLoaded", fire);
+  document.addEventListener("DOMContentSwitch", fire);
+  document.addEventListener("navigation:load", fire);
 })();

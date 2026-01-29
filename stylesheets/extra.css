@@ -982,55 +982,52 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
 }
 
 
-@media (min-width: 76.25em){
-  /* Random dropdown trigger button: match tab feel */
-  #random-dropdown-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:.25rem;
-    height:100%;
-    padding:0;
-    margin:0;
-    border:0;
-    background:transparent;
-    color:inherit;
-    font:inherit;
-    cursor:pointer;
+@media (min-width: 76.25em) {
+  /* Make the dropdown trigger behave like a normal tab */
+  #random-dropdown-btn.md-tabs__link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
   }
 
-  /* Arrow: same logic as current-course-bar (md-icon + rotate) */
-  #random-dropdown-btn .rd-icon.md-icon{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
+  /* Arrow: md-icon + rotate, strict theme accent on hover */
+  #random-dropdown-btn .rd-icon.md-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    width:1rem;
-    height:1rem;
-    border-radius:999px;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
 
-    color:var(--md-default-fg-color--lighter);
+    color: currentColor;
 
-    transform:rotate(0deg);
+    transform: rotate(0deg);
     transition:
       transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
       background-color 120ms ease,
       color 120ms ease;
   }
 
-  /* Open: rotate 90deg */
-  #random-dropdown-btn .rd-icon.is-open{
-    transform:rotate(90deg);
+  #random-dropdown-btn .rd-icon.is-open {
+    transform: rotate(90deg);
   }
 
-  /* Hover/focus: strict accent colours */
   #random-dropdown-btn:hover .rd-icon,
-  #random-dropdown-btn:focus-visible .rd-icon{
-    background-color:var(--md-accent-fg-color--transparent);
-    color:var(--md-accent-fg-color);
+  #random-dropdown-btn:focus-visible .rd-icon {
+    background-color: var(--md-accent-fg-color--transparent);
+    color: var(--md-accent-fg-color);
   }
 
-  /* Active (pressed) */
-  #random-dropdown-btn:active .rd-icon{
-    background-color:var(--md-accent-fg-color--transparent);
+  #random-dropdown-btn:active .rd-icon {
+    background-color: var(--md-accent-fg-color--transparent);
   }
 }
