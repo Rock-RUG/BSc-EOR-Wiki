@@ -1004,8 +1004,8 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
     align-items: center;
     justify-content: center;
 
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 999px;
 
     color: currentColor;
@@ -1031,3 +1031,6 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
     background-color: var(--md-accent-fg-color--transparent);
   }
 }
+
+#random-dropdown-panel.md-random-dropdown-panel { display: none; }
+#random-dropdown-panel.md-random-dropdown-panel.open { display: block; }
