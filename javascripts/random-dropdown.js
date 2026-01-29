@@ -2,6 +2,7 @@
   const MENU_LI_ID = "random-dropdown";
   const PANEL_ID = "random-dropdown-panel";
   const BTN_ID = "random-dropdown-btn";
+  const OLD_STYLE_ID = "random-dropdown-style";
 
   const LABEL_RANDOM = "Random";
   const LABEL_CUSTOM_RANDOM = "Custom random";
@@ -20,19 +21,26 @@
     return n;
   }
 
+  function cleanupOld() {
+    const oldLi = document.getElementById(MENU_LI_ID);
+    if (oldLi) oldLi.remove();
+
+    const oldPanel = document.getElementById(PANEL_ID);
+    if (oldPanel) oldPanel.remove();
+
+    const oldStyle = document.getElementById(OLD_STYLE_ID);
+    if (oldStyle) oldStyle.remove();
+  }
+
   function findTabAnchorByText(text) {
     const links = $all(".md-tabs__link");
     return links.find(a => (a.textContent || "").trim() === text) || null;
   }
 
-  function getWrapAndIcon(li) {
+  function setOpenState(li, isOpen) {
     const wrap = li.querySelector(".md-tabs__link.md-tab-dropdown");
     const icon = li.querySelector("#" + BTN_ID + " .rd-icon");
-    return { wrap, icon };
-  }
 
-  function setOpenState(li, isOpen) {
-    const { wrap, icon } = getWrapAndIcon(li);
     if (wrap) {
       wrap.classList.toggle("is-open", !!isOpen);
       wrap.setAttribute("aria-expanded", isOpen ? "true" : "false");
@@ -83,7 +91,6 @@
       const a = el("a", "md-random-dropdown-item", label);
       a.href = href;
 
-      // active highlight
       try {
         const cur = location.pathname.replace(/\/+$/, "");
         const tgt = new URL(href, document.baseURI).pathname.replace(/\/+$/, "");
@@ -92,10 +99,8 @@
 
       panel.appendChild(a);
 
-      // separator between items (match your extra.css separator style)
       if (idx !== items.length - 1) {
-        const sep = el("div", "md-random-dropdown-sep");
-        panel.appendChild(sep);
+        panel.appendChild(el("div", "md-random-dropdown-sep"));
       }
     });
   }
@@ -104,12 +109,14 @@
     const tabsUl = $(".md-tabs__list");
     if (!tabsUl) return;
 
+    // Always upgrade: remove any old DOM + injected styles
+    cleanupOld();
+
     const randomA = findTabAnchorByText(LABEL_RANDOM);
     const customA = findTabAnchorByText(LABEL_CUSTOM_RANDOM);
     const courseA = findTabAnchorByText(LABEL_RANDOM_IN_COURSE);
 
     if (!randomA || !customA) return;
-    if ($("#" + MENU_LI_ID)) return;
 
     const randomLi = randomA.closest("li.md-tabs__item");
     const customLi = customA.closest("li.md-tabs__item");
@@ -119,7 +126,6 @@
     li.id = MENU_LI_ID;
     li.classList.add("random-right-start");
 
-    // Wrap should behave like a tab link + allow aria-expanded styling in your extra.css
     const btnWrap = el("span", "md-tabs__link md-tab-dropdown");
     btnWrap.setAttribute("aria-expanded", "false");
 
@@ -131,7 +137,6 @@
 
     btn.appendChild(document.createTextNode("Random"));
 
-    // Material-native icon (same mechanism as your sidebar arrow)
     const icon = el("span", "md-nav__icon md-icon rd-icon");
     icon.setAttribute("aria-hidden", "true");
     icon.setAttribute("data-md-icon", "chevron-right");
@@ -154,11 +159,9 @@
     } else {
       tabsUl.appendChild(li);
     }
-
     if (customLi) customLi.remove();
     if (courseLi) courseLi.remove();
 
-    // Toggle open/close
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const panel = $("#" + PANEL_ID);
@@ -169,7 +172,6 @@
       else openPanelUnder(li, btn);
     });
 
-    // Outside click close
     document.addEventListener("click", (e) => {
       const panel = $("#" + PANEL_ID);
       if (!panel) return;
@@ -177,12 +179,10 @@
       closePanel(li);
     });
 
-    // Esc close
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closePanel(li);
     });
 
-    // If navigation happens while panel open, ensure state resets on next load
     document.addEventListener("DOMContentSwitch", () => closePanel(li));
   }
 
