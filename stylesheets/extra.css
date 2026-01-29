@@ -1004,8 +1004,8 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
     align-items: center;
     justify-content: center;
 
-    width: 1rem;
-    height: 1rem;
+    width: 0.9rem;
+    height: 0.9rem;
     border-radius: 999px;
 
     color: currentColor;

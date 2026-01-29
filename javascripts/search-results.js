@@ -1,6 +1,6 @@
 // docs/javascripts/search-results.js
 (function () {
-  // ====== base url ======
+  // ========== base url ==========
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
     const link =
@@ -29,14 +29,12 @@
     if (input) input.blur();
   }
 
-  // ====== helpers ======
-  function stripHtml(s) {
-    if (!s) return "";
-    const div = document.createElement("div");
-    div.innerHTML = s;
-    return div.textContent || div.innerText || "";
+  function isOnFindPage() {
+    const p = window.location.pathname.toLowerCase();
+    return p.endsWith("/find.html") || p.endsWith("find.html");
   }
 
+  // ========== helpers ==========
   function escapeHtml(s) {
     return String(s)
       .replaceAll("&", "&amp;")
@@ -46,12 +44,18 @@
       .replaceAll("'", "&#039;");
   }
 
+  function stripHtml(s) {
+    if (!s) return "";
+    const div = document.createElement("div");
+    div.innerHTML = s;
+    return div.textContent || div.innerText || "";
+  }
+
   function normaliseText(s) {
     return String(s || "").replace(/\s+/g, " ").trim();
   }
 
   function normaliseForSearch(s) {
-    // behave closer to Material/Lunr tokenisation: punctuation -> spaces
     return String(s || "")
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, " ")
@@ -63,34 +67,59 @@
     return normaliseForSearch(q).split(" ").filter(Boolean);
   }
 
-  function isOnFindPage() {
-    const p = window.location.pathname.toLowerCase();
-    return p.endsWith("/find.html") || p.endsWith("find.html");
-  }
-
-  // --- NEW: strip MathJax/LaTeX so custom results won't match/show TeX source ---
+  // 让 snippet 不显示 TeX
   function stripMathJax(s) {
     if (!s) return "";
-
-    // 1. HTML → plain text
     let t = stripHtml(s);
 
-    // 2. remove display/inline math
     t = t.replace(/\$\$[\s\S]*?\$\$/g, " ");
     t = t.replace(/\$[^$]*?\$/g, " ");
     t = t.replace(/\\\[[\s\S]*?\\\]/g, " ");
     t = t.replace(/\\\([\s\S]*?\\\)/g, " ");
 
-    // 3. \epsilon → epsilon
     t = t.replace(/\\([a-zA-Z]+)\b/g, "$1");
-
-    // 4. cleanup leftover braces
     t = t.replace(/[{}]/g, " ");
-
-    // 5. normalize whitespace
     return normaliseText(t);
   }
 
+  // ========== filters ==========
+  function isIndexPage(location) {
+    const loc = String(location || "").toLowerCase().split("#")[0];
+    return loc.endsWith("/index.html") || loc.endsWith("index.html");
+  }
+
+  function isRandomPage(location) {
+    const loc = String(location || "").toLowerCase().split("#")[0];
+    if (loc.includes("/random/")) return true;
+    const file = loc.split("/").pop() || "";
+    return /^random.*\.html$/.test(file);
+  }
+
+  function courseLabelFromLocation(location) {
+    const loc = String(location || "").replace(/^\/+/, "");
+    const path = loc.split("#")[0];
+    const segs = path.split("/").filter(Boolean);
+    if (segs.length < 2) return "";
+    let course = segs[1];
+    course = course.replace(/^\d+[ab]-/i, "");
+    course = course.replace(/-/g, " ").trim();
+    course = course.replace(/^Math\s+(I|II|III|IV)\s+/i, (m) => m.trim() + ": ");
+    return course;
+  }
+
+  function toAbsoluteUrl(loc) {
+    const root = getSiteRootUrl();
+    return new URL(String(loc || "").replace(/^\//, ""), root).toString();
+  }
+
+  // ========== index loading & aggregation ==========
+  async function loadIndex() {
+    const root = getSiteRootUrl();
+    const url = new URL("search/search_index.json", root);
+    const res = await fetch(url.toString());
+    if (!res.ok) throw new Error("Failed to load search index");
+    return await res.json();
+  }
 
   function asStringList(x) {
     if (!x) return [];
@@ -100,183 +129,23 @@
   }
 
   function getTagsFromDoc(d) {
-    // support multiple shapes in various mkdocs search index variants
-    return [
-      ...asStringList(d.tags),
-      ...asStringList(d.tag),
-      ...asStringList(d.meta && d.meta.tags),
-    ];
+    // 兼容多种形状
+    const out = [];
+    out.push(...asStringList(d && d.tags));
+    out.push(...asStringList(d && d.tag));
+    out.push(...asStringList(d && d.meta && d.meta.tags));
+    return out;
   }
 
   function getAliasesFromDoc(d) {
-    return [
-      ...asStringList(d.aliases),
-      ...asStringList(d.alias),
-      ...asStringList(d.meta && d.meta.aliases),
-    ];
+    const out = [];
+    out.push(...asStringList(d && d.aliases));
+    out.push(...asStringList(d && d.alias));
+    out.push(...asStringList(d && d.meta && d.meta.aliases));
+    return out;
   }
 
-  // ====== filters (your rules) ======
-  function isIndexPage(location) {
-    const loc = String(location || "").toLowerCase().split("#")[0];
-    return loc.endsWith("/index.html") || loc.endsWith("index.html");
-  }
-
-  // exclude random*.html (and any /random/ path just in case)
-  function isRandomPage(location) {
-    const loc = String(location || "").toLowerCase().split("#")[0];
-    if (loc.includes("/random/")) return true;
-    const file = loc.split("/").pop() || "";
-    return /^random.*\.html$/.test(file);
-  }
-
-  // ====== course chip ======
-  function courseLabelFromLocation(location) {
-    const loc = String(location || "").replace(/^\/+/, "");
-    const path = loc.split("#")[0];
-    const segs = path.split("/").filter(Boolean);
-    if (segs.length < 2) return "";
-
-    let course = segs[1]; // e.g. 1a-Math-I-Calculus
-    course = course.replace(/^\d+[ab]-/i, "");
-    course = course.replace(/-/g, " ").trim();
-    course = course.replace(/^Math\s+(I|II|III|IV)\s+/i, (m) => m.trim() + ": ");
-    return course;
-  }
-
-  // ====== scoring ======
-  // NOTE: This scores a PAGE-LEVEL entry where doc.text is the aggregated text of the whole page
-  // (including section hits that originally had #anchors).
-  function scoreDoc(doc, q) {
-    const title = String(doc.title || "");
-    const text = String(doc.text || "");
-    const loc = String(doc.location || "");
-
-    const tags = asStringList(doc.tags);
-    const aliases = asStringList(doc.aliases);
-
-    const titleN = normaliseForSearch(title);
-    const textN = normaliseForSearch(text);
-    const locN = normaliseForSearch(loc);
-    const tagsN = normaliseForSearch(tags.join(" "));
-    const aliasesN = normaliseForSearch(aliases.join(" "));
-
-    const textRawL = text.toLowerCase();
-    const titleRawL = title.toLowerCase();
-
-    const toks = tokeniseQuery(q);
-    if (!toks.length) return 0;
-
-    // AND semantics: every token must appear somewhere in (title/text/location/tags/aliases)
-    const hayN = `${titleN} ${textN} ${locN} ${tagsN} ${aliasesN}`;
-    for (const t of toks) {
-      const ok =
-        hayN.includes(t) ||
-        textRawL.includes(t) ||
-        titleRawL.includes(t);
-      if (!ok) return 0;
-    }
-
-    // ranking:正文权重大（因为你要“正文出现就命中”）
-    let score = 0;
-    const qN = normaliseForSearch(q);
-    const qL = q.toLowerCase().trim();
-
-    if (qN && textN.includes(qN)) score += 140;
-    if (qN && titleN.includes(qN)) score += 90;
-    if (qL && textRawL.includes(qL)) score += 90;
-    if (qL && titleRawL.includes(qL)) score += 60;
-
-    // boost tags/aliases similar to overlay behavior
-    if (qN && tagsN.includes(qN)) score += 160;
-    if (qN && aliasesN.includes(qN)) score += 160;
-
-    for (const t of toks) {
-      if (textN.includes(t) || textRawL.includes(t)) score += 30;
-      if (titleN.includes(t) || titleRawL.includes(t)) score += 18;
-      if (tagsN.includes(t)) score += 40;
-      if (aliasesN.includes(t)) score += 40;
-      if (locN.includes(t)) score += 6;
-    }
-
-    return score;
-  }
-
-  function makeSnippet(text, q) {
-    // IMPORTANT: use stripped text so snippets don't show TeX source
-    const t = stripMathJax(text);
-    if (!t) return "";
-
-    const lower = t.toLowerCase();
-    const ts = tokeniseQuery(q);
-
-    let hit = "";
-    let idx = -1;
-    for (const token of ts) {
-      const i = lower.indexOf(token);
-      if (i >= 0) {
-        hit = token;
-        idx = i;
-        break;
-      }
-    }
-
-    if (idx < 0 || !hit) {
-      return escapeHtml(t.slice(0, 180)) + (t.length > 180 ? "…" : "");
-    }
-
-    const start = Math.max(0, idx - 60);
-    const end = Math.min(t.length, idx + hit.length + 90);
-    const snippet = t.slice(start, end);
-
-    const before = escapeHtml(snippet.slice(0, idx - start));
-    const match = escapeHtml(snippet.slice(idx - start, idx - start + hit.length));
-    const after = escapeHtml(snippet.slice(idx - start + hit.length));
-
-    return (start > 0 ? "…" : "") + before + "<mark>" + match + "</mark>" + after + (end < t.length ? "…" : "");
-  }
-
-  async function loadIndex() {
-    const root = getSiteRootUrl();
-    const url = new URL("search/search_index.json", root);
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error("Failed to load search index");
-    return await res.json();
-  }
-
-  function buildResultItem(r, root, q) {
-    const href = new URL(String(r.location || "").replace(/^\//, ""), root).toString();
-    const course = courseLabelFromLocation(r.location);
-    const snippet = makeSnippet(r.text, q);
-
-    return `
-      <article class="sr-item">
-        <div class="sr-head">
-          <a class="sr-title" href="${href}">${escapeHtml(r.title || "Untitled")}</a>
-          ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
-        </div>
-        ${snippet ? `<div class="sr-snippet">${snippet}</div>` : ""}
-      </article>
-    `;
-  }
-
-  function bindSearchForm() {
-    const form = document.getElementById("search-form");
-    const input = document.getElementById("search-input");
-    if (!form || !input) return;
-
-    form.addEventListener("submit", (ev) => {
-      ev.preventDefault();
-      const q = input.value.trim();
-      if (!q) return;
-
-      const params = new URLSearchParams(window.location.search);
-      params.set("q", q);
-      window.location.search = params.toString();
-    });
-  }
-
-  // ---- aggregate section hits (#...) into their parent page ----
+  // 把 section(#anchor) 聚合成 page-level 文档（你旧的 search-results.js 就是这么做的）
   function aggregateDocsToPages(docs) {
     const pageMap = new Map();
 
@@ -284,10 +153,9 @@
       const locFull = String(d.location || "");
       if (!locFull) continue;
 
-      const pageLoc = locFull.split("#")[0]; // strip section anchor
+      const pageLoc = locFull.split("#")[0];
       if (!pageLoc) continue;
 
-      // exclude at PAGE level
       if (isIndexPage(pageLoc)) continue;
       if (isRandomPage(pageLoc)) continue;
 
@@ -303,43 +171,26 @@
         pageMap.set(pageLoc, entry);
       }
 
-      // Prefer the page-level title (doc whose location has no '#')
-      if (locFull === pageLoc && d.title) {
-        entry.title = String(d.title);
-      }
+      if (locFull === pageLoc && d.title) entry.title = String(d.title);
 
-      // Aggregate tags/aliases at page level
       for (const tg of getTagsFromDoc(d)) entry.tags.add(String(tg));
       for (const al of getAliasesFromDoc(d)) entry.aliases.add(String(al));
 
-      // Aggregate all section/page text into one searchable blob
-      // BUT skip sections: Prerequisites + Related Concepts (too noisy)
+      // 跳过 noisy section
       const anchor = locFull.includes("#") ? (locFull.split("#")[1] || "").toLowerCase() : "";
+      const isNoisy =
+        anchor === "prerequisites" || anchor.startsWith("prerequisites-") ||
+        anchor === "related-concepts" || anchor.startsWith("related-concepts-");
 
-      // anchors generated by MkDocs are usually:
-      // - prerequisites
-      // - related-concepts
-      // sometimes may become related-concepts-1 etc, so use startsWith
-      const isNoisySection =
-        anchor === "prerequisites" ||
-        anchor.startsWith("prerequisites-") ||
-        anchor === "related-concepts" ||
-        anchor.startsWith("related-concepts-");
-
-      if (!isNoisySection && d.text) {
-        // strip MathJax/LaTeX so custom search won't match/show TeX
-        entry.text += " " + stripMathJax(d.text);
-      }
+      if (!isNoisy && d.text) entry.text += " " + stripMathJax(d.text);
     }
 
-    // Fallback title if missing (rare)
     const out = [];
     for (const entry of pageMap.values()) {
       if (!entry.title) {
         const file = entry.location.split("/").pop() || "Untitled";
         entry.title = file.replace(/\.html$/i, "").replace(/-/g, " ");
       }
-
       out.push({
         location: entry.location,
         title: entry.title,
@@ -348,92 +199,290 @@
         aliases: Array.from(entry.aliases),
       });
     }
-
     return out;
   }
 
-  async function render() {
+  // ========== token matching (Step 1: union semantics) ==========
+  // token 内部多词：AND
+  function matchToken(doc, token) {
+    const tks = tokeniseQuery(token);
+    if (!tks.length) return false;
+
+    const titleN = normaliseForSearch(doc.title || "");
+    const textN = normaliseForSearch(doc.text || "");
+    const locN = normaliseForSearch(doc.location || "");
+    const tagsN = normaliseForSearch((doc.tags || []).join(" "));
+    const aliasesN = normaliseForSearch((doc.aliases || []).join(" "));
+    const hay = `${titleN} ${textN} ${locN} ${tagsN} ${aliasesN}`;
+
+    for (const t of tks) {
+      if (!hay.includes(t)) return false;
+    }
+    return true;
+  }
+
+  function buildGroups(pageDocs, tokens) {
+    const byToken = [];
+    const unionMap = new Map(); // loc -> doc
+
+    for (const token of tokens) {
+      const hits = [];
+      for (const d of pageDocs) {
+        if (matchToken(d, token)) {
+          hits.push(d);
+          if (!unionMap.has(d.location)) unionMap.set(d.location, d);
+        }
+      }
+      byToken.push({ token, hits });
+    }
+
+    const union = Array.from(unionMap.values());
+    return { byToken, union };
+  }
+
+  // ========== selection & random ==========
+  const STORAGE_KEY = "customRandomState.v1"; // 统一用这一份（find 也用）
+
+  function loadStateFromStorage() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveStateToStorage(state) {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {}
+  }
+
+  function countSelected(union, selectedMap) {
+    let n = 0;
+    for (const d of union) if (selectedMap[d.location]) n++;
+    return n;
+  }
+
+  function pickRandomSelected(union, selectedMap) {
+    const pool = union.filter(d => !!selectedMap[d.location]);
+    if (!pool.length) return null;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function bindSearchFormToToken(state, rerender) {
+    const form = document.getElementById("search-form");
+    const input = document.getElementById("search-input");
+    if (!form || !input) return;
+
+    // submit = 把 input 当成“新增 token”，而不是替换页面
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const v = (input.value || "").trim();
+      if (!v) return;
+
+      // 如果当前 tokens 为空，把它当第一个；否则追加
+      state.tokens.push(v);
+
+      // 清空输入框，并把 URL 上 q 清掉（避免刷新后重复注入）
+      input.value = "";
+      const params = new URLSearchParams(window.location.search);
+      params.delete("q");
+      window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
+
+      rerender();
+    });
+  }
+
+  // ========== UI ==========
+  function render(container, state) {
+    const tokens = state.tokens;
+    const byToken = state.byToken;
+    const union = state.union;
+    const selectedMap = state.selectedMap;
+
+    const unionCount = union.length;
+    const selectedCount = countSelected(union, selectedMap);
+
+    const chips = tokens.length
+      ? tokens.map((t, i) => `
+          <span style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0;padding:4px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);">
+            <span>${escapeHtml(t)}</span>
+            <button data-del="${i}" class="md-button" style="padding:2px 8px;min-width:auto">×</button>
+          </span>
+        `).join("")
+      : `<span style="opacity:.7">No tokens yet. Use the search bar above to add one.</span>`;
+
+    const topInfo = tokens.length ? `
+      <div style="margin-top:10px;opacity:.85;line-height:1.5">
+        <div>Found <strong>${unionCount}</strong> page(s) related to your tokens.</div>
+        <div><strong>${selectedCount}</strong> page(s) are selected for random practice.</div>
+      </div>
+    ` : "";
+
+    const controls = `
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
+        <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
+          Start random
+        </button>
+        <button id="cr-select-all" class="md-button" ${unionCount ? "" : "disabled"}>Select all</button>
+        <button id="cr-select-none" class="md-button" ${unionCount ? "" : "disabled"}>Select none</button>
+      </div>
+    `;
+
+    const sections = byToken.length ? byToken.map(group => {
+      const token = group.token;
+      const hits = group.hits || [];
+      const list = hits.map(d => {
+        const href = toAbsoluteUrl(d.location);
+        const course = courseLabelFromLocation(d.location);
+        const checked = selectedMap[d.location] ? "checked" : "";
+        return `
+          <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+              <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
+                <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
+                <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
+              </div>
+              ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      return `
+        <details open style="margin-top:14px">
+          <summary style="cursor:pointer">
+            <strong>${escapeHtml(token)}</strong> <span style="opacity:.7">(${hits.length})</span>
+          </summary>
+          <div style="margin-top:8px">${list || `<div style="opacity:.7">No hits.</div>`}</div>
+        </details>
+      `;
+    }).join("") : "";
+
+    container.innerHTML = `
+      <div class="sr-top">
+        <div class="sr-top__title">Find</div>
+        <div style="margin-top:8px">${chips}</div>
+        ${topInfo}
+        ${controls}
+      </div>
+      <div class="sr-list" style="margin-top:10px">
+        ${tokens.length ? sections : `<div class="sr-empty"><p>Add a token to see results.</p></div>`}
+      </div>
+    `;
+
+    // bind chip delete
+    container.querySelectorAll("button[data-del]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = Number(btn.getAttribute("data-del"));
+        if (!Number.isFinite(idx)) return;
+        state.tokens.splice(idx, 1);
+        rerender(container, state);
+      });
+    });
+
+    // bind per-item checkbox
+    container.querySelectorAll('input[type="checkbox"][data-select-loc]').forEach(cb => {
+      cb.addEventListener("change", () => {
+        const loc = cb.getAttribute("data-select-loc");
+        state.selectedMap[loc] = cb.checked;
+        // 只更新上面的计数和 random 按钮状态：简单起见直接全 rerender
+        rerender(container, state);
+      });
+    });
+
+    // select all/none
+    const btnAll = container.querySelector("#cr-select-all");
+    if (btnAll) btnAll.addEventListener("click", () => {
+      for (const d of state.union) state.selectedMap[d.location] = true;
+      rerender(container, state);
+    });
+
+    const btnNone = container.querySelector("#cr-select-none");
+    if (btnNone) btnNone.addEventListener("click", () => {
+      for (const d of state.union) state.selectedMap[d.location] = false;
+      rerender(container, state);
+    });
+
+    // random
+    const btnRandom = container.querySelector("#cr-random");
+    if (btnRandom) btnRandom.addEventListener("click", () => {
+      const picked = pickRandomSelected(state.union, state.selectedMap);
+      if (!picked) return;
+
+      // 存储给 banner/continue random 用（你原本就是这么做的思路）
+      saveStateToStorage({
+        tokens: state.tokens,
+        selectedMap: state.selectedMap,
+        // 直接存 union locations，足够 banner 继续 random
+        unionLocations: state.union.map(d => d.location),
+      });
+
+      window.location.assign(toAbsoluteUrl(picked.location));
+    });
+
+    // persist
+    saveStateToStorage({
+      tokens: state.tokens,
+      selectedMap: state.selectedMap,
+      unionLocations: state.union.map(d => d.location),
+    });
+  }
+
+  function rerender(container, state) {
+    // 重新计算 groups/union
+    const g = buildGroups(state.pageDocs, state.tokens);
+    state.byToken = g.byToken;
+    state.union = g.union;
+
+    // 对新 union 默认勾上（更符合“筛选池”直觉）
+    for (const d of state.union) {
+      if (state.selectedMap[d.location] === undefined) state.selectedMap[d.location] = true;
+    }
+
+    render(container, state);
+  }
+
+  async function main() {
     if (!isOnFindPage()) return;
 
     closeMaterialSearchOverlay();
-    bindSearchForm();
 
     const container = document.getElementById("search-results");
     if (!container) return;
 
+    // 初始化 tokens：q 作为首 token（只注入一次）
     const params = new URLSearchParams(window.location.search);
     const q = (params.get("q") || "").trim();
 
-    const input = document.getElementById("search-input");
-    if (input) input.value = q;
-
-    if (!q) {
-      container.innerHTML = `
-        <div class="sr-empty">
-          <p>Please enter a search query.</p>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = `
-      <div class="sr-top">
-        <div class="sr-top__title">Search results</div>
-        <div class="sr-top__q">${escapeHtml(q)}</div>
-      </div>
-      <div class="sr-loading">Searching…</div>
-    `;
-
     const indexJson = await loadIndex();
     const docs = (indexJson && indexJson.docs) ? indexJson.docs : [];
-
-    // IMPORTANT: Use aggregated page entries (includes section text), so body search works
     const pageDocs = aggregateDocsToPages(docs);
 
-    const scored = pageDocs
-      .map(d => ({
-        location: d.location,
-        title: d.title,
-        text: d.text,
-        tags: d.tags,
-        aliases: d.aliases,
-        score: scoreDoc(d, q),
-      }))
-      .filter(r => r.score > 0)
-      .sort((a, b) => b.score - a.score);
+    const restored = loadStateFromStorage();
 
-    const results = scored.slice(0, 300);
-    const root = getSiteRootUrl();
+    const state = {
+      pageDocs,
+      tokens: [],
+      byToken: [],
+      union: [],
+      selectedMap: (restored && restored.selectedMap) ? restored.selectedMap : {},
+    };
 
-    if (!results.length) {
-      container.innerHTML = `
-        <div class="sr-top">
-          <div class="sr-top__title">Search results</div>
-          <div class="sr-top__q">${escapeHtml(q)}</div>
-        </div>
-        <div class="sr-empty">
-          <p>No results found.</p>
-        </div>
-      `;
-      return;
-    }
+    if (q) state.tokens.push(q);
 
-    const items = results.map(r => buildResultItem(r, root, q)).join("");
+    bindSearchFormToToken(state, () => rerender(container, state));
 
-    container.innerHTML = `
-      <div class="sr-top">
-        <div class="sr-top__title">Search results</div>
-        <div class="sr-top__q">${escapeHtml(q)}</div>
-        <div class="sr-top__count">${results.length} shown (concept pages only)</div>
-      </div>
-      <div class="sr-list">
-        ${items}
-      </div>
-    `;
+    // 把 find 页顶部输入框展示为 q（便于用户看见自己刚搜了啥）
+    const input = document.getElementById("search-input");
+    if (input && q) input.value = q;
+
+    rerender(container, state);
   }
 
   function init() {
-    render().catch(err => console.warn("search-results:", err));
+    main().catch(err => console.warn("find unified:", err));
   }
 
   if (document.readyState === "loading") {
