@@ -1,6 +1,9 @@
 (function () {
   const BAR_ID = "current-course-bar";
 
+  // Avoid binding multiple listeners to the same toggle input
+  const toggleListenerBound = new WeakMap();
+
   function getSiteRootUrl() {
     const script = document.querySelector('script[src*="assets/javascripts/bundle"]');
     const link =
@@ -61,7 +64,7 @@
       bar.innerHTML = `
         <button type="button" class="ccb-btn" aria-label="Toggle current scope">
           <span class="ccb-title"></span>
-          <span class="ccb-icon md-nav__icon md-icon" aria-hidden="true" data-md-icon="chevron-down"></span>
+          <span class="ccb-icon md-nav__icon md-icon" aria-hidden="true" data-md-icon="chevron-right"></span>
         </button>
       `;
       scrollWrap.prepend(bar);
@@ -100,8 +103,7 @@
     return null;
   }
 
-  // IMPORTANT: choose the NEAREST nested ancestor that represents the course container,
-  // not the highest one (which tends to be the Year container).
+  // Choose the NEAREST nested ancestor that represents the course container
   function findCourseNodeFromActive(activeLink, yearSeg, courseSeg) {
     if (!activeLink || !yearSeg || !courseSeg) return null;
 
@@ -114,7 +116,7 @@
       if (cur.classList && cur.classList.contains("md-nav__item--nested")) {
         const anchors = Array.from(cur.querySelectorAll("a.md-nav__link[href]"));
         const ok = anchors.some(a => normaliseHrefToRel(a.getAttribute("href")).startsWith(prefix));
-        if (ok) return cur; // nearest match wins
+        if (ok) return cur;
       }
       cur = cur.parentElement ? cur.parentElement.closest(".md-nav__item") : null;
     }
@@ -137,8 +139,9 @@
     const iconSpan = bar.querySelector(".ccb-icon");
 
     const activeLink =
-      document.querySelector(".md-sidebar--primary a.md-nav__link--active, .md-sidebar--primary a.md-nav__link[aria-current='page']") ||
-      document.querySelector(".md-sidebar--primary .md-nav__link--active");
+      document.querySelector(
+        ".md-sidebar--primary a.md-nav__link--active, .md-sidebar--primary a.md-nav__link[aria-current='page']"
+      ) || document.querySelector(".md-sidebar--primary .md-nav__link--active");
 
     if (!activeLink) {
       bar.style.display = "none";
@@ -189,15 +192,27 @@
 
     iconSpan.style.display = "";
     iconSpan.setAttribute("data-md-icon", "chevron-right");
-iconSpan.classList.toggle("is-open", toggle.checked);
 
+    const syncIcon = () => {
+      iconSpan.classList.toggle("is-open", !!toggle.checked);
+    };
+
+    // initial sync
+    syncIcon();
+
+    // bind once: when user clicks the native arrow (or anything else toggles it),
+    // the top icon will rotate accordingly.
+    if (!toggleListenerBound.has(toggle)) {
+      const handler = () => syncIcon();
+      toggle.addEventListener("change", handler, { passive: true });
+      toggleListenerBound.set(toggle, handler);
+    }
+
+    // clicking the top bar toggles the same checkbox (Material handlers included)
     btn.onclick = () => {
-      // use click to trigger mkdocs-material internal handlers
       toggle.click();
-      requestAnimationFrame(() => {
-        iconSpan.setAttribute("data-md-icon", "chevron-right");
-iconSpan.classList.toggle("is-open", toggle.checked);
-      });
+      // change should fire, but keep one frame sync for safety
+      requestAnimationFrame(syncIcon);
     };
   }
 
