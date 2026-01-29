@@ -188,13 +188,15 @@
     }
 
     iconSpan.style.display = "";
-    iconSpan.setAttribute("data-md-icon", toggle.checked ? "chevron-down" : "chevron-right");
+    iconSpan.setAttribute("data-md-icon", "chevron-right");
+iconSpan.classList.toggle("is-open", toggle.checked);
 
     btn.onclick = () => {
       // use click to trigger mkdocs-material internal handlers
       toggle.click();
       requestAnimationFrame(() => {
-        iconSpan.setAttribute("data-md-icon", toggle.checked ? "chevron-down" : "chevron-right");
+        iconSpan.setAttribute("data-md-icon", "chevron-right");
+iconSpan.classList.toggle("is-open", toggle.checked);
       });
     };
   }
