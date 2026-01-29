@@ -67,7 +67,7 @@
     return normaliseForSearch(q).split(" ").filter(Boolean);
   }
 
-  // 让 snippet 不显示 TeX
+  // remove TeX-ish noise from snippet
   function stripMathJax(s) {
     if (!s) return "";
     let t = stripHtml(s);
@@ -112,6 +112,14 @@
     return new URL(String(loc || "").replace(/^\//, ""), root).toString();
   }
 
+  function normaliseScope(scope) {
+    let s = String(scope || "").trim();
+    s = s.replace(/^\/+/, "");
+    if (!s) return "";
+    if (!s.endsWith("/")) s += "/";
+    return s;
+  }
+
   // ========== index loading & aggregation ==========
   async function loadIndex() {
     const root = getSiteRootUrl();
@@ -129,7 +137,6 @@
   }
 
   function getTagsFromDoc(d) {
-    // 兼容多种形状
     const out = [];
     out.push(...asStringList(d && d.tags));
     out.push(...asStringList(d && d.tag));
@@ -145,7 +152,7 @@
     return out;
   }
 
-  // 把 section(#anchor) 聚合成 page-level 文档（你旧的 search-results.js 就是这么做的）
+  // aggregate section docs to page docs
   function aggregateDocsToPages(docs) {
     const pageMap = new Map();
 
@@ -176,7 +183,6 @@
       for (const tg of getTagsFromDoc(d)) entry.tags.add(String(tg));
       for (const al of getAliasesFromDoc(d)) entry.aliases.add(String(al));
 
-      // 跳过 noisy section
       const anchor = locFull.includes("#") ? (locFull.split("#")[1] || "").toLowerCase() : "";
       const isNoisy =
         anchor === "prerequisites" || anchor.startsWith("prerequisites-") ||
@@ -202,10 +208,10 @@
     return out;
   }
 
-  // ========== token matching (Step 1: union semantics) ==========
-  // token 内部多词：AND
-  function matchToken(doc, token) {
-    const tks = tokeniseQuery(token);
+  // ========== matching ==========
+  // term may include multiple words: AND inside a term
+  function matchTerm(doc, term) {
+    const tks = tokeniseQuery(term);
     if (!tks.length) return false;
 
     const titleN = normaliseForSearch(doc.title || "");
@@ -221,27 +227,70 @@
     return true;
   }
 
-  function buildGroups(pageDocs, tokens) {
-    const byToken = [];
-    const unionMap = new Map(); // loc -> doc
+  function computeHitsByClause(pageDocs, clauses) {
+    const byClause = [];
+    const docByLoc = new Map(pageDocs.map(d => [d.location, d]));
 
-    for (const token of tokens) {
+    for (let i = 0; i < clauses.length; i++) {
+      const c = clauses[i];
+      const term = String(c.term || "").trim();
       const hits = [];
-      for (const d of pageDocs) {
-        if (matchToken(d, token)) {
-          hits.push(d);
-          if (!unionMap.has(d.location)) unionMap.set(d.location, d);
+      const hitSet = new Set();
+
+      if (term) {
+        for (const d of pageDocs) {
+          if (matchTerm(d, term)) {
+            hits.push(d);
+            hitSet.add(d.location);
+          }
         }
       }
-      byToken.push({ token, hits });
+
+      byClause.push({
+        idx: i,
+        clause: c,
+        term,
+        hits,
+        hitSet,
+        opToNext: (c.opToNext || "OR").toUpperCase(),
+      });
     }
 
-    const union = Array.from(unionMap.values());
-    return { byToken, union };
+    return { byClause, docByLoc };
+  }
+
+  // linear eval from left to right, only enabled clauses participate
+  function evaluateLinear(byClause, docByLoc) {
+    const enabled = byClause.filter(x => x.clause.enabled && x.term);
+
+    if (!enabled.length) return [];
+
+    let acc = new Set(enabled[0].hitSet);
+
+    for (let k = 1; k < enabled.length; k++) {
+      const prev = enabled[k - 1];
+      const rhs = enabled[k].hitSet;
+      const op = (prev.opToNext || "OR").toUpperCase();
+
+      if (op === "AND") {
+        const next = new Set();
+        for (const x of acc) if (rhs.has(x)) next.add(x);
+        acc = next;
+      } else {
+        for (const x of rhs) acc.add(x);
+      }
+    }
+
+    const out = [];
+    for (const loc of acc) {
+      const d = docByLoc.get(loc);
+      if (d) out.push(d);
+    }
+    return out;
   }
 
   // ========== selection & random ==========
-  const STORAGE_KEY = "customRandomState.v1"; // 统一用这一份（find 也用）
+  const STORAGE_KEY = "customRandomState.v2";
 
   function loadStateFromStorage() {
     try {
@@ -270,22 +319,27 @@
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
-  function bindSearchFormToToken(state, rerender) {
+  // ========== UI binding ==========
+  function bindSearchFormToAddClause(state, rerender) {
     const form = document.getElementById("search-form");
     const input = document.getElementById("search-input");
     if (!form || !input) return;
 
-    // submit = 把 input 当成“新增 token”，而不是替换页面
     form.addEventListener("submit", (ev) => {
       ev.preventDefault();
       const v = (input.value || "").trim();
       if (!v) return;
 
-      // 如果当前 tokens 为空，把它当第一个；否则追加
-      state.tokens.push(v);
+      // add a new enabled clause
+      state.clauses.push({
+        enabled: true,
+        term: v,
+        opToNext: "OR",
+      });
 
-      // 清空输入框，并把 URL 上 q 清掉（避免刷新后重复注入）
       input.value = "";
+
+      // remove q from URL to avoid double injection after edits
       const params = new URLSearchParams(window.location.search);
       params.delete("q");
       window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
@@ -294,100 +348,176 @@
     });
   }
 
-  // ========== UI ==========
+  // ========== render ==========
   function render(container, state) {
-    const tokens = state.tokens;
-    const byToken = state.byToken;
-    const union = state.union;
-    const selectedMap = state.selectedMap;
+    const scopeInfo = state.scope ? `<span class="sr-chip">scope: ${escapeHtml(state.scope)}</span>` : "";
+    const unionCount = state.union.length;
+    const selectedCount = countSelected(state.union, state.selectedMap);
 
-    const unionCount = union.length;
-    const selectedCount = countSelected(union, selectedMap);
+    const clauseRows = state.byClause.length
+      ? state.byClause.map((row) => {
+          const i = row.idx;
+          const c = row.clause;
+          const term = row.term;
+          const enabledChecked = c.enabled ? "checked" : "";
+          const opDisabled = (i === state.byClause.length - 1) ? "disabled" : "";
+          const opValue = (c.opToNext || "OR").toUpperCase();
 
-    const chips = tokens.length
-      ? tokens.map((t, i) => `
-          <span style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0;padding:4px 10px;border-radius:999px;border:1px solid var(--md-default-fg-color--lightest);">
-            <span>${escapeHtml(t)}</span>
-            <button data-del="${i}" class="md-button" style="padding:2px 8px;min-width:auto">×</button>
-          </span>
-        `).join("")
-      : `<span style="opacity:.7">No tokens yet. Use the search bar above to add one.</span>`;
+          return `
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:6px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+              <label style="display:flex;align-items:center;gap:6px;min-width:92px;">
+                <input type="checkbox" data-clause-enabled="${i}" ${enabledChecked}/>
+                <span style="opacity:.85">Use</span>
+              </label>
 
-    const topInfo = tokens.length ? `
-      <div style="margin-top:10px;opacity:.85;line-height:1.5">
-        <div>Found <strong>${unionCount}</strong> page(s) related to your tokens.</div>
-        <div><strong>${selectedCount}</strong> page(s) are selected for random practice.</div>
+              <input
+                data-clause-term="${i}"
+                value="${escapeHtml(term)}"
+                placeholder="keyword or tag"
+                style="flex:1;min-width:220px;padding:6px 10px;border:1px solid var(--md-default-fg-color--lightest);border-radius:10px;background:var(--md-default-bg-color);"
+              />
+
+              <select data-clause-op="${i}" ${opDisabled}
+                style="padding:6px 10px;border:1px solid var(--md-default-fg-color--lightest);border-radius:10px;background:var(--md-default-bg-color);">
+                <option value="AND" ${opValue === "AND" ? "selected" : ""}>AND</option>
+                <option value="OR" ${opValue === "OR" ? "selected" : ""}>OR</option>
+              </select>
+
+              <button class="md-button" data-clause-del="${i}" style="min-width:auto;padding:4px 10px;">Delete</button>
+
+              <span style="opacity:.7">hits: ${row.hits.length}</span>
+            </div>
+          `;
+        }).join("")
+      : `<div style="opacity:.7;padding:8px 0;">No tokens yet. Use the search bar above to add one.</div>`;
+
+    const topInfo = `
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        ${scopeInfo}
+        <span style="opacity:.85">result: <strong>${unionCount}</strong></span>
+        <span style="opacity:.85">selected: <strong>${selectedCount}</strong></span>
       </div>
-    ` : "";
+    `;
 
     const controls = `
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
         <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
           Start random
         </button>
         <button id="cr-select-all" class="md-button" ${unionCount ? "" : "disabled"}>Select all</button>
         <button id="cr-select-none" class="md-button" ${unionCount ? "" : "disabled"}>Select none</button>
+        <button id="cr-clear-clauses" class="md-button" ${state.byClause.length ? "" : "disabled"}>Clear tokens</button>
       </div>
     `;
 
-    const sections = byToken.length ? byToken.map(group => {
-      const token = group.token;
-      const hits = group.hits || [];
-      const list = hits.map(d => {
-        const href = toAbsoluteUrl(d.location);
-        const course = courseLabelFromLocation(d.location);
-        const checked = selectedMap[d.location] ? "checked" : "";
-        return `
-          <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
-            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-              <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
-                <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
-                <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
-              </div>
-              ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
-            </div>
-          </article>
-        `;
-      }).join("");
+    const resultSections = state.byClause.length
+      ? state.byClause.map((row) => {
+          const tokenTitle = row.term ? row.term : "(empty)";
+          const isUsed = row.clause.enabled && row.term;
+          const badge = isUsed ? `<span class="sr-chip">used</span>` : `<span class="sr-chip">ignored</span>`;
 
-      return `
-        <details open style="margin-top:14px">
-          <summary style="cursor:pointer">
-            <strong>${escapeHtml(token)}</strong> <span style="opacity:.7">(${hits.length})</span>
-          </summary>
-          <div style="margin-top:8px">${list || `<div style="opacity:.7">No hits.</div>`}</div>
-        </details>
-      `;
-    }).join("") : "";
+          const list = row.hits.map(d => {
+            const href = toAbsoluteUrl(d.location);
+            const course = courseLabelFromLocation(d.location);
+            const checked = state.selectedMap[d.location] ? "checked" : "";
+            return `
+              <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                  <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
+                    <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
+                    <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join("");
+
+          return `
+            <details open style="margin-top:14px">
+              <summary style="cursor:pointer">
+                <strong>${escapeHtml(tokenTitle)}</strong>
+                <span style="opacity:.7">(${row.hits.length})</span>
+                ${badge}
+              </summary>
+              <div style="margin-top:8px">${list || `<div style="opacity:.7">No hits.</div>`}</div>
+            </details>
+          `;
+        }).join("")
+      : "";
 
     container.innerHTML = `
       <div class="sr-top">
         <div class="sr-top__title">Find</div>
-        <div style="margin-top:8px">${chips}</div>
-        ${topInfo}
-        ${controls}
+
+        <div style="margin-top:10px;">
+          <div style="opacity:.85;margin-bottom:6px;">Tokens and logic (left to right)</div>
+          <div id="clause-editor">${clauseRows}</div>
+          ${topInfo}
+          ${controls}
+        </div>
       </div>
-      <div class="sr-list" style="margin-top:10px">
-        ${tokens.length ? sections : `<div class="sr-empty"><p>Add a token to see results.</p></div>`}
+
+      <div class="sr-list" style="margin-top:12px">
+        ${state.byClause.length ? resultSections : `<div class="sr-empty"><p>Add a token to see results.</p></div>`}
       </div>
     `;
 
-    // bind chip delete
-    container.querySelectorAll("button[data-del]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const idx = Number(btn.getAttribute("data-del"));
-        if (!Number.isFinite(idx)) return;
-        state.tokens.splice(idx, 1);
+    // clause enabled
+    container.querySelectorAll('input[type="checkbox"][data-clause-enabled]').forEach(cb => {
+      cb.addEventListener("change", () => {
+        const i = Number(cb.getAttribute("data-clause-enabled"));
+        if (!Number.isFinite(i) || !state.clauses[i]) return;
+        state.clauses[i].enabled = cb.checked;
         rerender(container, state);
       });
     });
 
-    // bind per-item checkbox
+    // clause term (input)
+    container.querySelectorAll('input[data-clause-term]').forEach(inp => {
+      inp.addEventListener("input", () => {
+        const i = Number(inp.getAttribute("data-clause-term"));
+        if (!Number.isFinite(i) || !state.clauses[i]) return;
+        state.clauses[i].term = inp.value;
+      });
+      inp.addEventListener("change", () => {
+        rerender(container, state);
+      });
+      inp.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+          ev.preventDefault();
+          rerender(container, state);
+        }
+      });
+    });
+
+    // clause op
+    container.querySelectorAll("select[data-clause-op]").forEach(sel => {
+      sel.addEventListener("change", () => {
+        const i = Number(sel.getAttribute("data-clause-op"));
+        if (!Number.isFinite(i) || !state.clauses[i]) return;
+        state.clauses[i].opToNext = sel.value;
+        rerender(container, state);
+      });
+    });
+
+    // clause delete
+    container.querySelectorAll("button[data-clause-del]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = Number(btn.getAttribute("data-clause-del"));
+        if (!Number.isFinite(i)) return;
+        state.clauses.splice(i, 1);
+        rerender(container, state);
+      });
+    });
+
+    // per-item checkbox selection
     container.querySelectorAll('input[type="checkbox"][data-select-loc]').forEach(cb => {
       cb.addEventListener("change", () => {
         const loc = cb.getAttribute("data-select-loc");
         state.selectedMap[loc] = cb.checked;
-        // 只更新上面的计数和 random 按钮状态：简单起见直接全 rerender
         rerender(container, state);
       });
     });
@@ -405,17 +535,23 @@
       rerender(container, state);
     });
 
+    // clear clauses
+    const btnClear = container.querySelector("#cr-clear-clauses");
+    if (btnClear) btnClear.addEventListener("click", () => {
+      state.clauses = [];
+      rerender(container, state);
+    });
+
     // random
     const btnRandom = container.querySelector("#cr-random");
     if (btnRandom) btnRandom.addEventListener("click", () => {
       const picked = pickRandomSelected(state.union, state.selectedMap);
       if (!picked) return;
 
-      // 存储给 banner/continue random 用（你原本就是这么做的思路）
       saveStateToStorage({
-        tokens: state.tokens,
+        scope: state.scope,
+        clauses: state.clauses,
         selectedMap: state.selectedMap,
-        // 直接存 union locations，足够 banner 继续 random
         unionLocations: state.union.map(d => d.location),
       });
 
@@ -424,19 +560,27 @@
 
     // persist
     saveStateToStorage({
-      tokens: state.tokens,
+      scope: state.scope,
+      clauses: state.clauses,
       selectedMap: state.selectedMap,
       unionLocations: state.union.map(d => d.location),
     });
   }
 
   function rerender(container, state) {
-    // 重新计算 groups/union
-    const g = buildGroups(state.pageDocs, state.tokens);
-    state.byToken = g.byToken;
-    state.union = g.union;
+    // scope filter
+    let docs = state.pageDocs;
+    if (state.scope) {
+      const scopePrefix = normaliseScope(state.scope);
+      docs = docs.filter(d => String(d.location || "").replace(/^\/+/, "").startsWith(scopePrefix));
+    }
 
-    // 对新 union 默认勾上（更符合“筛选池”直觉）
+    const computed = computeHitsByClause(docs, state.clauses);
+    state.byClause = computed.byClause;
+
+    state.union = evaluateLinear(state.byClause, computed.docByLoc);
+
+    // default select new locations
     for (const d of state.union) {
       if (state.selectedMap[d.location] === undefined) state.selectedMap[d.location] = true;
     }
@@ -452,9 +596,9 @@
     const container = document.getElementById("search-results");
     if (!container) return;
 
-    // 初始化 tokens：q 作为首 token（只注入一次）
     const params = new URLSearchParams(window.location.search);
     const q = (params.get("q") || "").trim();
+    const scope = normaliseScope(params.get("scope") || "");
 
     const indexJson = await loadIndex();
     const docs = (indexJson && indexJson.docs) ? indexJson.docs : [];
@@ -464,25 +608,33 @@
 
     const state = {
       pageDocs,
-      tokens: [],
-      byToken: [],
+      scope: scope || (restored && restored.scope) || "",
+      clauses: (restored && Array.isArray(restored.clauses)) ? restored.clauses : [],
+      byClause: [],
       union: [],
       selectedMap: (restored && restored.selectedMap) ? restored.selectedMap : {},
     };
 
-    if (q) state.tokens.push(q);
+    // inject q as first clause if provided
+    if (q) {
+      state.clauses.unshift({
+        enabled: true,
+        term: q,
+        opToNext: "OR",
+      });
 
-    bindSearchFormToToken(state, () => rerender(container, state));
+      // show q in the top input as a reminder (still works as "add token" field)
+      const input = document.getElementById("search-input");
+      if (input) input.value = q;
+    }
 
-    // 把 find 页顶部输入框展示为 q（便于用户看见自己刚搜了啥）
-    const input = document.getElementById("search-input");
-    if (input && q) input.value = q;
+    bindSearchFormToAddClause(state, () => rerender(container, state));
 
     rerender(container, state);
   }
 
   function init() {
-    main().catch(err => console.warn("find unified:", err));
+    main().catch(err => console.warn("find unified v2:", err));
   }
 
   if (document.readyState === "loading") {
