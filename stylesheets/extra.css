@@ -1034,3 +1034,14 @@ html[data-md-color-scheme="default"] .md-typeset table:not([class]) td{
 
 #random-dropdown-panel.md-random-dropdown-panel { display: none; }
 #random-dropdown-panel.md-random-dropdown-panel.open { display: block; }
+
+/* Hide sidebars on find.html (tool page) */
+body[data-md-url="find.html"] .md-sidebar--primary,
+body[data-md-url="find.html"] .md-sidebar--secondary {
+  display: none;
+}
+
+/* Let content use full width */
+body[data-md-url="find.html"] .md-content {
+  grid-column: 1 / -1;
+}

@@ -107,13 +107,15 @@
     return p.replace(/^\/+/, "");
   }
 
-  function isConceptPage(relPath) {
-    const p = String(relPath || "").toLowerCase();
-    if (p === "" || p === "index.html" || p.endsWith("/index.html")) return false;
+function isConceptPage(relPath) {
+  const p = String(relPath || "").toLowerCase();
+  if (p === "" || p === "index.html" || p.endsWith("/index.html")) return false;
 
-    const segs = String(relPath || "").split("/").filter(Boolean);
-    return segs.length >= 3;
-  }
+  const segs = String(relPath || "").split("/").filter(Boolean);
+  // 原来 >=3 太严格，改成 >=2
+  return segs.length >= 2;
+}
+
 
   function computeMatchedTokens(tokens, tokenMap, currentLocRel) {
     const matched = [];

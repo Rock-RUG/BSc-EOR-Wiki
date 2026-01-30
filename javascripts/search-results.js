@@ -476,7 +476,7 @@ const clauseSections = state.byClause.length
     }).join("")
   : "";
 
-const resultSections = combinedSection + clauseSections;
+const resultSections = combinedSection;
 
 
     container.innerHTML = `
@@ -484,7 +484,7 @@ const resultSections = combinedSection + clauseSections;
         <div class="sr-top__title">Find</div>
 
         <div style="margin-top:10px;">
-          <div style="opacity:.85;margin-bottom:6px;">Tokens and logic (left to right)</div>
+          <div style="opacity:.85;margin-bottom:6px;">Keywords & rules</div>
           <div id="clause-editor">${clauseRows}</div>
           ${topInfo}
           ${controls}
