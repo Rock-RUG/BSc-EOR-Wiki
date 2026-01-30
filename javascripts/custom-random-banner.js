@@ -167,7 +167,7 @@ function isConceptPage(relPath) {
       <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:260px">
   <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
     <a id="cr-continue" class="md-button md-button--primary" href="#">Continue random</a>
-    <a id="cr-view" class="md-button" href="#">View this page</a>
+    <a id="cr-view" class="md-button" href="#">Exit random</a>
     <a id="cr-change" class="md-button" href="#">Edit filter</a>
   </div>
 
@@ -190,13 +190,27 @@ function isConceptPage(relPath) {
     } catch (_) {}
 
     document.getElementById("cr-view").addEventListener("click", (e) => {
-      e.preventDefault();
-      try {
-        sessionStorage.setItem("random_unfold_once_v1", "1");
-        // 不改 REVIEW_MODE_KEY，让“下一页是否折叠”仍由 checkbox 决定
-      } catch (_) {}
-      window.location.reload();
-    });
+  e.preventDefault();
+
+  try {
+    // 退出 random：清掉 banner 相关状态
+    sessionStorage.removeItem("random_custom_nav_flag_v1");
+    sessionStorage.removeItem("random_custom_candidates_v1");
+    sessionStorage.removeItem("random_custom_tokens_v1");
+    sessionStorage.removeItem("random_custom_token_map_v1");
+    sessionStorage.removeItem("random_custom_page_v1");
+
+    // 同时也退出 self-test 本次导航票据（避免刷新后再次自动 fold）
+    sessionStorage.removeItem("random_review_nav_flag_v1");
+    // random_review_mode_v1 我建议保留：它是“偏好”，不等于“正在随机”
+    // 如果你想 Exit random 也顺便关掉偏好，把下一行取消注释
+    // sessionStorage.removeItem("random_review_mode_v1");
+  } catch (_) {}
+
+  // 刷新页面：banner 会因为 nav_flag 不存在而不再出现
+  window.location.reload();
+});
+
 
 
     document.getElementById("cr-continue").addEventListener("click", (e) => {

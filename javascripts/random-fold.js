@@ -72,14 +72,29 @@ chip.id = "rf-exit-chip";
     if (h1) h1.insertAdjacentElement("afterend", chip);
     else container.insertAdjacentElement("afterbegin", chip);
 
-    chip.querySelector("#rf-exit").addEventListener("click", () => {
-  // 展开本页所有由 random-fold 生成的折叠块
+    function updateToggleLabel() {
+  const btn = chip.querySelector("#rf-exit");
+  if (!btn) return;
   const details = document.querySelectorAll("details.rf-details");
-  for (const d of details) d.open = true;
+  const anyClosed = Array.from(details).some(d => !d.open);
+  btn.textContent = anyClosed ? "Expand all sections" : "Fold all sections";
+}
 
-  // 可选：展开后把提示条淡出（不强制）
-  try { chip.style.opacity = "0.85"; } catch (_) {}
+chip.querySelector("#rf-exit").addEventListener("click", () => {
+  const details = document.querySelectorAll("details.rf-details");
+  if (!details.length) return;
+
+  const anyClosed = Array.from(details).some(d => !d.open);
+
+  // anyClosed -> expand all, else fold all
+  for (const d of details) d.open = anyClosed;
+
+  updateToggleLabel();
 });
+
+// 初始渲染时就把文案设置正确
+updateToggleLabel();
+
   }
 
   function foldSections() {
