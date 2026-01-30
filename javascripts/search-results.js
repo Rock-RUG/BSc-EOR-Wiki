@@ -20,34 +20,43 @@
   }
 
     function closeMaterialSearchOverlay() {
-    const toggle =
-      document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
-      document.querySelector('input#__search');
-    if (toggle) toggle.checked = false;
+  const toggle =
+    document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
+    document.querySelector('input#__search');
+  if (toggle) toggle.checked = false;
 
-    const input = document.querySelector('input[data-md-component="search-query"]');
-    if (input) input.blur();
+  const input = document.querySelector('input[data-md-component="search-query"]');
+  if (input) input.blur();
 
-    // extra safety: click reset/close if present
-    const closeBtn =
-      document.querySelector('button[data-md-component="search-reset"]') ||
-      document.querySelector(".md-search__icon[for='__search']");
-    if (closeBtn && closeBtn.click) closeBtn.click();
+  // try clicking reset/close if present
+  const resetBtn = document.querySelector('button[data-md-component="search-reset"]');
+  if (resetBtn && resetBtn.click) resetBtn.click();
 
-    // hard unlock scroll (mobile safari)
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
-    document.body.style.position = "";
-    document.body.style.width = "";
-    document.body.classList.remove("md-search--active");
-    document.documentElement.classList.remove("md-search--active");
+  // hard unlock scroll (mobile safari can keep it locked)
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.width = "";
+  document.body.classList.remove("md-search--active");
+  document.documentElement.classList.remove("md-search--active");
+
+  // ensure focus leaves the overlay input
+  if (document.activeElement && document.activeElement.blur) {
+    try { document.activeElement.blur(); } catch (_) {}
   }
+}
+
 
 
   function isOnFindPage() {
-    const p = window.location.pathname.toLowerCase();
-    return p.endsWith("/find.html") || p.endsWith("find.html");
-  }
+  const p = window.location.pathname.toLowerCase().replace(/\/+$/, "/");
+  return (
+    p.endsWith("/find.html") ||
+    p.endsWith("/find/") ||
+    p.endsWith("/find/index.html")
+  );
+}
+
 
   // ========== helpers ==========
   function escapeHtml(s) {

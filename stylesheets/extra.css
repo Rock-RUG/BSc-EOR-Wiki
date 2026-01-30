@@ -1098,3 +1098,27 @@ body.find-tool-page .md-content {
     opacity: 0.9;
   }
 }
+
+@media (max-width: 600px) {
+  /* unify tabs colour */
+  .md-tabs__link,
+  .md-tabs__link--active {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  /* dropdown button text colour */
+  #random-dropdown-btn {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  /* show arrow clearly */
+  #random-dropdown-btn .rd-icon {
+    display: inline-block;
+    margin-left: .25rem;
+    opacity: .9;
+    transform: translateY(-1px);
+  }
+  .md-tab-dropdown.is-open #random-dropdown-btn .rd-icon {
+    transform: rotate(180deg);
+  }
+}

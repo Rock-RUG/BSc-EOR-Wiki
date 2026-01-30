@@ -172,10 +172,10 @@
     btn.appendChild(document.createTextNode("Random"));
 
     // md-icon chevron + rotate via CSS (.is-open)
-    const icon = el("span", "md-nav__icon md-icon rd-icon");
-    icon.setAttribute("aria-hidden", "true");
-    icon.setAttribute("data-md-icon", "chevron-right");
-    btn.appendChild(icon);
+    const icon = el("span", "rd-icon", "▾");
+icon.setAttribute("aria-hidden", "true");
+btn.appendChild(icon);
+
 
     wrap.appendChild(btn);
     dropdownLi.appendChild(wrap);
