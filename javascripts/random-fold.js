@@ -78,6 +78,20 @@ chip.id = "rf-exit-chip";
   const details = document.querySelectorAll("details.rf-details");
   const anyClosed = Array.from(details).some(d => !d.open);
   btn.textContent = anyClosed ? "Expand all sections" : "Fold all sections";
+}function updateToggleLabel() {
+  const btn = chip.querySelector("#rf-exit");
+  if (!btn) return;
+
+  const details = document.querySelectorAll("details.rf-details");
+
+  // 关键：如果 fold 的 details 还没生成出来，首次默认提示“Expand”
+  if (!details.length) {
+    btn.textContent = "Expand all sections";
+    return;
+  }
+
+  const anyClosed = Array.from(details).some(d => !d.open);
+  btn.textContent = anyClosed ? "Expand all sections" : "Fold all sections";
 }
 
 chip.querySelector("#rf-exit").addEventListener("click", () => {
@@ -85,15 +99,17 @@ chip.querySelector("#rf-exit").addEventListener("click", () => {
   if (!details.length) return;
 
   const anyClosed = Array.from(details).some(d => !d.open);
-
-  // anyClosed -> expand all, else fold all
   for (const d of details) d.open = anyClosed;
 
   updateToggleLabel();
 });
 
-// 初始渲染时就把文案设置正确
+// 初始设置一次
 updateToggleLabel();
+
+// 再补两次延迟刷新，确保 fold 完成后按钮文案是对的
+setTimeout(updateToggleLabel, 0);
+setTimeout(updateToggleLabel, 80);
 
   }
 
