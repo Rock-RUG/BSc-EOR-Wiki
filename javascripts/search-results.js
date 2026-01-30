@@ -46,6 +46,26 @@
   }
 }
 
+function hardUnlockScroll() {
+  try {
+    // restore scroll position if body was fixed
+    const top = document.body.style.top;
+    if (top) {
+      const y = -parseInt(top, 10) || 0;
+      document.body.style.top = "";
+      window.scrollTo(0, y);
+    }
+
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+
+    document.body.classList.remove("md-search--active");
+    document.documentElement.classList.remove("md-search--active");
+  } catch (_) {}
+}
+
 
 
   function isOnFindPage() {
@@ -666,8 +686,11 @@
     document.body.classList.add("find-tool-page");
 
     closeMaterialSearchOverlay();
-    setTimeout(closeMaterialSearchOverlay, 0);
-    setTimeout(closeMaterialSearchOverlay, 80);
+hardUnlockScroll();
+setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 0);
+setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 80);
+setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 200);
+
 
     const container = document.getElementById("search-results");
     if (!container) return;

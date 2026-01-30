@@ -1122,3 +1122,35 @@ body.find-tool-page .md-content {
     transform: rotate(180deg);
   }
 }
+
+@media (max-width: 600px) {
+  /* 统一 tabs 文字颜色，避免 Random 变蓝 */
+  .md-tabs__link,
+  .md-tabs__link--active {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  /* Random dropdown 按钮颜色也统一 */
+  #random-dropdown-btn {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  /* 强制显示你插入的 Material icon */
+  #random-dropdown-btn .rd-icon {
+    display: inline-flex !important;
+    vertical-align: middle;
+    opacity: .9;
+    margin-left: .25rem;
+  }
+
+  /* Material icon 通常靠 currentColor 着色，确保可见 */
+  #random-dropdown-btn .md-icon {
+    color: currentColor !important;
+  }
+}
+
+/* Only on Smart Search / Find tool page */
+body.find-tool-page .md-search__overlay {
+  display: none !important;
+  pointer-events: none !important;
+}
