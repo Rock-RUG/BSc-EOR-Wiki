@@ -410,43 +410,74 @@
       </div>
     `;
 
-    const resultSections = state.byClause.length
-      ? state.byClause.map((row) => {
-          const tokenTitle = row.term ? row.term : "(empty)";
-          const isUsed = row.clause.enabled && row.term;
-          const badge = isUsed ? `<span class="sr-chip">used</span>` : `<span class="sr-chip">ignored</span>`;
+    const combinedList = state.union.map(d => {
+  const href = toAbsoluteUrl(d.location);
+  const course = courseLabelFromLocation(d.location);
+  const checked = state.selectedMap[d.location] ? "checked" : "";
+  return `
+    <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
+          <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
+          <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
+        </div>
+        ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
+      </div>
+    </article>
+  `;
+}).join("");
 
-          const list = row.hits.map(d => {
-            const href = toAbsoluteUrl(d.location);
-            const course = courseLabelFromLocation(d.location);
-            const checked = state.selectedMap[d.location] ? "checked" : "";
-            return `
-              <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
-                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-                  <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
-                    <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
-                    <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
-                  </div>
-                  <div style="display:flex;gap:8px;align-items:center;">
-                    ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
-                  </div>
-                </div>
-              </article>
-            `;
-          }).join("");
+const combinedSection = state.byClause.length ? `
+  <details open style="margin-top:14px">
+    <summary style="cursor:pointer">
+      <strong>Combined results</strong>
+      <span style="opacity:.7">(${state.union.length})</span>
+      <span class="sr-chip">pool</span>
+    </summary>
+    <div style="margin-top:8px">
+      ${combinedList || `<div style="opacity:.7">No results.</div>`}
+    </div>
+  </details>
+` : "";
 
-          return `
-            <details open style="margin-top:14px">
-              <summary style="cursor:pointer">
-                <strong>${escapeHtml(tokenTitle)}</strong>
-                <span style="opacity:.7">(${row.hits.length})</span>
-                ${badge}
-              </summary>
-              <div style="margin-top:8px">${list || `<div style="opacity:.7">No hits.</div>`}</div>
-            </details>
-          `;
-        }).join("")
-      : "";
+const clauseSections = state.byClause.length
+  ? state.byClause.map((row) => {
+      const tokenTitle = row.term ? row.term : "(empty)";
+      const isUsed = row.clause.enabled && row.term;
+      const badge = isUsed ? `<span class="sr-chip">used</span>` : `<span class="sr-chip">ignored</span>`;
+
+      const list = row.hits.map(d => {
+        const href = toAbsoluteUrl(d.location);
+        const course = courseLabelFromLocation(d.location);
+        const checked = state.selectedMap[d.location] ? "checked" : "";
+        return `
+          <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+              <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
+                <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
+                <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
+              </div>
+              ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      return `
+        <details style="margin-top:14px">
+          <summary style="cursor:pointer">
+            <strong>${escapeHtml(tokenTitle)}</strong>
+            <span style="opacity:.7">(${row.hits.length})</span>
+            ${badge}
+          </summary>
+          <div style="margin-top:8px">${list || `<div style="opacity:.7">No hits.</div>`}</div>
+        </details>
+      `;
+    }).join("")
+  : "";
+
+const resultSections = combinedSection + clauseSections;
+
 
     container.innerHTML = `
       <div class="sr-top">
@@ -606,27 +637,25 @@
 
     const restored = loadStateFromStorage();
 
-    const state = {
-      pageDocs,
-      scope: scope || (restored && restored.scope) || "",
-      clauses: (restored && Array.isArray(restored.clauses)) ? restored.clauses : [],
-      byClause: [],
-      union: [],
-      selectedMap: (restored && restored.selectedMap) ? restored.selectedMap : {},
-    };
+const state = {
+  pageDocs,
+  scope: scope || (restored && restored.scope) || "",
+  clauses: [],
+  byClause: [],
+  union: [],
+  selectedMap: {},
+};
 
-    // inject q as first clause if provided
-    if (q) {
-      state.clauses.unshift({
-        enabled: true,
-        term: q,
-        opToNext: "OR",
-      });
+// ✅ 如果有 q：直接新开一局（不继承缓存）
+if (q) {
+  state.clauses = [{ enabled: true, term: q, opToNext: "OR" }];
+  state.selectedMap = {};
+} else {
+  // ✅ 没 q：从缓存恢复
+  state.clauses = (restored && Array.isArray(restored.clauses)) ? restored.clauses : [];
+  state.selectedMap = (restored && restored.selectedMap) ? restored.selectedMap : {};
+}
 
-      // show q in the top input as a reminder (still works as "add token" field)
-      const input = document.getElementById("search-input");
-      if (input) input.value = q;
-    }
 
     bindSearchFormToAddClause(state, () => rerender(container, state));
 

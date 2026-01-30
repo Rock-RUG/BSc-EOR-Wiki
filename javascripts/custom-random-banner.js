@@ -198,6 +198,39 @@
     }
   } catch (_) {}
 
+// ====== legacy keys for banner ======
+const CANDS_KEY = "random_custom_candidates_v1";
+const ENTRY_KEY = "random_custom_page_v1";
+const TOKENS_KEY = "random_custom_tokens_v1";
+const TOKENMAP_KEY = "random_custom_token_map_v1";
+const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
+
+try {
+  // 让下一页显示 banner
+  sessionStorage.setItem(NAV_FLAG_KEY, "1");
+
+  // Change range 回到哪里：回到当前 find 页（含参数）
+  sessionStorage.setItem(ENTRY_KEY, window.location.href);
+
+  // candidates：用最终池（union）的 location（banner 也是按这个 union 随机）
+  sessionStorage.setItem(CANDS_KEY, JSON.stringify(state.union.map(d => d.location)));
+
+  // tokens：用 enabled 且 term 非空的 term（展示用）
+  const tokens = state.byClause
+    .filter(r => r.clause.enabled && r.term)
+    .map(r => r.term);
+  sessionStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
+
+  // tokenMap：term -> 命中列表（用于 banner 上显示 “本页命中了哪些 token”）
+  const tokenMap = {};
+  for (const r of state.byClause) {
+    if (!r.clause.enabled || !r.term) continue;
+    tokenMap[r.term] = Array.from(r.hitSet);
+  }
+  sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(tokenMap));
+} catch (_) {}
+
+
   window.location.assign(toAbsoluteUrl(chosen));
 });
 
