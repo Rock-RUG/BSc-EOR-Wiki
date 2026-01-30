@@ -705,6 +705,32 @@ function hardUnlockScroll() {
     render(container, state);
   }
 
+  function forceCloseMaterialSearch() {
+  // 关闭 toggle
+  const toggle =
+    document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
+    document.querySelector('input#__search');
+  if (toggle) toggle.checked = false;
+
+  // 移除 Material 的激活状态
+  document.body.classList.remove("md-search--active");
+  document.documentElement.classList.remove("md-search--active");
+
+  // iOS scroll hard reset
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.width = "";
+}
+
+// 页面首次加载
+document.addEventListener("DOMContentLoaded", forceCloseMaterialSearch);
+
+// iOS bfcache / history restore
+window.addEventListener("pageshow", forceCloseMaterialSearch);
+
+
   async function main() {
     if (!isOnFindPage()) return;
     document.body.classList.add("find-tool-page");
