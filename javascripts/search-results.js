@@ -19,7 +19,7 @@
     return base.origin + base.pathname;
   }
 
-  function closeMaterialSearchOverlay() {
+    function closeMaterialSearchOverlay() {
     const toggle =
       document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
       document.querySelector('input#__search');
@@ -27,7 +27,22 @@
 
     const input = document.querySelector('input[data-md-component="search-query"]');
     if (input) input.blur();
+
+    // extra safety: click reset/close if present
+    const closeBtn =
+      document.querySelector('button[data-md-component="search-reset"]') ||
+      document.querySelector(".md-search__icon[for='__search']");
+    if (closeBtn && closeBtn.click) closeBtn.click();
+
+    // hard unlock scroll (mobile safari)
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+    document.body.classList.remove("md-search--active");
+    document.documentElement.classList.remove("md-search--active");
   }
+
 
   function isOnFindPage() {
     const p = window.location.pathname.toLowerCase();
@@ -642,6 +657,8 @@
     document.body.classList.add("find-tool-page");
 
     closeMaterialSearchOverlay();
+    setTimeout(closeMaterialSearchOverlay, 0);
+    setTimeout(closeMaterialSearchOverlay, 80);
 
     const container = document.getElementById("search-results");
     if (!container) return;

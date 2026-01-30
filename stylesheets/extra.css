@@ -1055,3 +1055,46 @@ body.find-tool-page .md-sidebar--secondary {
 body.find-tool-page .md-content {
   grid-column: 1 / -1;
 }
+
+/* Mobile: search bar layout */
+@media (max-width: 600px) {
+  .search-hero__form {
+    flex-wrap: wrap;
+  }
+
+  .search-hero__input {
+    min-width: 0;
+    font-size: 0.98rem;
+  }
+
+  .search-hero__input::placeholder {
+    font-size: 0.95rem;
+    opacity: 0.65;
+  }
+
+  .search-hero__button {
+    padding: 0.6rem 0.9rem;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+}
+
+/* Mobile: unify tabs link colour */
+@media (max-width: 600px) {
+  .md-tabs__link,
+  .md-tabs__link--active {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  /* Dropdown "Random" button inside tabs */
+  .md-tab-dropdown,
+  .md-tab-dropdown.is-open {
+    color: rgba(255,255,255,.92) !important;
+  }
+
+  /* Ensure the chevron icon is visible */
+  .md-tab-dropdown .rd-icon {
+    display: inline-flex !important;
+    opacity: 0.9;
+  }
+}
