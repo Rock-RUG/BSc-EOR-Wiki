@@ -48,30 +48,41 @@
 
 function hardUnlockScroll() {
   try {
+    // 先读出 lock 时的 top（通常形如 "-123px"）
     const top = document.body.style.top;
 
-    // Always clear fixed-lock styles
+    // 清 scrollfix 标记
+    document.body.removeAttribute("data-md-scrollfix");
+    document.documentElement.removeAttribute("data-md-scrollfix");
+
+    // 清锁滚动相关 style
     document.documentElement.style.overflow = "";
+    document.documentElement.style.position = "";
+    document.documentElement.style.height = "";
+
     document.body.style.overflow = "";
     document.body.style.position = "";
     document.body.style.width = "";
+    document.body.style.height = "";
+
     document.body.classList.remove("md-search--active");
     document.documentElement.classList.remove("md-search--active");
 
-    if (!top) return;
-
-    // Clear top first
+    // 再清 top
     document.body.style.top = "";
 
-    // Restore scroll only if non-zero top
+    // 如果 top 是有效的负值，恢复滚动位置
     const n = parseInt(top, 10);
     if (Number.isFinite(n) && n !== 0) {
       const y = -n;
-      // Only adjust if still near top to avoid yanking user during scroll
-      if ((window.scrollY || 0) < 2) window.scrollTo(0, y);
+
+      // iOS 上更稳：无条件恢复到 y，但只在页面刚加载时做一次
+      // 你已经在 main() 开头调用它，所以这里不要在用户滚动后反复触发
+      window.scrollTo(0, y);
     }
   } catch (_) {}
 }
+
 
 
 
@@ -735,17 +746,13 @@ window.addEventListener("pageshow", forceCloseMaterialSearch);
     if (!isOnFindPage()) return;
     document.body.classList.add("find-tool-page");
 
-    closeMaterialSearchOverlay();
-hardUnlockScroll();
 
-// Only run the delayed unlock if the page is still at top.
-// Otherwise it may yank the user back to the top on iOS.
-setTimeout(() => {
-  if ((window.scrollY || 0) < 2) {
-    closeMaterialSearchOverlay();
-    hardUnlockScroll();
-  }
-}, 60);
+// iOS: 有些情况下必须在首次触摸时再解一次锁（只做一次）
+window.addEventListener("touchstart", () => {
+  closeMaterialSearchOverlay();
+  hardUnlockScroll();
+}, { once: true, passive: true });
+
 
 window.addEventListener("pageshow", () => {
   closeMaterialSearchOverlay();

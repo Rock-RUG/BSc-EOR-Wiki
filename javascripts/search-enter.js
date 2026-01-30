@@ -29,12 +29,22 @@
   const resetBtn = document.querySelector('button[data-md-component="search-reset"]');
   if (resetBtn && resetBtn.click) resetBtn.click();
 
-  // iOS: hard unlock scroll
+  // --- HARD unlock (iOS) ---
+  // Material 有时会加 scrollfix 标记
+  document.body.removeAttribute("data-md-scrollfix");
+  document.documentElement.removeAttribute("data-md-scrollfix");
+
+  // 清所有常见锁滚动相关 style
   document.documentElement.style.overflow = "";
+  document.documentElement.style.position = "";
+  document.documentElement.style.height = "";
+
   document.body.style.overflow = "";
   document.body.style.position = "";
-  document.body.style.width = "";
   document.body.style.top = "";
+  document.body.style.width = "";
+  document.body.style.height = "";
+
   document.body.classList.remove("md-search--active");
   document.documentElement.classList.remove("md-search--active");
 
@@ -42,6 +52,7 @@
     try { document.activeElement.blur(); } catch (_) {}
   }
 }
+
 
 
 
