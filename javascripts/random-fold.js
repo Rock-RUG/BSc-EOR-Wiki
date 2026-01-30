@@ -1,6 +1,6 @@
-const UNFOLD_ONCE_KEY = "random_unfold_once_v1";
 // docs/javascripts/random-fold.js
 (function () {
+  const UNFOLD_ONCE_KEY = "random_unfold_once_v1";
   const MODE_FLAG = "random_review_mode_v1";
 
   // 新增：只有从 Start/Continue random 导航过来才允许折叠（一次性）

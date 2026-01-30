@@ -8,6 +8,17 @@
       .trim();
   }
 
+  function isToolOrMetaHref(href) {
+  const h = stripHash(href).toLowerCase();
+  const file = h.split("/").pop() || "";
+  return (
+    file === "find.html" ||
+    file === "custom-random.html" ||
+    file === "about-this-wiki.html" ||
+    file === "about.html"
+  );
+}
+
   function tokens(q) {
     return normaliseForSearch(q).split(" ").filter(Boolean);
   }
@@ -50,6 +61,7 @@
   // - hide ALL section hits (#...) (you wanted concept pages only)
   // - AND additionally make sure prerequisites/related-concepts section hits are hidden (explicit)
   function isKeepableResultHref(href) {
+    if (isToolOrMetaHref(href)) return false;
     if (!href) return false;
     if (isIndexHref(href)) return false;
     if (isRandomHref(href)) return false;

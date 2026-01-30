@@ -48,23 +48,31 @@
 
 function hardUnlockScroll() {
   try {
-    // restore scroll position if body was fixed
     const top = document.body.style.top;
-    if (top) {
-      const y = -parseInt(top, 10) || 0;
-      document.body.style.top = "";
-      window.scrollTo(0, y);
-    }
 
+    // Always clear fixed-lock styles
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
     document.body.style.position = "";
     document.body.style.width = "";
-
     document.body.classList.remove("md-search--active");
     document.documentElement.classList.remove("md-search--active");
+
+    if (!top) return;
+
+    // Clear top first
+    document.body.style.top = "";
+
+    // Restore scroll only if non-zero top
+    const n = parseInt(top, 10);
+    if (Number.isFinite(n) && n !== 0) {
+      const y = -n;
+      // Only adjust if still near top to avoid yanking user during scroll
+      if ((window.scrollY || 0) < 2) window.scrollTo(0, y);
+    }
   } catch (_) {}
 }
+
 
 
 
@@ -127,6 +135,21 @@ function hardUnlockScroll() {
   }
 
   // ========== filters ==========
+  function isToolOrMetaPage(location) {
+  const loc = String(location || "").toLowerCase().split("#")[0];
+  const file = loc.split("/").pop() || "";
+
+  // tool pages
+  if (file === "find.html") return true;
+  if (file === "custom-random.html") return true;
+
+  // about page (按你站点可能的命名做几个兜底)
+  if (file === "about-this-wiki.html") return true;
+  if (file === "about.html") return true;
+
+  return false;
+}
+
   function isIndexPage(location) {
     const loc = String(location || "").toLowerCase().split("#")[0];
     return loc.endsWith("/index.html") || loc.endsWith("index.html");
@@ -209,6 +232,7 @@ function hardUnlockScroll() {
 
       if (isIndexPage(pageLoc)) continue;
       if (isRandomPage(pageLoc)) continue;
+      if (isToolOrMetaPage(pageLoc)) continue;
 
       let entry = pageMap.get(pageLoc);
       if (!entry) {
@@ -687,8 +711,16 @@ function hardUnlockScroll() {
 
     closeMaterialSearchOverlay();
 hardUnlockScroll();
-setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 0);
-setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 80);
+
+// Only run the delayed unlock if the page is still at top.
+// Otherwise it may yank the user back to the top on iOS.
+setTimeout(() => {
+  if ((window.scrollY || 0) < 2) {
+    closeMaterialSearchOverlay();
+    hardUnlockScroll();
+  }
+}, 60);
+
 
 
     const container = document.getElementById("search-results");
