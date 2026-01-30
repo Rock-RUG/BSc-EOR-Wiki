@@ -65,7 +65,7 @@ chip.id = "rf-exit-chip";
           <strong>Self-test mode</strong>
           <span style="opacity:.75">Sections are folded by default.</span>
         </div>
-        <button id="rf-exit" class="md-button">Exit</button>
+        <button id="rf-exit" class="md-button">Expand all sections</button>
       </div>
     `;
     const h1 = container.querySelector("h1");
@@ -73,12 +73,13 @@ chip.id = "rf-exit-chip";
     else container.insertAdjacentElement("afterbegin", chip);
 
     chip.querySelector("#rf-exit").addEventListener("click", () => {
-      try {
-        sessionStorage.removeItem(MODE_FLAG);
-        sessionStorage.removeItem(REVIEW_NAV_FLAG);
-      } catch (_) {}
-      window.location.reload();
-    });
+  // 展开本页所有由 random-fold 生成的折叠块
+  const details = document.querySelectorAll("details.rf-details");
+  for (const d of details) d.open = true;
+
+  // 可选：展开后把提示条淡出（不强制）
+  try { chip.style.opacity = "0.85"; } catch (_) {}
+});
   }
 
   function foldSections() {

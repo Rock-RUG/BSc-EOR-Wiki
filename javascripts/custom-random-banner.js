@@ -1,5 +1,9 @@
+
 // docs/javascripts/custom-random-banner.js
 (function () {
+    // Self-test (fold) flags used by random-fold.js
+  const REVIEW_MODE_KEY = "random_review_mode_v1";
+  const REVIEW_NAV_FLAG = "random_review_nav_flag_v1";
   const CANDS_KEY = "random_custom_candidates_v1";
   const ENTRY_KEY = "random_custom_page_v1";
   const TOKENS_KEY = "random_custom_tokens_v1";
@@ -160,62 +164,71 @@ function isConceptPage(relPath) {
       : `This page doesn't match any token (possible if you opened it manually).`;
 
     box.innerHTML = `
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;justify-content:space-between">
-        <div style="min-width:240px">
-          <div>
-            <strong>Custom random</strong>
-<span style="opacity:.75">(${count} page(s) in the random pool)</span>
-          </div>
-          <div style="margin-top:8px">
-            ${tokenChips}
-          </div>
-          <div style="margin-top:8px;opacity:.85">
-            ${matchedText}
-          </div>
-        </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:260px">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <a id="cr-continue" class="md-button md-button--primary" href="#">Continue random</a>
+    <a id="cr-view" class="md-button" href="#">View this page</a>
+    <a id="cr-change" class="md-button" href="#">Edit filter</a>
+  </div>
 
-        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-  <a id="cr-continue" class="md-button md-button--primary" href="#">Continue random</a>
-  <a id="cr-view" class="md-button" href="#">View this page</a>
-  <a id="cr-change" class="md-button" href="#">Edit filter</a>
+  <label style="display:flex;align-items:center;gap:8px;opacity:.9">
+    <input id="cr-selftest" type="checkbox" />
+    Next page in self-test mode (fold sections)
+  </label>
 </div>
-      </div>
     `;
 
     const h1 = inner.querySelector("h1");
     if (h1 && h1.parentNode) h1.insertAdjacentElement("afterend", box);
     else inner.insertAdjacentElement("afterbegin", box);
 
+    // init checkbox state from last preference
+    try {
+      const on = sessionStorage.getItem(REVIEW_MODE_KEY) === "1";
+      const cb = document.getElementById("cr-selftest");
+      if (cb) cb.checked = on;
+    } catch (_) {}
+
+    document.getElementById("cr-view").addEventListener("click", (e) => {
+      e.preventDefault();
+      try {
+        sessionStorage.setItem("random_unfold_once_v1", "1");
+        // 不改 REVIEW_MODE_KEY，让“下一页是否折叠”仍由 checkbox 决定
+      } catch (_) {}
+      window.location.reload();
+    });
+
+
     document.getElementById("cr-continue").addEventListener("click", (e) => {
   e.preventDefault();
   const chosen = pickRandom(cands);
   if (!chosen) return;
-
+    
   // 关键：让下一页也显示 custom random banner
   try { sessionStorage.setItem(NAV_FLAG_KEY, "1"); } catch (_) {}
 
   // 如果你还需要 review 的逻辑，保留也行（不冲突）
+    // self-test preference for NEXT page
   try {
-    if (sessionStorage.getItem("random_review_mode_v1") === "1") {
-      sessionStorage.setItem("random_review_nav_flag_v1", "1");
+    const cb = document.getElementById("cr-selftest");
+    const want = cb ? cb.checked : (sessionStorage.getItem(REVIEW_MODE_KEY) === "1");
+
+    if (want) {
+      sessionStorage.setItem(REVIEW_MODE_KEY, "1");
+      sessionStorage.setItem(REVIEW_NAV_FLAG, "1"); // ticket for random-fold.js
+    } else {
+      sessionStorage.removeItem(REVIEW_MODE_KEY);
+      sessionStorage.removeItem(REVIEW_NAV_FLAG);
     }
   } catch (_) {}
+
 
 
 
   window.location.assign(toAbsoluteUrl(chosen));
 });
 
-document.getElementById("cr-view").addEventListener("click", (e) => {
-  e.preventDefault();
-  try {
-    // 临时展开当前页（仅一次）
-    sessionStorage.setItem("random_unfold_once_v1", "1");
-    // 确保 self-test 模式是开启的（否则 fold/unfold 没意义）
-    sessionStorage.setItem("random_review_mode_v1", "1");
-  } catch (_) {}
-  window.location.reload();
-});
+
 
     document.getElementById("cr-change").addEventListener("click", (e) => {
       e.preventDefault();
