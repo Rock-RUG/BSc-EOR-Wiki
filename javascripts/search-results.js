@@ -262,7 +262,6 @@
   // linear eval from left to right, only enabled clauses participate
   function evaluateLinear(byClause, docByLoc) {
     const enabled = byClause.filter(x => x.clause.enabled && x.term);
-
     if (!enabled.length) return [];
 
     let acc = new Set(enabled[0].hitSet);
@@ -330,7 +329,6 @@
       const v = (input.value || "").trim();
       if (!v) return;
 
-      // add a new enabled clause
       state.clauses.push({
         enabled: true,
         term: v,
@@ -339,7 +337,6 @@
 
       input.value = "";
 
-      // remove q from URL to avoid double injection after edits
       const params = new URLSearchParams(window.location.search);
       params.delete("q");
       window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
@@ -373,7 +370,7 @@
               <input
                 data-clause-term="${i}"
                 value="${escapeHtml(term)}"
-                placeholder="keyword or tag"
+                placeholder="keyword, tag, or course code"
                 style="flex:1;min-width:220px;padding:6px 10px;border:1px solid var(--md-default-fg-color--lightest);border-radius:10px;background:var(--md-default-bg-color);"
               />
 
@@ -399,85 +396,53 @@
       </div>
     `;
 
-    const controls = `
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
-        <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
-          Start random
-        </button>
-        <button id="cr-select-all" class="md-button" ${unionCount ? "" : "disabled"}>Select all</button>
-        <button id="cr-select-none" class="md-button" ${unionCount ? "" : "disabled"}>Select none</button>
-        <button id="cr-clear-clauses" class="md-button" ${state.byClause.length ? "" : "disabled"}>Clear tokens</button>
-      </div>
-    `;
-
     const combinedList = state.union.map(d => {
-  const href = toAbsoluteUrl(d.location);
-  const course = courseLabelFromLocation(d.location);
-  const checked = state.selectedMap[d.location] ? "checked" : "";
-  return `
-    <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
-      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-        <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
-          <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
-          <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
-        </div>
-        ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
-      </div>
-    </article>
-  `;
-}).join("");
-
-const combinedSection = state.byClause.length ? `
-  <details open style="margin-top:14px">
-    <summary style="cursor:pointer">
-      <strong>Combined results</strong>
-      <span style="opacity:.7">(${state.union.length})</span>
-      <span class="sr-chip">pool</span>
-    </summary>
-    <div style="margin-top:8px">
-      ${combinedList || `<div style="opacity:.7">No results.</div>`}
-    </div>
-  </details>
-` : "";
-
-const clauseSections = state.byClause.length
-  ? state.byClause.map((row) => {
-      const tokenTitle = row.term ? row.term : "(empty)";
-      const isUsed = row.clause.enabled && row.term;
-      const badge = isUsed ? `<span class="sr-chip">used</span>` : `<span class="sr-chip">ignored</span>`;
-
-      const list = row.hits.map(d => {
-        const href = toAbsoluteUrl(d.location);
-        const course = courseLabelFromLocation(d.location);
-        const checked = state.selectedMap[d.location] ? "checked" : "";
-        return `
-          <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
-            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-              <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
-                <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
-                <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
-              </div>
-              ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
-            </div>
-          </article>
-        `;
-      }).join("");
-
+      const href = toAbsoluteUrl(d.location);
+      const course = courseLabelFromLocation(d.location);
+      const checked = state.selectedMap[d.location] ? "checked" : "";
       return `
-        <details style="margin-top:14px">
-          <summary style="cursor:pointer">
-            <strong>${escapeHtml(tokenTitle)}</strong>
-            <span style="opacity:.7">(${row.hits.length})</span>
-            ${badge}
-          </summary>
-          <div style="margin-top:8px">${list || `<div style="opacity:.7">No hits.</div>`}</div>
-        </details>
+        <article style="padding:8px 0;border-bottom:1px solid var(--md-default-fg-color--lightest);">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <div style="display:flex;gap:10px;align-items:center;min-width:260px;flex:1">
+              <input type="checkbox" data-select-loc="${escapeHtml(d.location)}" ${checked} />
+              <a href="${href}" style="text-decoration:none">${escapeHtml(d.title || "Untitled")}</a>
+            </div>
+            ${course ? `<span class="sr-chip">${escapeHtml(course)}</span>` : ""}
+          </div>
+        </article>
       `;
-    }).join("")
-  : "";
+    }).join("");
 
-const resultSections = combinedSection;
+    // ✅ controls moved into Combined results
+    const combinedSection = state.byClause.length ? `
+      <details open style="margin-top:14px">
+        <summary style="cursor:pointer">
+          <strong>Combined results</strong>
+          <span style="opacity:.7">(${state.union.length})</span>
+          <span class="sr-chip">pool</span>
+        </summary>
 
+        <div style="margin:10px 0;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <label style="display:flex;align-items:center;gap:8px;opacity:.9">
+            <input type="checkbox" id="sf-selftest" ${state.selfTest ? "checked" : ""}/>
+            Self-test mode (fold sections)
+          </label>
+
+          <button id="cr-random" class="md-button md-button--primary" ${selectedCount ? "" : "disabled"}>
+            Start random
+          </button>
+          <button id="cr-select-all" class="md-button" ${unionCount ? "" : "disabled"}>Select all</button>
+          <button id="cr-select-none" class="md-button" ${unionCount ? "" : "disabled"}>Select none</button>
+          <button id="cr-clear-clauses" class="md-button" ${state.byClause.length ? "" : "disabled"}>Clear tokens</button>
+        </div>
+
+        <div style="margin-top:8px">
+          ${combinedList || `<div style="opacity:.7">No results.</div>`}
+        </div>
+      </details>
+    ` : "";
+
+    const resultSections = combinedSection;
 
     container.innerHTML = `
       <div class="sr-top">
@@ -487,7 +452,6 @@ const resultSections = combinedSection;
           <div style="opacity:.85;margin-bottom:6px;">Keywords & rules</div>
           <div id="clause-editor">${clauseRows}</div>
           ${topInfo}
-          ${controls}
         </div>
       </div>
 
@@ -495,6 +459,23 @@ const resultSections = combinedSection;
         ${state.byClause.length ? resultSections : `<div class="sr-empty"><p>Add a token to see results.</p></div>`}
       </div>
     `;
+
+    // ===== bind: self-test toggle (preference) =====
+    const cbSelf = container.querySelector("#sf-selftest");
+    if (cbSelf) cbSelf.addEventListener("change", () => {
+      state.selfTest = cbSelf.checked;
+      try {
+        if (state.selfTest) sessionStorage.setItem("random_review_mode_v1", "1");
+        else sessionStorage.removeItem("random_review_mode_v1");
+      } catch (_) {}
+      saveStateToStorage({
+        scope: state.scope,
+        clauses: state.clauses,
+        selectedMap: state.selectedMap,
+        unionLocations: state.union.map(d => d.location),
+        selfTest: state.selfTest,
+      });
+    });
 
     // clause enabled
     container.querySelectorAll('input[type="checkbox"][data-clause-enabled]').forEach(cb => {
@@ -575,58 +556,69 @@ const resultSections = combinedSection;
 
     // random
     const btnRandom = container.querySelector("#cr-random");
-if (btnRandom) btnRandom.addEventListener("click", () => {
-  const picked = pickRandomSelected(state.union, state.selectedMap);
-  if (!picked) return;
+    if (btnRandom) btnRandom.addEventListener("click", () => {
+      const picked = pickRandomSelected(state.union, state.selectedMap);
+      if (!picked) return;
 
-  // ===== legacy keys for custom-random-banner.js =====
-  const CANDS_KEY = "random_custom_candidates_v1";
-  const ENTRY_KEY = "random_custom_page_v1";
-  const TOKENS_KEY = "random_custom_tokens_v1";
-  const TOKENMAP_KEY = "random_custom_token_map_v1";
-  const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
+      // self-test flags for random-fold.js
+      try {
+        if (state.selfTest) {
+          sessionStorage.setItem("random_review_mode_v1", "1");
+          sessionStorage.setItem("random_review_nav_flag_v1", "1");
+        } else {
+          sessionStorage.removeItem("random_review_mode_v1");
+          sessionStorage.removeItem("random_review_nav_flag_v1");
+        }
+      } catch (_) {}
 
-  try {
-    sessionStorage.setItem(NAV_FLAG_KEY, "1");
-    sessionStorage.setItem(ENTRY_KEY, window.location.href);
-    sessionStorage.setItem(CANDS_KEY, JSON.stringify(state.union.map(d => d.location)));
+      // legacy keys for custom-random-banner.js
+      const CANDS_KEY = "random_custom_candidates_v1";
+      const ENTRY_KEY = "random_custom_page_v1";
+      const TOKENS_KEY = "random_custom_tokens_v1";
+      const TOKENMAP_KEY = "random_custom_token_map_v1";
+      const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
 
-    const tokens = state.byClause
-      .filter(r => r.clause.enabled && r.term)
-      .map(r => r.term);
-    sessionStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
+      try {
+        sessionStorage.setItem(NAV_FLAG_KEY, "1");
+        sessionStorage.setItem(ENTRY_KEY, window.location.href);
+        sessionStorage.setItem(CANDS_KEY, JSON.stringify(state.union.map(d => d.location)));
 
-    const tokenMap = {};
-    for (const r of state.byClause) {
-      if (!r.clause.enabled || !r.term) continue;
-      tokenMap[r.term] = Array.from(r.hitSet);
-    }
-    sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(tokenMap));
-  } catch (_) {}
+        const tokens = state.byClause
+          .filter(r => r.clause.enabled && r.term)
+          .map(r => r.term);
+        sessionStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
 
-  // still save your v2 state (optional but good)
-  saveStateToStorage({
-    scope: state.scope,
-    clauses: state.clauses,
-    selectedMap: state.selectedMap,
-    unionLocations: state.union.map(d => d.location),
-  });
+        const tokenMap = {};
+        for (const r of state.byClause) {
+          if (!r.clause.enabled || !r.term) continue;
+          tokenMap[r.term] = Array.from(r.hitSet);
+        }
+        sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(tokenMap));
+      } catch (_) {}
 
-  window.location.assign(toAbsoluteUrl(picked.location));
-});
+      // persist v2 state
+      saveStateToStorage({
+        scope: state.scope,
+        clauses: state.clauses,
+        selectedMap: state.selectedMap,
+        unionLocations: state.union.map(d => d.location),
+        selfTest: state.selfTest,
+      });
 
+      window.location.assign(toAbsoluteUrl(picked.location));
+    });
 
-    // persist
+    // persist (keep it cheap, only basic state)
     saveStateToStorage({
       scope: state.scope,
       clauses: state.clauses,
       selectedMap: state.selectedMap,
       unionLocations: state.union.map(d => d.location),
+      selfTest: state.selfTest,
     });
   }
 
   function rerender(container, state) {
-    // scope filter
     let docs = state.pageDocs;
     if (state.scope) {
       const scopePrefix = normaliseScope(state.scope);
@@ -638,7 +630,6 @@ if (btnRandom) btnRandom.addEventListener("click", () => {
 
     state.union = evaluateLinear(state.byClause, computed.docByLoc);
 
-    // default select new locations
     for (const d of state.union) {
       if (state.selectedMap[d.location] === undefined) state.selectedMap[d.location] = true;
     }
@@ -665,28 +656,35 @@ if (btnRandom) btnRandom.addEventListener("click", () => {
 
     const restored = loadStateFromStorage();
 
-const state = {
-  pageDocs,
-  scope: scope || (restored && restored.scope) || "",
-  clauses: [],
-  byClause: [],
-  union: [],
-  selectedMap: {},
-};
+    const state = {
+      pageDocs,
+      scope: scope || (restored && restored.scope) || "",
+      clauses: [],
+      byClause: [],
+      union: [],
+      selectedMap: {},
+      selfTest: false,
+    };
 
-// ✅ 如果有 q：直接新开一局（不继承缓存）
-if (q) {
-  state.clauses = [{ enabled: true, term: q, opToNext: "OR" }];
-  state.selectedMap = {};
-} else {
-  // ✅ 没 q：从缓存恢复
-  state.clauses = (restored && Array.isArray(restored.clauses)) ? restored.clauses : [];
-  state.selectedMap = (restored && restored.selectedMap) ? restored.selectedMap : {};
-}
+    // read self-test preference
+    try {
+      state.selfTest =
+        (restored && restored.selfTest === true) ||
+        sessionStorage.getItem("random_review_mode_v1") === "1";
+    } catch (_) {
+      state.selfTest = (restored && restored.selfTest === true) || false;
+    }
 
+    // new query if q exists
+    if (q) {
+      state.clauses = [{ enabled: true, term: q, opToNext: "OR" }];
+      state.selectedMap = {};
+    } else {
+      state.clauses = (restored && Array.isArray(restored.clauses)) ? restored.clauses : [];
+      state.selectedMap = (restored && restored.selectedMap) ? restored.selectedMap : {};
+    }
 
     bindSearchFormToAddClause(state, () => rerender(container, state));
-
     rerender(container, state);
   }
 

@@ -164,7 +164,7 @@ function isConceptPage(relPath) {
         <div style="min-width:240px">
           <div>
             <strong>Custom random</strong>
-            <span style="opacity:.75">(${count} page(s) in union)</span>
+<span style="opacity:.75">(${count} page(s) in the random pool)</span>
           </div>
           <div style="margin-top:8px">
             ${tokenChips}
@@ -175,9 +175,10 @@ function isConceptPage(relPath) {
         </div>
 
         <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-          <a id="cr-continue" class="md-button md-button--primary" href="#">Continue random</a>
-          <a id="cr-change" class="md-button" href="#">Change range</a>
-        </div>
+  <a id="cr-continue" class="md-button md-button--primary" href="#">Continue random</a>
+  <a id="cr-view" class="md-button" href="#">View this page</a>
+  <a id="cr-change" class="md-button" href="#">Edit filter</a>
+</div>
       </div>
     `;
 
@@ -200,42 +201,21 @@ function isConceptPage(relPath) {
     }
   } catch (_) {}
 
-// ====== legacy keys for banner ======
-const CANDS_KEY = "random_custom_candidates_v1";
-const ENTRY_KEY = "random_custom_page_v1";
-const TOKENS_KEY = "random_custom_tokens_v1";
-const TOKENMAP_KEY = "random_custom_token_map_v1";
-const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
-
-try {
-  // 让下一页显示 banner
-  sessionStorage.setItem(NAV_FLAG_KEY, "1");
-
-  // Change range 回到哪里：回到当前 find 页（含参数）
-  sessionStorage.setItem(ENTRY_KEY, window.location.href);
-
-  // candidates：用最终池（union）的 location（banner 也是按这个 union 随机）
-  sessionStorage.setItem(CANDS_KEY, JSON.stringify(state.union.map(d => d.location)));
-
-  // tokens：用 enabled 且 term 非空的 term（展示用）
-  const tokens = state.byClause
-    .filter(r => r.clause.enabled && r.term)
-    .map(r => r.term);
-  sessionStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
-
-  // tokenMap：term -> 命中列表（用于 banner 上显示 “本页命中了哪些 token”）
-  const tokenMap = {};
-  for (const r of state.byClause) {
-    if (!r.clause.enabled || !r.term) continue;
-    tokenMap[r.term] = Array.from(r.hitSet);
-  }
-  sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(tokenMap));
-} catch (_) {}
 
 
   window.location.assign(toAbsoluteUrl(chosen));
 });
 
+document.getElementById("cr-view").addEventListener("click", (e) => {
+  e.preventDefault();
+  try {
+    // 临时展开当前页（仅一次）
+    sessionStorage.setItem("random_unfold_once_v1", "1");
+    // 确保 self-test 模式是开启的（否则 fold/unfold 没意义）
+    sessionStorage.setItem("random_review_mode_v1", "1");
+  } catch (_) {}
+  window.location.reload();
+});
 
     document.getElementById("cr-change").addEventListener("click", (e) => {
       e.preventDefault();

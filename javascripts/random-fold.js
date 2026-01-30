@@ -1,3 +1,4 @@
+const UNFOLD_ONCE_KEY = "random_unfold_once_v1";
 // docs/javascripts/random-fold.js
 (function () {
   const MODE_FLAG = "random_review_mode_v1";
@@ -35,6 +36,15 @@
       return false;
     }
   }
+
+  // ✅ 临时展开一次：仅对当前页生效，下一页继续折叠
+try {
+  if (sessionStorage.getItem(UNFOLD_ONCE_KEY) === "1") {
+    sessionStorage.removeItem(UNFOLD_ONCE_KEY);
+    return; // 不折叠
+  }
+} catch (_) {}
+
 
   function addExitChip(container) {
     const chip = document.createElement("div");
