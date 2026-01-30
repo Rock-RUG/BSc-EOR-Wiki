@@ -575,19 +575,46 @@ const resultSections = combinedSection;
 
     // random
     const btnRandom = container.querySelector("#cr-random");
-    if (btnRandom) btnRandom.addEventListener("click", () => {
-      const picked = pickRandomSelected(state.union, state.selectedMap);
-      if (!picked) return;
+if (btnRandom) btnRandom.addEventListener("click", () => {
+  const picked = pickRandomSelected(state.union, state.selectedMap);
+  if (!picked) return;
 
-      saveStateToStorage({
-        scope: state.scope,
-        clauses: state.clauses,
-        selectedMap: state.selectedMap,
-        unionLocations: state.union.map(d => d.location),
-      });
+  // ===== legacy keys for custom-random-banner.js =====
+  const CANDS_KEY = "random_custom_candidates_v1";
+  const ENTRY_KEY = "random_custom_page_v1";
+  const TOKENS_KEY = "random_custom_tokens_v1";
+  const TOKENMAP_KEY = "random_custom_token_map_v1";
+  const NAV_FLAG_KEY = "random_custom_nav_flag_v1";
 
-      window.location.assign(toAbsoluteUrl(picked.location));
-    });
+  try {
+    sessionStorage.setItem(NAV_FLAG_KEY, "1");
+    sessionStorage.setItem(ENTRY_KEY, window.location.href);
+    sessionStorage.setItem(CANDS_KEY, JSON.stringify(state.union.map(d => d.location)));
+
+    const tokens = state.byClause
+      .filter(r => r.clause.enabled && r.term)
+      .map(r => r.term);
+    sessionStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
+
+    const tokenMap = {};
+    for (const r of state.byClause) {
+      if (!r.clause.enabled || !r.term) continue;
+      tokenMap[r.term] = Array.from(r.hitSet);
+    }
+    sessionStorage.setItem(TOKENMAP_KEY, JSON.stringify(tokenMap));
+  } catch (_) {}
+
+  // still save your v2 state (optional but good)
+  saveStateToStorage({
+    scope: state.scope,
+    clauses: state.clauses,
+    selectedMap: state.selectedMap,
+    unionLocations: state.union.map(d => d.location),
+  });
+
+  window.location.assign(toAbsoluteUrl(picked.location));
+});
+
 
     // persist
     saveStateToStorage({
@@ -621,6 +648,7 @@ const resultSections = combinedSection;
 
   async function main() {
     if (!isOnFindPage()) return;
+    document.body.classList.add("find-tool-page");
 
     closeMaterialSearchOverlay();
 

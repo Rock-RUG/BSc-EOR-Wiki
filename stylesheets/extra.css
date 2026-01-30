@@ -1045,3 +1045,13 @@ body[data-md-url="find.html"] .md-sidebar--secondary {
 body[data-md-url="find.html"] .md-content {
   grid-column: 1 / -1;
 }
+
+
+body.find-tool-page .md-sidebar--primary,
+body.find-tool-page .md-sidebar--secondary {
+  display: none;
+}
+
+body.find-tool-page .md-content {
+  grid-column: 1 / -1;
+}
