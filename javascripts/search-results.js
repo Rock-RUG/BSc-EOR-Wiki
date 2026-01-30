@@ -133,6 +133,20 @@ function hardUnlockScroll() {
 }
 
 
+
+  // ====== pending token from top search (mobile) ======
+  const FIND_PENDING_TOKEN_KEY = "find_pending_token_v1";
+  function consumePendingToken() {
+    try {
+      const v = (sessionStorage.getItem(FIND_PENDING_TOKEN_KEY) || "").trim();
+      if (!v) return "";
+      sessionStorage.removeItem(FIND_PENDING_TOKEN_KEY);
+      return v;
+    } catch (_) {
+      return "";
+    }
+  }
+
   // ========== helpers ==========
   function escapeHtml(s) {
     return String(s)
@@ -772,8 +786,19 @@ function hardUnlockScroll() {
     if (!container) return;
 
     const params = new URLSearchParams(window.location.search);
-    const q = (params.get("q") || "").trim();
-    const scope = normaliseScope(params.get("scope") || "");
+    let q = (params.get("q") || "").trim();
+    const pendingQ = consumePendingToken();
+    if (pendingQ) q = pendingQ;
+
+    // Keep URL clean (avoid iOS weirdness with search overlay + querystring)
+    if (q) {
+      try {
+        const p2 = new URLSearchParams(window.location.search);
+        p2.delete("q");
+        window.history.replaceState({}, "", `${window.location.pathname}?${p2.toString()}`);
+      } catch (_) {}
+    }
+const scope = normaliseScope(params.get("scope") || "");
 
     const indexJson = await loadIndex();
     const docs = (indexJson && indexJson.docs) ? indexJson.docs : [];

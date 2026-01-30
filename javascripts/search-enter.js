@@ -72,7 +72,10 @@
       unlockMdSearchBeforeNavigate();
 
       const root = getSiteRootUrl();
-      window.location.href = root + "find.html?q=" + encodeURIComponent(q);
+      try { sessionStorage.setItem('find_pending_token_v1', q); } catch (_) {}
+
+      // Go to find.html like Custom Random does (no querystring), then auto-add token on the page.
+      window.location.href = root + "find.html";
     });
   }
 
