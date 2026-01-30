@@ -743,6 +743,11 @@ window.addEventListener("pageshow", forceCloseMaterialSearch);
 
 
   async function main() {
+    // 🔥 强制禁用 Material Search 的 scrollfix（iOS 必须）
+document
+  .querySelectorAll('[data-md-scrollfix]')
+  .forEach(el => el.removeAttribute('data-md-scrollfix'));
+
     if (!isOnFindPage()) return;
     document.body.classList.add("find-tool-page");
 
