@@ -75,12 +75,6 @@ chip.id = "rf-exit-chip";
     function updateToggleLabel() {
   const btn = chip.querySelector("#rf-exit");
   if (!btn) return;
-  const details = document.querySelectorAll("details.rf-details");
-  const anyClosed = Array.from(details).some(d => !d.open);
-  btn.textContent = anyClosed ? "Expand all sections" : "Fold all sections";
-}function updateToggleLabel() {
-  const btn = chip.querySelector("#rf-exit");
-  if (!btn) return;
 
   const details = document.querySelectorAll("details.rf-details");
 

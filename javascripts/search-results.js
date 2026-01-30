@@ -689,7 +689,6 @@ function hardUnlockScroll() {
 hardUnlockScroll();
 setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 0);
 setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 80);
-setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 200);
 
 
     const container = document.getElementById("search-results");
@@ -735,6 +734,10 @@ setTimeout(() => { closeMaterialSearchOverlay(); hardUnlockScroll(); }, 200);
 
     bindSearchFormToAddClause(state, () => rerender(container, state));
     rerender(container, state);
+    try {
+  const ov = document.querySelector(".md-search__overlay");
+  if (ov) ov.remove();
+} catch (_) {}
   }
 
   function init() {

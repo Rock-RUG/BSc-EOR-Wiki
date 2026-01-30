@@ -18,29 +18,29 @@
   }
 
   function closeMaterialSearchOverlay() {
-    // mkdocs-material uses a checkbox toggle for search
-    const toggle =
-      document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
-      document.querySelector('input#__search');
+  const toggle =
+    document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
+    document.querySelector('input#__search');
+  if (toggle) toggle.checked = false;
 
-    if (toggle) toggle.checked = false;
+  const input = document.querySelector('input[data-md-component="search-query"]');
+  if (input) input.blur();
 
-    const input = document.querySelector('input[data-md-component="search-query"]');
-    if (input) input.blur();
+  const closeBtn =
+    document.querySelector('button[data-md-component="search-reset"]') ||
+    document.querySelector(".md-search__icon[for='__search']");
+  if (closeBtn && closeBtn.click) closeBtn.click();
 
-    // If there is a close/reset button, click it (extra safety)
-    const closeBtn =
-      document.querySelector('button[data-md-component="search-reset"]') ||
-      document.querySelector(".md-search__icon[for='__search']");
-    if (closeBtn && closeBtn.click) closeBtn.click();
-  }
-      // Hard unlock scroll (mobile Safari sometimes keeps it locked)
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
-    document.body.style.position = "";
-    document.body.style.width = "";
-    document.body.classList.remove("md-search--active");
-    document.documentElement.classList.remove("md-search--active");
+  // Hard unlock scroll (mobile Safari)
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.width = "";
+  document.body.style.top = "";          // 关键：补上
+  document.body.classList.remove("md-search--active");
+  document.documentElement.classList.remove("md-search--active");
+}
+
 
 
   function bind() {
