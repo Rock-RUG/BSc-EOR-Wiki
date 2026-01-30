@@ -721,6 +721,10 @@ setTimeout(() => {
   }
 }, 60);
 
+window.addEventListener("pageshow", () => {
+  closeMaterialSearchOverlay();
+  hardUnlockScroll();
+});
 
 
     const container = document.getElementById("search-results");

@@ -26,20 +26,23 @@
   const input = document.querySelector('input[data-md-component="search-query"]');
   if (input) input.blur();
 
-  const closeBtn =
-    document.querySelector('button[data-md-component="search-reset"]') ||
-    document.querySelector(".md-search__icon[for='__search']");
-  if (closeBtn && closeBtn.click) closeBtn.click();
+  const resetBtn = document.querySelector('button[data-md-component="search-reset"]');
+  if (resetBtn && resetBtn.click) resetBtn.click();
 
-  // Hard unlock scroll (mobile Safari)
+  // iOS: hard unlock scroll
   document.documentElement.style.overflow = "";
   document.body.style.overflow = "";
   document.body.style.position = "";
   document.body.style.width = "";
-  document.body.style.top = "";          // 关键：补上
+  document.body.style.top = "";
   document.body.classList.remove("md-search--active");
   document.documentElement.classList.remove("md-search--active");
+
+  if (document.activeElement && document.activeElement.blur) {
+    try { document.activeElement.blur(); } catch (_) {}
+  }
 }
+
 
 
 
