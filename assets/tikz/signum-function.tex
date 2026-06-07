@@ -1,0 +1,20 @@
+\documentclass[tikz,border=2pt]{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+	
+		\begin{tikzpicture}
+		% Draw axes
+		\draw [->] (-2.5,0) -- (2.5,0) node [right] {$x$};
+		\draw [->] (0,-1.8) -- (0,1.8);
+		% Draw function
+		\draw [blue, thick] (-2,-1) -- (0,-1) node [right] {$-1$};
+		\draw [blue, thick] (0,1) node [left] {$1$} -- (2,1)  node [below right] {$f(x)=\mathrm{sgn}(x)$};
+		\draw [blue, thick, fill=blue] (0,0) circle [radius=0.04] node [below right] {$0$};
+		\draw [blue, thick, fill=white] (0,1) circle [radius=0.04];
+		\draw [blue, thick, fill=white] (0,-1) circle [radius=0.04];
+	\end{tikzpicture}
+	
+\end{document}

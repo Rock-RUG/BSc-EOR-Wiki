@@ -1,0 +1,16 @@
+\documentclass[tikz,border=2pt]{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+	
+	\begin{tikzpicture}[scale=0.52]
+		\draw[->] (-2,0) -- (4,0) node[right] {$x$};
+		\draw[->] (0,-2) -- (0,4) node[above] {$y$};
+		\draw[dashed] (-2,1) -- (4,1) ;
+		\draw[thick, domain=-2:0.67, variable=\x, smooth] plot ({\x}, {1/(\x-1)+1});
+		\draw[thick, domain=1.33:4, variable=\x, smooth] plot ({\x}, {1/(\x-1)+1});
+	\end{tikzpicture}
+	
+\end{document}

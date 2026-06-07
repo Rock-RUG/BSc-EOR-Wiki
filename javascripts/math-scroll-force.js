@@ -1,0 +1,406 @@
+(function () {
+  "use strict";
+
+  const WRAP_CLASS = "mk-math-scroll";
+  const INNER_CLASS = "mk-math-inner";
+  const BAR_CLASS = "mk-math-bar";
+  const THUMB_CLASS = "mk-math-bar-thumb";
+  const VERSION_ATTR = "data-mk-math-scroll-force";
+
+  let timer = 0;
+  // While we are wrapping math / measuring (which appends a probe node to
+  // document.body and inserts wrapper nodes), our own DOM writes must NOT be
+  // seen by the body MutationObserver — otherwise process() re-triggers
+  // schedule() which re-runs process(): a self-sustaining full-document rescan
+  // loop that pegged the CPU (continuous Layout + Paint) and cooked phones even
+  // on pages with no math at all.
+  let observerPaused = false;
+
+  const CANDIDATE_SELECTOR = [
+    ".md-typeset .arithmatex",
+    ".md-typeset mjx-container",
+    ".md-typeset .MathJax",
+    ".md-typeset .MathJax_Display",
+    ".md-typeset .katex",
+    ".md-typeset .katex-display"
+  ].join(",");
+
+  function isElement(node) {
+    return node && node.nodeType === 1;
+  }
+
+  function isVisible(el) {
+    if (!el || !el.getBoundingClientRect) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
+
+  function isExcluded(el) {
+    return !!(
+      el.closest("pre, code, kbd, samp, textarea") ||
+      el.closest("#mk-concept-hover-preview, #lp-map-modal")
+    );
+  }
+
+  function unwrapOldWrappers(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+
+    scope.querySelectorAll("." + WRAP_CLASS).forEach((wrap) => {
+      if (wrap.getAttribute(VERSION_ATTR) === "1") return;
+
+      const parent = wrap.parentNode;
+      if (!parent) return;
+
+      const inner = wrap.querySelector(":scope > ." + INNER_CLASS) || wrap;
+      const children = Array.from(inner.childNodes).filter((n) => {
+        return !(isElement(n) && (n.classList.contains(BAR_CLASS) || n.classList.contains(THUMB_CLASS)));
+      });
+
+      children.forEach((n) => parent.insertBefore(n, wrap));
+      wrap.remove();
+    });
+  }
+
+  function mathRoot(el) {
+    if (!el || !el.closest) return null;
+    if (el.closest("." + WRAP_CLASS)) return null;
+    if (isExcluded(el)) return null;
+
+    const arith = el.closest(".arithmatex");
+    if (arith && arith.closest(".md-typeset")) return arith;
+
+    const katexDisplay = el.closest(".katex-display");
+    if (katexDisplay) return katexDisplay;
+
+    const mathJaxDisplay = el.closest(".MathJax_Display");
+    if (mathJaxDisplay) return mathJaxDisplay;
+
+    if (el.matches("mjx-container, .MathJax, .katex")) return el;
+
+    return null;
+  }
+
+  function isDisplayRoot(root) {
+    if (!root) return false;
+
+    if (root.matches("div.arithmatex")) return true;
+    if (root.getAttribute("data-math-display") === "block") return true;
+    if (root.matches('mjx-container[display="true"]')) return true;
+    if (root.matches(".MathJax_Display, .katex-display")) return true;
+    if (root.querySelector('mjx-container[display="true"], .MathJax_Display, .katex-display')) return true;
+
+    return false;
+  }
+
+  function availableWidth(root) {
+    const box =
+      root.closest("p, li, td, blockquote, .admonition, details, .md-content__inner") ||
+      root.parentElement;
+
+    const w1 = box ? box.clientWidth || 0 : 0;
+    const w2 = document.querySelector(".md-content__inner")?.clientWidth || 0;
+    const w3 = Math.max(0, window.innerWidth - 32);
+
+    return Math.max(0, Math.min(...[w1, w2, w3].filter(Boolean)));
+  }
+
+  function measureNaturalWidth(root) {
+    if (!root || !document.body) return 0;
+
+    const probe = document.createElement("div");
+    const clone = root.cloneNode(true);
+
+    probe.style.cssText = [
+      "position:absolute",
+      "left:-100000px",
+      "top:0",
+      "visibility:hidden",
+      "pointer-events:none",
+      "width:max-content",
+      "max-width:none",
+      "min-width:max-content",
+      "overflow:visible",
+      "contain:none",
+      "white-space:nowrap"
+    ].join(";");
+
+    clone.style.setProperty("display", "inline-block", "important");
+    clone.style.setProperty("width", "max-content", "important");
+    clone.style.setProperty("min-width", "max-content", "important");
+    clone.style.setProperty("max-width", "none", "important");
+    clone.style.setProperty("overflow", "visible", "important");
+    clone.style.setProperty("white-space", "nowrap", "important");
+
+    clone.querySelectorAll("*").forEach((n) => {
+      n.style && n.style.setProperty("max-width", "none", "important");
+    });
+
+    probe.appendChild(clone);
+    document.body.appendChild(probe);
+
+    let w = 0;
+    try {
+      w = Math.max(
+        probe.scrollWidth || 0,
+        clone.scrollWidth || 0,
+        probe.getBoundingClientRect().width || 0,
+        clone.getBoundingClientRect().width || 0
+      );
+
+      clone.querySelectorAll("mjx-container, svg, .MathJax, .katex, .katex-html").forEach((n) => {
+        const r = n.getBoundingClientRect();
+        w = Math.max(w, r.width || 0, n.scrollWidth || 0, n.offsetWidth || 0);
+      });
+    } catch (_) {}
+
+    probe.remove();
+    return Math.ceil(w);
+  }
+
+  function addBar(wrap) {
+    if (wrap.querySelector(":scope > ." + BAR_CLASS)) return;
+
+    const bar = document.createElement("div");
+    bar.className = BAR_CLASS;
+
+    const thumb = document.createElement("div");
+    thumb.className = THUMB_CLASS;
+
+    bar.appendChild(thumb);
+    wrap.appendChild(bar);
+  }
+
+  function updateBar(wrap) {
+    if (!wrap) return;
+
+    const bar = wrap.querySelector(":scope > ." + BAR_CLASS);
+    const thumb = wrap.querySelector(":scope > ." + BAR_CLASS + " > ." + THUMB_CLASS);
+    if (!bar || !thumb) return;
+
+    const client = wrap.clientWidth || 0;
+    const scroll = wrap.scrollWidth || 0;
+    const maxScroll = Math.max(0, scroll - client);
+
+    if (!client || !scroll || maxScroll <= 3) {
+      wrap.classList.remove("is-scrollable");
+      return;
+    }
+
+    wrap.classList.add("is-scrollable");
+
+    const thumbW = Math.max(30, Math.round((client / scroll) * client));
+    const maxLeft = Math.max(0, client - thumbW);
+    const left = maxScroll ? Math.round((wrap.scrollLeft / maxScroll) * maxLeft) : 0;
+
+    thumb.style.width = thumbW + "px";
+    thumb.style.transform = "translateX(" + left + "px)";
+  }
+
+  function bindForcedTouchScroll(wrap) {
+    if (!wrap || wrap.__mkMathTouchBound) return;
+    wrap.__mkMathTouchBound = true;
+
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let locked = "";
+    let active = false;
+
+    wrap.addEventListener("touchstart", (ev) => {
+      const t = ev.touches && ev.touches[0];
+      if (!t) return;
+
+      startX = t.clientX;
+      startY = t.clientY;
+      startLeft = wrap.scrollLeft || 0;
+      locked = "";
+      active = true;
+    }, { passive: true });
+
+    wrap.addEventListener("touchmove", (ev) => {
+      if (!active) return;
+
+      const t = ev.touches && ev.touches[0];
+      if (!t) return;
+
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      const adx = Math.abs(dx);
+      const ady = Math.abs(dy);
+
+      if (!locked && (adx > 7 || ady > 7)) {
+        locked = adx > ady ? "x" : "y";
+      }
+
+      if (locked === "x") {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        wrap.scrollLeft = startLeft - dx;
+        updateBar(wrap);
+      }
+    }, { passive: false });
+
+    wrap.addEventListener("touchend", () => {
+      active = false;
+      locked = "";
+      updateBar(wrap);
+    }, { passive: true });
+
+    wrap.addEventListener("touchcancel", () => {
+      active = false;
+      locked = "";
+      updateBar(wrap);
+    }, { passive: true });
+
+    wrap.addEventListener("scroll", () => updateBar(wrap), { passive: true });
+  }
+
+  function wrapOne(root) {
+    if (!root || !isVisible(root)) return;
+    if (root.closest("." + WRAP_CLASS)) return;
+
+    const avail = availableWidth(root);
+    const natural = measureNaturalWidth(root);
+
+    if (!avail || !natural) return;
+
+    const tooWide = natural > avail + 8;
+    if (!tooWide) return;
+
+    const inline = !isDisplayRoot(root);
+    const tag = inline ? "span" : "div";
+
+    const wrap = document.createElement(tag);
+    const inner = document.createElement(tag);
+
+    wrap.className = WRAP_CLASS + (inline ? " mk-math-scroll--inline" : " mk-math-scroll--display");
+    wrap.setAttribute(VERSION_ATTR, "1");
+    wrap.style.setProperty("--mk-math-natural-width", natural + "px");
+
+    inner.className = INNER_CLASS;
+
+    root.parentNode.insertBefore(wrap, root);
+    wrap.appendChild(inner);
+    inner.appendChild(root);
+
+    addBar(wrap);
+    bindForcedTouchScroll(wrap);
+
+    requestAnimationFrame(() => updateBar(wrap));
+  }
+
+  function process(root) {
+    observerPaused = true;
+    try {
+      unwrapOldWrappers(root);
+
+      const scope = root && root.querySelectorAll ? root : document;
+      const candidates = Array.from(scope.querySelectorAll(CANDIDATE_SELECTOR));
+
+      const roots = [];
+      const seen = new WeakSet();
+
+      candidates.forEach((el) => {
+        const r = mathRoot(el);
+        if (!r || seen.has(r)) return;
+        seen.add(r);
+        roots.push(r);
+      });
+
+      roots.forEach(wrapOne);
+    } finally {
+      requestAnimationFrame(() => {
+        try {
+          document.querySelectorAll("." + WRAP_CLASS + "[" + VERSION_ATTR + "='1']").forEach(updateBar);
+        } finally {
+          // Re-arm the observer only after our own DOM writes have flushed.
+          observerPaused = false;
+        }
+      });
+    }
+  }
+
+  function schedule(root) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      // No point measuring/painting while the tab is backgrounded.
+      if (document.hidden) return;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => process(root || document));
+      });
+    }, 40);
+  }
+
+  function init() {
+    schedule(document);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  window.addEventListener("load", () => schedule(document));
+  window.addEventListener("resize", () => schedule(document));
+  document.addEventListener("DOMContentSwitch", () => schedule(document));
+
+  if (window.document$ && typeof window.document$.subscribe === "function") {
+    try {
+      window.document$.subscribe(() => schedule(document));
+    } catch (_) {}
+  }
+
+  if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
+    window.MathJax.startup.promise.then(() => schedule(document)).catch(() => {});
+  }
+
+  // Only re-scan when a mutation actually ADDS a math-like node. Previously this
+  // fired schedule() on EVERY DOM change anywhere (cosmetic animations, header
+  // ticks, account-panel churn, even our own probe/wrapper inserts), so a page
+  // with constant background DOM activity — including the math-free home page —
+  // ran a full-document querySelectorAll + layout measurement ~25x/second. The
+  // node filter plus the observerPaused guard make non-math mutations free.
+  function nodeIsOurScaffold(node) {
+    return !!(node.classList && (
+      node.classList.contains(WRAP_CLASS) ||
+      node.classList.contains(INNER_CLASS) ||
+      node.classList.contains(BAR_CLASS) ||
+      node.classList.contains(THUMB_CLASS)
+    ));
+  }
+  const mo = new MutationObserver((records) => {
+    if (observerPaused) return;
+    for (let i = 0; i < records.length; i++) {
+      const added = records[i].addedNodes;
+      if (!added || !added.length) continue;
+      for (let j = 0; j < added.length; j++) {
+        const node = added[j];
+        if (!isElement(node) || nodeIsOurScaffold(node)) continue;
+        if (
+          (node.matches && node.matches(CANDIDATE_SELECTOR)) ||
+          (node.querySelector && node.querySelector(CANDIDATE_SELECTOR))
+        ) {
+          schedule(document);
+          return;
+        }
+      }
+    }
+  });
+  if (document.body) {
+    mo.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+  // A backgrounded tab parks the loop; re-scan once on return in case math was
+  // injected (e.g. instant navigation) while hidden.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) schedule(document);
+  }, { passive: true });
+
+  setTimeout(() => schedule(document), 300);
+  setTimeout(() => schedule(document), 1000);
+  setTimeout(() => schedule(document), 2000);
+})();

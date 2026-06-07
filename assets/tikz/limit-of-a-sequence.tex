@@ -1,0 +1,15 @@
+\documentclass[tikz,border=2pt]{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+	
+	\begin{tikzpicture}
+		\begin{axis}[ymin=0,ymax=1,xmin=0,xmax=20, xlabel={$n$}, ylabel={$a_n$}]
+			\addplot+[mark=*,mark options={fill=blue},blue] coordinates
+			{(1,1) (2,0.5) (3,0.3333) (4,0.25) (5,0.2) (6,0.1667) (7,0.1429) (8,0.125) (9,0.1111) (10,0.1) (11,0.09091) (12,0.08333) (13,0.07692) (14,0.07143) (15,0.06667) (16,0.0625) (17,0.05882) (18,0.05556) (19,0.05263) (20,0.05)};
+		\end{axis}
+	\end{tikzpicture}
+	
+\end{document}

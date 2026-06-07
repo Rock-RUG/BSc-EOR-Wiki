@@ -1,0 +1,20 @@
+\documentclass[tikz,border=2pt]{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+	
+	\begin{tikzpicture}
+		\draw[-latex] (-1,0) -- (8,0) node {\quad\quad \quad \quad };
+		\draw[thick] (0,0.02) -- (7,0.02);
+		\draw[thick] (0,-0.02) -- (7,-0.02);
+		\draw[-] (0,0.1) -- (0,0);
+		\draw[-] (7,0.1) -- (7,0);
+		\draw[fill=red] (0,0) circle (2pt) node[above] {$a$};
+		\draw[fill=blue] (7,0) circle (2pt) node[above] {$b$};
+		\draw (0,-0.5) node {\small Left endpoint};
+		\draw (7,-0.5) node {\small Right endpoint};
+	\end{tikzpicture}
+	
+\end{document}

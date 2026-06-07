@@ -1,0 +1,146 @@
+(function () {
+  "use strict";
+
+  var MODAL_ID = "mk-logo-lightbox";
+  var OPEN_CLASS = "mk-logo-lightbox-open";
+  var FULL_LOGO_ASSETS = ["logo-local-map.svg", "logo-local-map.png", "logo-navbar.svg"];
+
+  function assetUrl(fileName) {
+    var probes = [
+      document.currentScript,
+      document.querySelector('script[src*="logo-lightbox.js"]'),
+      document.querySelector(".md-header__button.md-logo img"),
+      document.querySelector('link[href*="assets/"]'),
+      document.querySelector('script[src*="assets/"]')
+    ];
+
+    for (var i = 0; i < probes.length; i++) {
+      var probe = probes[i];
+      var rawUrl = probe && (probe.currentSrc || probe.src || probe.href);
+      if (!rawUrl) continue;
+
+      try {
+        var scriptUrl = new URL(rawUrl, window.location.href);
+        var marker = "/assets/";
+        var idx = scriptUrl.pathname.indexOf(marker);
+        if (idx >= 0) {
+          scriptUrl.pathname = scriptUrl.pathname.slice(0, idx) + marker + fileName;
+          scriptUrl.search = "";
+          scriptUrl.hash = "";
+          return scriptUrl.href;
+        }
+      } catch (_) {}
+    }
+
+    var script = document.currentScript || document.querySelector('script[src*="logo-lightbox.js"]');
+    if (script && script.src) {
+      try {
+        return new URL("../assets/" + fileName, script.src).href;
+      } catch (_) {}
+    }
+
+    return new URL("assets/" + fileName, document.baseURI || window.location.href).href;
+  }
+
+  function assetCandidates(fileNames) {
+    var urls = [];
+    fileNames.forEach(function (fileName) {
+      var url = assetUrl(fileName);
+      if (urls.indexOf(url) < 0) urls.push(url);
+    });
+    return urls;
+  }
+
+  function setImageWithFallback(image, fileNames) {
+    var urls = assetCandidates(fileNames);
+    var index = 0;
+
+    image.addEventListener("error", function () {
+      index += 1;
+      if (index < urls.length) image.src = urls[index];
+    });
+
+    if (urls.length) image.src = urls[0];
+  }
+
+  function closeModal() {
+    var modal = document.getElementById(MODAL_ID);
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    document.documentElement.classList.remove(OPEN_CLASS);
+    document.body.classList.remove(OPEN_CLASS);
+    window.setTimeout(function () {
+      if (modal && modal.parentNode && !modal.classList.contains("is-open")) {
+        modal.parentNode.removeChild(modal);
+      }
+    }, 140);
+  }
+
+  function ensureModal() {
+    var existing = document.getElementById(MODAL_ID);
+    if (existing) return existing;
+
+    var modal = document.createElement("div");
+    modal.id = MODAL_ID;
+    modal.className = "mk-logo-lightbox";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", "BSc EOR Wiki logo preview");
+    modal.innerHTML =
+      '<div class="mk-logo-lightbox__backdrop" data-logo-close="1"></div>' +
+      '<div class="mk-logo-lightbox__panel">' +
+      '<button type="button" class="mk-logo-lightbox__close" data-logo-close="1" aria-label="Close logo preview">&times;</button>' +
+      '<img class="mk-logo-lightbox__image" alt="BSc EOR Wiki logo">' +
+      "</div>";
+
+    var image = modal.querySelector(".mk-logo-lightbox__image");
+    if (image) setImageWithFallback(image, FULL_LOGO_ASSETS);
+
+    modal.addEventListener("click", function (event) {
+      if (event.target && event.target.closest && event.target.closest("[data-logo-close]")) {
+        closeModal();
+      }
+    });
+
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  function openModal() {
+    var modal = ensureModal();
+    document.documentElement.classList.add(OPEN_CLASS);
+    document.body.classList.add(OPEN_CLASS);
+    window.requestAnimationFrame(function () {
+      modal.classList.add("is-open");
+      var closeButton = modal.querySelector(".mk-logo-lightbox__close");
+      if (closeButton) closeButton.focus({ preventScroll: true });
+    });
+  }
+
+  function bindLogo() {
+    var logo = document.querySelector(".md-header__button.md-logo");
+    if (!logo || logo.dataset.mkLogoLightboxBound === "1") return;
+    logo.dataset.mkLogoLightboxBound = "1";
+    logo.setAttribute("aria-label", "Open high-resolution BSc EOR Wiki logo");
+    logo.setAttribute("title", "Open high-resolution logo");
+    logo.addEventListener("click", function (event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      openModal();
+    });
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeModal();
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindLogo, { once: true });
+  } else {
+    bindLogo();
+  }
+
+  if (window.document$ && typeof window.document$.subscribe === "function") {
+    window.document$.subscribe(bindLogo);
+  }
+})();

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1600" role="img" aria-labelledby="title desc">
+  <title id="title">BSc EOR Wiki local-map logo</title>
+  <desc id="desc">A square local-map logo with a white center node and gold center, a green left node, a purple top node, a blue right node, and the BSc EOR Wiki title in the lower map position.</desc>
+  <defs>
+    <linearGradient id="logo-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2456d8"/>
+      <stop offset="0.58" stop-color="#1f49b7"/>
+      <stop offset="1" stop-color="#173781"/>
+    </linearGradient>
+    <filter id="node-shadow" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#071a44" flood-opacity="0.22"/>
+    </filter>
+    <marker id="arrow-green" markerUnits="userSpaceOnUse" viewBox="0 0 72 72" refX="64" refY="36" markerWidth="72" markerHeight="72" orient="auto">
+      <path d="M8 10 L66 36 L8 62 L22 36 Z" fill="#26d5a8"/>
+    </marker>
+    <marker id="arrow-blue" markerUnits="userSpaceOnUse" viewBox="0 0 72 72" refX="64" refY="36" markerWidth="72" markerHeight="72" orient="auto">
+      <path d="M8 10 L66 36 L8 62 L22 36 Z" fill="#66b2ff"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="1600" fill="#ffffff"/>
+  <rect x="8" y="8" width="1584" height="1584" rx="150" fill="url(#logo-bg)"/>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M800 410 L800 600" stroke="#a98bff" stroke-width="40" stroke-dasharray="70 50"/>
+    <path d="M360 800 L520 800" stroke="#26d5a8" stroke-width="40"/>
+    <path d="M1000 800 L1160 800" stroke="#66b2ff" stroke-width="40"/>
+  </g>
+  <path d="M520 742 L612 800 L520 858 Z" fill="#26d5a8"/>
+  <path d="M1160 742 L1252 800 L1160 858 Z" fill="#66b2ff"/>
+
+  <g filter="url(#node-shadow)">
+    <circle cx="800" cy="250" r="120" fill="#ffffff"/>
+    <circle cx="200" cy="800" r="120" fill="#ffffff"/>
+    <circle cx="1400" cy="800" r="120" fill="#ffffff"/>
+    <circle cx="800" cy="800" r="160" fill="#ffffff"/>
+  </g>
+
+  <circle cx="800" cy="250" r="42" fill="#a98bff"/>
+  <circle cx="200" cy="800" r="42" fill="#26d5a8"/>
+  <circle cx="1400" cy="800" r="42" fill="#66b2ff"/>
+
+  <circle cx="800" cy="800" r="62" fill="#f4c542"/>
+
+  <text x="800" y="1370" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="198" font-weight="800" letter-spacing="0" fill="#ffffff">BSc EOR Wiki</text>
+</svg>

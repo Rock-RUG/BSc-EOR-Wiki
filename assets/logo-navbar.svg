@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">BSc EOR Wiki navbar logo</title>
+  <desc id="desc">A compact local-map icon with a white center node, gold center, green left node, purple top node, and blue right node.</desc>
+  <defs>
+    <filter id="node-shadow" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#071a44" flood-opacity="0.22"/>
+    </filter>
+    <marker id="arrow-green" markerUnits="userSpaceOnUse" viewBox="0 0 48 48" refX="43" refY="24" markerWidth="48" markerHeight="48" orient="auto">
+      <path d="M5 7 L44 24 L5 41 L14 24 Z" fill="#34e0b0"/>
+    </marker>
+    <marker id="arrow-blue" markerUnits="userSpaceOnUse" viewBox="0 0 48 48" refX="43" refY="24" markerWidth="48" markerHeight="48" orient="auto">
+      <path d="M5 7 L44 24 L5 41 L14 24 Z" fill="#7abbff"/>
+    </marker>
+  </defs>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M320 164 L320 204" stroke="#b69dff" stroke-width="24" stroke-dasharray="38 30"/>
+    <path d="M160 320 L170 320" stroke="#34e0b0" stroke-width="24"/>
+    <path d="M436 320 L444 320" stroke="#7abbff" stroke-width="24"/>
+  </g>
+  <path d="M170 288 L210 320 L170 352 Z" fill="#34e0b0"/>
+  <path d="M444 288 L484 320 L444 352 Z" fill="#7abbff"/>
+
+  <g filter="url(#node-shadow)">
+    <circle cx="320" cy="76" r="62" fill="#ffffff"/>
+    <circle cx="76" cy="320" r="62" fill="#ffffff"/>
+    <circle cx="564" cy="320" r="62" fill="#ffffff"/>
+  </g>
+
+  <circle cx="320" cy="76" r="22" fill="#b69dff"/>
+  <circle cx="76" cy="320" r="22" fill="#34e0b0"/>
+  <circle cx="564" cy="320" r="22" fill="#7abbff"/>
+
+  <circle cx="320" cy="320" r="92" fill="#ffffff" filter="url(#node-shadow)"/>
+  <circle cx="320" cy="320" r="36" fill="#f4c542"/>
+</svg>
