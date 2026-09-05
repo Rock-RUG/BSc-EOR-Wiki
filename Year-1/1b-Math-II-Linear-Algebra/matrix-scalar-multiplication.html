@@ -5,6 +5,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="The scalar multiple α A of a matrix A=(aij) is the matrix whose entries are (α aij)." name="description"/>
+<link href="https://rock-rug.github.io/BSc-EOR-Wiki/Year-1/1b-Math-II-Linear-Algebra/matrix-scalar-multiplication.html" rel="canonical"/>
 <link href="matrix-product.html" rel="prev"/>
 <link href="matrix.html" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
@@ -12,27 +14,126 @@
 <title>Matrix Scalar Multiplication - BSc EOR Wiki</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
-<style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+<link href="../../stylesheets/fonts-vendor.css?h=6f3b200e55fb" rel="stylesheet"/>
+<link href="../../stylesheets/katex-vendor.css?h=810f682352aa" rel="stylesheet"/>
 <link href="../../stylesheets/katex-fast.css?h=29ac38851d7d" rel="stylesheet"/>
-<link href="../../stylesheets/extra.css?h=1f47ba957462" rel="stylesheet"/>
+<link href="../../stylesheets/extra.css?h=1586f375acda" rel="stylesheet"/>
+<link href="../../stylesheets/mastery-widget.css?h=ac9184281879" rel="stylesheet"/>
+<link href="../../stylesheets/find-builder.css?h=68f6090ea745" rel="stylesheet"/>
+<link href="../../stylesheets/course-search.css?h=0e431d40c86d" rel="stylesheet"/>
+<link href="../../stylesheets/course-status.css?h=4224c998406e" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-surfaces.css?h=cb55e64aef1a" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-community.css?h=a283eeb6614f" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-maps.css?h=4e8d335fb9b8" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home.css?h=20b01d119048" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-image.css?h=94ca73b71a65" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-nature.css?h=0c3190e40fe2" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-worlds.css?h=32cb302d13c3" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-night.css?h=cbcaf276c44a" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-contributors.css?h=69704a737fb7" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-about.css?h=30c0332cb287" rel="stylesheet"/>
+<link href="../../stylesheets/teaching-workbench.css?h=fa5b92f7fa26" rel="stylesheet"/>
+<link href="../../stylesheets/course-home.css?h=3a41489c7105" rel="stylesheet"/>
 <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<meta content="website" property="og:type"/>
+<meta content="BSc EOR Wiki" property="og:site_name"/>
+<meta content="Matrix Scalar Multiplication - BSc EOR Wiki" property="og:title"/>
+<meta content="The scalar multiple α A of a matrix A=(aij) is the matrix whose entries are (α aij)." property="og:description"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/Year-1/1b-Math-II-Linear-Algebra/matrix-scalar-multiplication.html" property="og:url"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/assets/logo-navbar.png" property="og:image"/>
+<meta content="BSc EOR Wiki logo" property="og:image:alt"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="Matrix Scalar Multiplication - BSc EOR Wiki" name="twitter:title"/>
+<meta content="The scalar multiple α A of a matrix A=(aij) is the matrix whose entries are (α aij)." name="twitter:description"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/assets/logo-navbar.png" name="twitter:image"/>
+<meta content="BSc EOR Wiki logo" name="twitter:image:alt"/>
+<script id="mk-search-index-network-cache">
+// Material uses XMLHttpRequest before extra_javascript. Let custom search reuse
+// that one index download/parse without changing the native request lifecycle.
+(function () {
+  if (!window.XMLHttpRequest || window.__mkMaterialSearchIndexPromises) return;
+  var pending = window.__mkMaterialSearchIndexPromises = Object.create(null);
+  var original = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (method, input) {
+    var result = original.apply(this, arguments), url;
+    try { url = new URL(input, document.baseURI); } catch (_) { return result; }
+    if (String(method).toUpperCase() !== 'GET' || url.origin !== location.origin || !/\/search\/search_index\.json$/.test(url.pathname)) return result;
+    var xhr = this, key = url.href;
+    var task = new Promise(function (resolve, reject) {
+      xhr.addEventListener('load', function () {
+        if (xhr.status < 200 || xhr.status >= 300) { reject(new Error('Search index unavailable')); return; }
+        try {
+          if (xhr.responseType === 'blob') xhr.response.text().then(JSON.parse).then(resolve, reject);
+          else resolve(xhr.responseType === 'json' ? xhr.response : JSON.parse(xhr.responseText));
+        } catch (error) { reject(error); }
+      }, { once: true });
+      ['error', 'abort', 'timeout'].forEach(function (type) {
+        xhr.addEventListener(type, function () { reject(new Error('Search index unavailable')); }, { once: true });
+      });
+    });
+    pending[key] = task;
+    task.catch(function () { if (pending[key] === task) delete pending[key]; });
+    return result;
+  };
+})();
+</script>
+<link as="font" crossorigin="anonymous" href="../../stylesheets/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="anonymous" href="../../stylesheets/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2"/>
+<!-- Start sidebar metadata early when its feature is enabled. A static preload
+     would still download it in Lite mode, where the sorter has no consumer. -->
+<script id="mk-sidebar-meta-prefetch-v1">
+(function(){
+  var enabled=true;
+  try{var p=JSON.parse(localStorage.getItem("mk_startup_features_v1")||"{}");if(p&&p.sidebarSort===false)enabled=false;}catch(_){}
+  try{var f=window.__mkForcedStartupPrefs;if(f&&typeof f.sidebarSort==="boolean")enabled=f.sidebarSort;}catch(_){}
+  
+  if(!enabled)return;
+  
+  try{var u="../../assets/sidebar/sidebar-meta.json";window.__mkSidebarMetaPromise=fetch(u,{cache:"default",priority:"high"}).then(function(r){return r&&r.ok?r.json():null;}).catch(function(){return null;});}catch(_){}
+})();
+</script>
 <!-- Default opaque status-bar tint so iOS always has a colour to use before the
      theme-color sync (ui-guard.js) runs; updated live per active interface theme. -->
 <meta content="#3f51b5" name="theme-color"/>
-<script id="mk-unified-first-paint-gate-v11-pc-sidebar">
+<script id="mk-startup-prefs-early-v1">
+(function(){
+  // Material removes q when its header search closes. Preserve the explicit
+  // Learning Path handoff before the deferred Finder scripts read the URL.
+  function preserveLpFindToken(){
+    try{
+      var url=new URL(location.href),params=url.searchParams;
+      if(!/\/find(?:\.html|\/(?:index\.html)?)?$/i.test(url.pathname)||params.get("lp_token"))return;
+      var direct=String(params.get("lp_direct")||params.get("fb_direct")||"").trim().toLowerCase();
+      var src=String(params.get("src")||"").trim().toLowerCase();
+      var q=String(params.get("q")||"").trim();
+      if(!q||(direct!=="1"&&direct!=="true"&&src!=="lp_direct"&&src!=="learning_path"))return;
+      params.set("lp_token",q);
+      history.replaceState(history.state,"",url.toString());
+    }catch(_){}
+  }
+  preserveLpFindToken();
+  document.addEventListener("DOMContentSwitch",preserveLpFindToken,true);
+  var KEY="mk_startup_features_v1";
+  var DEFAULTS={account:true,learningPath:true,mastery:true,aiQuiz:true,sidebarSort:true};
+  function kebab(k){return String(k||"").replace(/[A-Z]/g,function(m){return "-"+m.toLowerCase();});}
+  function prefs(){try{var o=JSON.parse(localStorage.getItem(KEY)||"{}")||{};return Object.assign({},DEFAULTS,o&&typeof o==="object"&&!Array.isArray(o)?o:{});}catch(_){return Object.assign({},DEFAULTS);}}
+  function enabled(k,p){p=p||prefs();if(k==="aiQuiz"&&p.mastery===false)return false;return p[k]!==false;}
+  function clearTheme(r){try{["data-mk-theme-mode","data-mk-interface-theme","data-mk-image-interface-theme","data-mk-img-hdr-clip","data-mk-public-profile-theme","data-mk-public-profile-theme-item","data-mk-header-skin","data-mk-search-box-effect","data-mk-page-effect","data-mk-dropdown-skin","data-mk-page-pattern","data-mk-profile-frame","data-mk-profile-background","data-mk-header-font","data-mk-body-font","data-mk-comment-effect","data-mk-finder-effect","data-mk-finder-builder-panel","data-mk-finder-builder-buttons","data-mk-finder-builder-tokens","data-mk-sidepanel-surface","data-mk-sidepanel-cards","data-mk-sidepanel-links","data-mk-ranking-effect","data-mk-map-effect","data-mk-map-animation","data-mk-mastery-effect-mastered","data-mk-mastery-effect-clear","data-mk-mastery-button-style","data-mk-mastery-background","data-mk-mastery-border","data-mk-connections-panel","data-mk-connections-sections","data-mk-connections-links","data-mk-nameplate-style","data-mk-reaction-effect","data-mk-reading-progress","data-mk-bookmark-effect","data-mk-quiz-celebration","data-mk-concept-card-skin","data-mk-sidebar-skin","data-mk-notification-skin","data-mk-sound-pack","data-mk-bgm-track"].forEach(function(a){r.removeAttribute(a);});["--mk-image-theme-header-image","--mk-image-theme-bg-image","--mk-image-theme-header-position","--mk-image-theme-bg-position","--mk-image-theme-header-blur","--mk-image-theme-bg-blur","--mk-image-theme-header-overlay","--mk-image-theme-bg-opacity","--mk-image-theme-seam-height","--mk-image-theme-seam-opacity","--mk-image-theme-seam-blur","--mk-image-theme-seam-saturate","--mk-image-theme-menu-bg","--mk-image-theme-menu-hover","--mk-image-theme-menu-border","--mk-image-theme-menu-accent","--mk-image-theme-header-stack-height","--mk-image-theme-header-self-height","--mk-image-theme-tabs-offset","--mk-active-page-bg","--mk-theme-sidebar-bg","--mk-theme-sticky-floor","--mk-theme-sidebar-card-bg","--mk-theme-sidebar-card-bg-hover","--mk-theme-sidebar-border","--mk-image-card-bg","--mk-image-card-bg-hover","--mk-image-card-border","--msb-sidebar-page-bg","--msb-sidebar-page-background","--msb-card-bg","--msb-card-bg-hover","--msb-card-border","--msb-card-border-strong","--md-primary-fg-color","--md-accent-fg-color"].forEach(function(n){r.style.removeProperty(n);});}catch(_){}}
+  function apply(){var p=prefs(),r=document.documentElement;["account","learningPath","mastery","aiQuiz","sidebarSort"].forEach(function(k){var on=enabled(k,p),slug=kebab(k);r.classList.toggle("mk-startup-"+slug+"-off",!on);r.classList.toggle("mk-startup-"+slug+"-on",on);try{r.setAttribute("data-mk-startup-"+slug,on?"on":"off");}catch(_){}});if(!enabled("account",p))clearTheme(r);window.__mkStartupFeatureEnabled=function(k){return enabled(k,prefs());};}
+  apply();
+})();
+</script>
+<script id="mk-unified-first-paint-gate-v12-fast-release">
 (function(){
   var root=document.documentElement;
-  var id=0,timer=0,hard=0,start=0,lastReason="",forceTopThisBoot=false,lastScrollSig="",stableScrollFrames=0,topTimers=[];
+  var id=0,timer=0,hard=0,start=0,lastReason="",forceTopThisBoot=false,userInteracted=false,lastScrollSig="",stableScrollFrames=0,topTimers=[];
   function ensureCover(){try{var d=document.getElementById("mk-first-paint-cover");if(!d){d=document.createElement("div");d.id="mk-first-paint-cover";d.setAttribute("aria-hidden","true");(document.body||document.documentElement).appendChild(d);}return d;}catch(_){return null;}}
   function removeCoverSoon(){try{setTimeout(function(){var d=document.getElementById("mk-first-paint-cover");if(d&&d.parentNode)d.parentNode.removeChild(d);},90);}catch(_){}}
   function now(){return (window.performance&&performance.now)?performance.now():Date.now();}
   function cancelTopTimers(){try{topTimers.forEach(function(t){clearTimeout(t);});topTimers=[];}catch(_){}}
   function shouldForceTop(reason){try{if(location.hash)return false;var r=String(reason||"");if(r==="popstate"||r==="pageshow")return false;return true;}catch(_){return true;}}
   function scrollTopValue(){try{var se=document.scrollingElement||document.documentElement;return Math.max(window.pageYOffset||0,document.documentElement.scrollTop||0,document.body?document.body.scrollTop||0:0,se?se.scrollTop||0:0);}catch(_){return window.pageYOffset||0;}}
-  function forceTopNow(){if(!forceTopThisBoot)return;try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(_){}try{var se=document.scrollingElement||document.documentElement;if(se)se.scrollTop=0;document.documentElement.scrollTop=0;if(document.body)document.body.scrollTop=0;window.scrollTo(0,0);}catch(_){}}
+  function forceTopNow(){if(!forceTopThisBoot||userInteracted)return;try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(_){}try{var se=document.scrollingElement||document.documentElement;if(se)se.scrollTop=0;document.documentElement.scrollTop=0;if(document.body)document.body.scrollTop=0;window.scrollTo(0,0);}catch(_){}}
   function armTopFix(){cancelTopTimers();if(!forceTopThisBoot)return;[0,8,16,32,64,120,220].forEach(function(ms){topTimers.push(setTimeout(forceTopNow,ms));});}
   function viewportSig(){try{var vv=window.visualViewport;var y=Math.round(scrollTopValue());var oy=vv?Math.round(vv.offsetTop||0):0;var h=vv?Math.round(vv.height||0):Math.round(window.innerHeight||0);var w=vv?Math.round(vv.width||0):Math.round(window.innerWidth||0);return y+":"+oy+":"+h+":"+w;}catch(_){return String(Math.round(scrollTopValue()));}}
   function viewportStable(ms){try{if(!forceTopThisBoot)return true;forceTopNow();var y=scrollTopValue();var sig=viewportSig();if(sig===lastScrollSig)stableScrollFrames+=1;else{lastScrollSig=sig;stableScrollFrames=0;}if(y>1&&ms<360)return false;return stableScrollFrames>=2||ms>180;}catch(_){return true;}}
@@ -44,30 +145,42 @@
   function shellReady(){try{return !!document.querySelector(".md-container,.md-main,.md-content");}catch(_){return false;}}
   function isDesktopSidebar(){try{return !!(window.matchMedia&&window.matchMedia("(min-width: 960px)").matches);}catch(_){return false;}}
   function shouldGateDesktopSidebar(ms){try{if(!concept())return false;if(!isDesktopSidebar())return false;var s=document.querySelector(".md-sidebar--primary");if(s)return true;return ms<720;}catch(_){return false;}}
-  function sidebarReady(ms){try{if(!shouldGateDesktopSidebar(ms))return true;var s=document.querySelector(".md-sidebar--primary");if(!s)return false;return root.classList.contains("mk-sidebar-sort-done")&&root.classList.contains("mk-sidebar-sort-ready");}catch(_){return false;}}
   function motionReady(ms){try{var h=document.querySelector(".md-header");if(!h)return true;var w=document.getElementById("mk-site-motion-toggle");return !!(w&&w.classList.contains("is-ready"))||ms>220;}catch(_){return true;}}
-  function masteryReady(c,ms){if(!c)return true;try{return !!(document.getElementById("mw-mastery")||document.getElementById("mw-mastery-compact")||document.querySelector(".mw-title-menu")||window.__mkMasteryWidgetReadyRel===location.pathname)||ms>360;}catch(_){return ms>460;}}
-  function lpReady(c,ms){if(!c)return true;try{return !!(document.getElementById("lp-side-panel")||document.getElementById("lp-mobile-sheet")||window.__lpLastRenderedRel||window.__mkLearningPathReadyRel===location.pathname)||ms>390;}catch(_){return ms>520;}}
+  function startupOn(k){try{return !window.__mkStartupFeatureEnabled||window.__mkStartupFeatureEnabled(k)!==false;}catch(_){return true;}}
+  function sidebarReady(ms){try{if(!shouldGateDesktopSidebar(ms)||!startupOn("sidebarSort"))return true;var s=document.querySelector(".md-sidebar--primary");if(!s)return ms>420;if(!root.classList.contains("mk-sidebar-sort-ready"))return ms>420;return root.classList.contains("mk-sidebar-sort-centered")||ms>420;}catch(_){return ms>420;}}
+  function masteryReady(c,ms){if(!c||!startupOn("mastery"))return true;try{return !!(document.getElementById("mw-mastery")||document.getElementById("mw-mastery-compact")||document.querySelector(".mw-title-menu")||window.__mkMasteryWidgetReadyRel===location.pathname)||ms>360;}catch(_){return ms>460;}}
+  function lpReady(c,ms){if(!c||!startupOn("learningPath"))return true;try{return !!(document.getElementById("lp-side-panel")||document.getElementById("lp-mobile-sheet")||window.__lpLastRenderedRel||window.__mkLearningPathReadyRel===location.pathname)||ms>390;}catch(_){return ms>520;}}
   function findReady(ms){if(!isFind())return true;try{var fb=document.getElementById("find-builder");var form=document.getElementById("search-form");return !!(fb&&form&&(root.classList.contains("mk-find-ready")||window.__fbReadyV1||window.__fbReadyDispatchedV1))||ms>430;}catch(_){return ms>430;}}
-  function isHeaderSearchActive(){try{var ae=document.activeElement;return !!(ae&&ae.closest&&ae.closest('.md-header .md-search'));}catch(_){return false;}}
+  function isHeaderSearchActive(){try{var ae=document.activeElement,t=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search'),s=document.querySelector('.md-header .md-search'),b=document.body;return !!((t&&t.checked)||(ae&&ae.closest&&ae.closest('.md-header .md-search'))||(s&&s.classList&&s.classList.contains('md-search--active'))||(s&&s.getAttribute&&s.getAttribute('data-mk-search-force-active')==='1')||root.classList.contains('md-search--active')||root.classList.contains('mk-hsf-open')||(b&&b.classList&&b.classList.contains('md-search--active')));}catch(_){return false;}}
   function clearFindFx(){try{var r=document.getElementById("search-results");if(r)r.classList.remove("fb-preblur");var fb=document.getElementById("find-builder");if(fb)fb.classList.remove("fb-dream-active","fb-undo-bump","fb-redo-bump");document.querySelectorAll("#search-results .csr-cols,#search-results .csr-list,#search-results .csr-foot,#find-builder .fb-board,#find-builder .fb-hint").forEach(function(el){el.style.filter="";el.style.opacity="";el.style.transform="";el.classList.remove("fb-hint--pending","fb-hint--reveal");});}catch(_){} }
-  function clearFindSearchResidue(){if(!isFind())return;clearFindFx();var active=isHeaderSearchActive();root.classList.toggle("mk-header-search-open",!!active);if(active)return;try{var toggle=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search');if(toggle)toggle.checked=false;document.querySelectorAll('.md-header .md-search.md-search--active,.md-search.md-search--active').forEach(function(el){el.classList.remove('md-search--active');});root.classList.remove('md-search--active');if(document.body)document.body.classList.remove('md-search--active');document.querySelectorAll('.md-search__output,.md-search__overlay,.mk-search-history,.mk-search-suggest').forEach(function(el){try{el.style.display='none';el.style.pointerEvents='none';el.style.opacity='0';el.setAttribute('aria-hidden','true');}catch(_){}});var bd=document.getElementById('mk-mobile-search-backdrop');if(bd){bd.dataset.mkFindHidden='1';bd.style.display='none';bd.style.opacity='0';bd.style.backdropFilter='none';bd.style.webkitBackdropFilter='none';}}catch(_){} }
-  function blank(reason){markKind();ensureCover();lastReason=reason||"";forceTopThisBoot=shouldForceTop(lastReason);lastScrollSig="";stableScrollFrames=0;clearFindSearchResidue();forceTopNow();armTopFix();root.classList.remove("mk-app-ready","mk-first-paint-release","mk-tabs-ready");root.classList.add("mk-app-booting","mk-nav-pending","mk-startup-no-motion","mk-tabs-boot","mk-sidebar-sort-boot","mk-scroll-stabilizing");if(reason==="find"||isFind())root.classList.add("mk-find-booting","mk-find-entering");}
-  function reveal(n){if(n!==id)return;clearTimeout(timer);clearTimeout(hard);clearFindSearchResidue();forceTopNow();requestAnimationFrame(function(){forceTopNow();requestAnimationFrame(function(){if(n!==id)return;clearFindSearchResidue();forceTopNow();markKind();root.classList.add("mk-app-ready","mk-first-paint-release","mk-tabs-ready");removeCoverSoon();root.classList.remove("mk-app-booting","mk-nav-pending","mk-tabs-boot","mk-sidebar-sort-boot","mk-find-booting","mk-find-entering","mk-scroll-stabilizing");forceTopNow();setTimeout(forceTopNow,0);setTimeout(forceTopNow,60);setTimeout(function(){if(n===id){root.classList.remove("mk-startup-no-motion","mk-first-paint-release");cancelTopTimers();}},90);});});}
-  function probe(n){if(n!==id)return;markKind();clearFindSearchResidue();var ms=now()-start,c=concept();if(ms>=18&&shellReady()&&tabsReady()&&sidebarReady(ms)&&motionReady(ms)&&masteryReady(c,ms)&&lpReady(c,ms)&&findReady(ms)&&viewportStable(ms))return reveal(n);clearTimeout(timer);timer=setTimeout(function(){probe(n);},16);}
+  function clearFindSearchResidue(){if(!isFind())return;clearFindFx();var active=isHeaderSearchActive();root.classList.toggle("mk-header-search-open",!!active);if(active)return;try{var toggle=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search');if(toggle)toggle.checked=false;document.querySelectorAll('.md-header .md-search.md-search--active').forEach(function(el){el.classList.remove('md-search--active');});root.classList.remove('md-search--active');if(document.body)document.body.classList.remove('md-search--active');document.querySelectorAll('.md-header .md-search__output,.md-header .md-search__overlay,.md-header .mk-search-history,.md-header .mk-search-suggest').forEach(function(el){try{el.style.display='none';el.style.pointerEvents='none';el.style.opacity='0';el.setAttribute('aria-hidden','true');}catch(_){}});var bd=document.getElementById('mk-mobile-search-backdrop');if(bd){bd.dataset.mkFindHidden='1';bd.style.display='none';bd.style.opacity='0';bd.style.backdropFilter='none';bd.style.webkitBackdropFilter='none';}}catch(_){} }
+  function blank(reason){markKind();ensureCover();lastReason=reason||"";userInteracted=false;forceTopThisBoot=shouldForceTop(lastReason);lastScrollSig="";stableScrollFrames=0;clearFindSearchResidue();forceTopNow();armTopFix();root.classList.remove("mk-app-ready","mk-first-paint-release","mk-tabs-ready","mk-sidebar-sort-centered");root.classList.add("mk-app-booting","mk-nav-pending","mk-startup-no-motion","mk-tabs-boot","mk-sidebar-sort-boot","mk-scroll-stabilizing");if(reason==="find"||isFind())root.classList.add("mk-find-booting","mk-find-entering");}
+  function revealCommit(n){if(n!==id)return;clearFindSearchResidue();forceTopNow();markKind();root.classList.add("mk-app-ready","mk-first-paint-release","mk-tabs-ready");removeCoverSoon();root.classList.remove("mk-app-booting","mk-nav-pending","mk-tabs-boot","mk-sidebar-sort-boot","mk-find-booting","mk-find-entering","mk-scroll-stabilizing");forceTopNow();setTimeout(forceTopNow,0);setTimeout(forceTopNow,60);setTimeout(function(){if(n===id){root.classList.remove("mk-startup-no-motion","mk-first-paint-release");cancelTopTimers();}},90);}
+  /* revealCommit is idempotent (class add/remove + cover removal), so the paths
+     below may race safely. A HIDDEN tab never paints, so requestAnimationFrame
+     never fires in it and the reveal never ran: #mk-first-paint-cover is an
+     opaque full-screen layer at z-index 2147483647, so a page opened in a
+     background tab stayed blank until it was focused - and then had to reveal
+     AND run the whole deferred script burst at once. Commit straight away when
+     there is no paint to wait for, and keep a timer fallback for tabs that are
+     visible but rAF-throttled. */
+  function reveal(n){if(n!==id)return;clearTimeout(timer);clearTimeout(hard);clearFindSearchResidue();forceTopNow();if(document.hidden){revealCommit(n);return;}requestAnimationFrame(function(){forceTopNow();requestAnimationFrame(function(){revealCommit(n);});});setTimeout(function(){revealCommit(n);},400);}
+  function probe(n){if(n!==id)return;markKind();clearFindSearchResidue();var ms=now()-start;if(ms>=18&&shellReady()&&tabsReady()&&sidebarReady(ms)&&motionReady(ms)&&findReady(ms)&&viewportStable(ms))return reveal(n);clearTimeout(timer);timer=setTimeout(function(){probe(n);},16);}
   function boot(reason){markKind();id++;start=now();clearTimeout(timer);clearTimeout(hard);blank(reason);var n=id;timer=setTimeout(function(){probe(n);},0);hard=setTimeout(function(){hardRevealWhenSafe(n);},isFind()?500:480);}
-  function hardRevealWhenSafe(n){if(n!==id)return;var ms=now()-start;if(shouldGateDesktopSidebar(ms)&&!sidebarReady(ms)&&ms<1900){clearTimeout(hard);hard=setTimeout(function(){hardRevealWhenSafe(n);},80);return;}reveal(n);}
-  function searchTarget(t){try{return !!(t&&t.closest&&t.closest(".md-header .md-search, .md-search, label[for='__search'], input#__search, input[data-md-component='search-query'], form"));}catch(_){return false;}}
+  function hardRevealWhenSafe(n){if(n!==id)return;var ms=now()-start;if(shouldGateDesktopSidebar(ms)&&!sidebarReady(ms)&&ms<650){clearTimeout(hard);hard=setTimeout(function(){hardRevealWhenSafe(n);},50);return;}reveal(n);}
+  function releaseForInteraction(e){try{if(e&&e.isTrusted===false)return;userInteracted=true;forceTopThisBoot=false;cancelTopTimers();if(root.classList.contains("mk-app-booting"))reveal(id);}catch(_){}}
+  function searchTarget(t){try{if(t&&t.closest&&t.closest(".mk-page-comments, .mk-comment-form, .mk-comment-composer"))return false;return !!(t&&t.closest&&t.closest(".md-header .md-search, .md-search, label[for='__search'], input#__search, input[data-md-component='search-query'], form"));}catch(_){return false;}}
   document.addEventListener("submit",function(e){if(searchTarget(e&&e.target))boot("find");},true);
   document.addEventListener("keydown",function(e){if(e&&e.key==="Enter"&&searchTarget(e.target))boot("find");},true);
   window.addEventListener("find:autofill",function(){boot("find");},true);
   try{["pushState","replaceState"].forEach(function(k){var orig=history[k];if(!orig||orig.__mkGateWrappedV8)return;var wrapped=function(){var ret=orig.apply(this,arguments);setTimeout(function(){markKind();if(isFind())boot("history-find");else probe(id);},0);return ret;};wrapped.__mkGateWrappedV8=true;history[k]=wrapped;});}catch(_){}
   window.__mkUnifiedFirstPaintStart=boot;window.__mkUnifiedFirstPaintBlank=function(reason){boot(reason||"manual")};window.__mkUnifiedFirstPaintProbe=function(){probe(id)};window.__mkClearFindSearchResidue=clearFindSearchResidue;
-  ["mk:random-tabs-ready","mk:sidebar-sort-done","mk:sidebar-sort-rendered","mk:mastery-widget-ready","mk:learning-path-ready","mk:site-motion-change","mk:motionchange","fb:ready"].forEach(function(e){window.addEventListener(e,function(){probe(id);},true);});
+  ["wheel","touchstart","pointerdown"].forEach(function(e){window.addEventListener(e,releaseForInteraction,{passive:true,capture:true});});window.addEventListener("keydown",function(e){if(e&&/^(ArrowDown|ArrowUp|PageDown|PageUp|Home|End| )$/.test(String(e.key||"")))releaseForInteraction(e);},true);
+  ["mk:random-tabs-ready","mk:sidebar-sort-done","mk:sidebar-sort-rendered","mk:sidebar-sort-centered","mk:mastery-widget-ready","mk:learning-path-ready","mk:site-motion-change","mk:motionchange","fb:ready"].forEach(function(e){window.addEventListener(e,function(){probe(id);},true);});
   boot("initial");document.addEventListener("DOMContentLoaded",function(){probe(id);},{once:true});document.addEventListener("DOMContentSwitch",function(){boot("switch");});window.addEventListener("pageshow",function(e){if(e&&e.persisted)boot("pageshow");else probe(id);},{passive:true});window.addEventListener("popstate",function(){boot("popstate");},{passive:true});[0,60,160,340,700,1200,1800].forEach(function(ms){setTimeout(clearFindSearchResidue,ms);});
 })();
 </script>
-<style id="mk-unified-first-paint-css-v11-pc-sidebar">
+<style id="mk-unified-first-paint-css-v12-fast-release">
 html.mk-app-booting,html.mk-app-booting body{background:var(--md-default-bg-color,#fff)!important;overflow-anchor:none!important;scroll-behavior:auto!important;overscroll-behavior:none!important}
 html.mk-app-booting::before,html.mk-app-booting body::before,#mk-first-paint-cover{content:"";position:fixed!important;top:calc(-1 * env(safe-area-inset-top,0px) - 120px)!important;left:calc(-1 * env(safe-area-inset-left,0px) - 120px)!important;right:calc(-1 * env(safe-area-inset-right,0px) - 120px)!important;bottom:calc(-1 * env(safe-area-inset-bottom,0px) - 80vh)!important;min-height:calc(100dvh + 80vh + env(safe-area-inset-bottom,0px) + 240px)!important;z-index:2147483647!important;background:var(--md-default-bg-color,#fff)!important;pointer-events:none!important;display:block!important;visibility:visible!important;opacity:1!important;transform:translateZ(0)!important;contain:paint!important}
 html.mk-app-booting .md-header,html.mk-app-booting .md-tabs{visibility:hidden!important;opacity:0!important}
@@ -76,7 +189,7 @@ html.mk-app-ready #mk-first-paint-cover,html:not(.mk-app-booting) #mk-first-pain
 html.mk-startup-no-motion *,html.mk-startup-no-motion *:before,html.mk-startup-no-motion *:after,html.mk-first-paint-release *,html.mk-first-paint-release *:before,html.mk-first-paint-release *:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 #find-builder.fb-dream-active .fb-board,#search-results.fb-preblur,#search-results.fb-preblur .csr-cols,#search-results.fb-preblur .csr-list,#search-results.fb-preblur .csr-foot,html.mk-find-page #find-builder .fb-board,html.mk-find-page #search-results .csr-cols,html.mk-find-page #search-results .csr-list,html.mk-find-page #search-results .csr-foot,html.mk-find-page .fb-hint--pending{filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;opacity:1!important;transform:none!important;transition:none!important;animation:none!important}
 html.mk-find-page:not(.mk-header-search-open) #mk-mobile-search-backdrop{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important;pointer-events:none!important}
-html.mk-find-page:not(.mk-header-search-open) .md-search__overlay,html.mk-find-page:not(.mk-header-search-open) .md-header .md-search__output,html.mk-find-page:not(.mk-header-search-open) .md-header .mk-search-history,html.mk-find-page:not(.mk-header-search-open) .md-header .mk-search-suggest{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;pointer-events:none!important}
+html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .md-search__overlay,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .md-search__output,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .mk-search-history,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .mk-search-suggest{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;pointer-events:none!important}
 html.rk-preload .md-header,html.rk-loading .md-header,html:not(.rk-ready) .md-header,html.rk-preload .md-tabs,html.rk-loading .md-tabs,html:not(.rk-ready) .md-tabs,html.rk-preload .md-container,html.rk-loading .md-container,html:not(.rk-ready) .md-container,html.rk-preload .md-main,html.rk-loading .md-main,html.rk-preload .md-content,html.rk-loading .md-content{opacity:1!important;visibility:visible!important;pointer-events:auto!important;animation:none!important;transition:none!important}
 .md-tabs__list{justify-content:flex-start}.md-tabs__list>.md-tabs__item.random-right-start{margin-left:auto}.md-tab-dropdown-panel{position:fixed;z-index:9999;display:none}.md-tab-dropdown-panel.open{display:block}.md-tabs__link.md-tab-dropdown,.md-tabs__link-btn.md-tab-dropdown-btn{display:inline-flex;align-items:center}.md-tabs__link-btn.md-tab-dropdown-btn{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0}.md-tab-dropdown-btn .rd-icon{display:inline-flex;align-items:center;justify-content:center;color:currentColor}
 html body article.md-content__inner h1 .arithmatex-inline,html body article.md-content__inner h1 .arithmatex-prerendered,html body article.md-content__inner h1 mjx-container,html body article.md-content__inner h1 .MathJax,html body article.md-content__inner h1 .katex{margin-left:0!important;margin-right:0!important}
@@ -84,26 +197,78 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </style>
 <script id="mk-ios-drawer-vv-gap-v1">
 (function(){
-  function sync(){
+  var frame=0;
+  var drawer=null;
+  var overlay=null;
+  var lastGap=-1;
+
+  function findDrawer(){
+    try{
+      if(drawer&&drawer.isConnected)return drawer;
+      var next=document.querySelector('input.md-toggle[data-md-toggle="drawer"], input#__drawer, #__drawer');
+      if(next===drawer)return drawer;
+      if(drawer)drawer.removeEventListener('change',onDrawerChange);
+      drawer=next||null;
+      if(drawer)drawer.addEventListener('change',onDrawerChange,{passive:true});
+      return drawer;
+    }catch(_){return null;}
+  }
+
+  function drawerOpen(){
+    var input=findDrawer();
+    return !!(input&&input.checked);
+  }
+
+  function findOverlay(){
+    try{
+      if(overlay&&overlay.isConnected)return overlay;
+      var next=document.querySelector('.md-overlay');
+      if(next!==overlay){overlay=next||null;lastGap=-1;}
+      return overlay;
+    }catch(_){return null;}
+  }
+
+  function syncNow(){
+    frame=0;
+    if(!drawerOpen())return;
     try{
       var vv = window.visualViewport;
       var gap = 0;
       if (vv) {
         gap = Math.max(0, Math.round((window.innerHeight || 0) - (vv.height || 0) - (vv.offsetTop || 0)));
       }
-      document.documentElement.style.setProperty('--mk-ios-vv-bottom-gap', gap + 'px');
+      var target=findOverlay();
+      if(!target||gap===lastGap)return;
+      lastGap=gap;
+      target.style.setProperty('--mk-ios-vv-bottom-gap',gap+'px');
     }catch(_){}
   }
-  sync();
-  window.addEventListener('resize', sync, {passive:true});
-  window.addEventListener('orientationchange', sync, {passive:true});
-  window.addEventListener('pageshow', sync, {passive:true});
-  document.addEventListener('DOMContentLoaded', sync, {once:true});
-  document.addEventListener('DOMContentSwitch', sync);
+
+  function schedule(){
+    if(!drawerOpen()||frame)return;
+    frame=window.requestAnimationFrame(syncNow);
+  }
+
+  function onDrawerChange(){
+    if(drawer&&drawer.checked)syncNow();
+  }
+
+  function refresh(){
+    findDrawer();
+    findOverlay();
+    schedule();
+  }
+
+  refresh();
+  window.addEventListener('resize', schedule, {passive:true});
+  window.addEventListener('orientationchange', schedule, {passive:true});
+  window.addEventListener('pageshow', refresh, {passive:true});
+  document.addEventListener('DOMContentLoaded', refresh, {once:true});
+  document.addEventListener('DOMContentSwitch', refresh);
   try{
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', sync, {passive:true});
-      window.visualViewport.addEventListener('scroll', sync, {passive:true});
+      window.visualViewport.addEventListener('resize', schedule, {passive:true});
+      window.visualViewport.addEventListener('scroll', schedule, {passive:true});
     }
   }catch(_){}
 })();
@@ -112,9 +277,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 @media (max-width: 76.1875em), (pointer: coarse) {
   /* iOS Safari drawer fix, conservative version.
      Do not change the drawer itself. Keep the overlay as the outside-tap
-     closer, but stop it before Safari's dynamic bottom toolbar area. */
-  #__drawer:checked ~ .md-overlay,
-  html:has(#__drawer:checked) .md-overlay {
+     closer, but stop it before Safari's dynamic bottom toolbar area.
+     The forgiving :is() list preserves the sibling fallback on Safari versions
+     that do not support :has(); an ordinary comma list would be discarded. */
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay) {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -130,10 +296,8 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     filter: none !important;
   }
 
-  #__drawer:checked ~ .md-overlay::before,
-  #__drawer:checked ~ .md-overlay::after,
-  html:has(#__drawer:checked) .md-overlay::before,
-  html:has(#__drawer:checked) .md-overlay::after {
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay)::before,
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay)::after {
     content: none !important;
     display: none !important;
     background: transparent !important;
@@ -146,7 +310,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 }
 </style>
 </head>
-<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<body data-md-color-accent="teal" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
@@ -182,24 +346,24 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </div>
 </div>
 <form class="md-header__option" data-md-component="palette">
-<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
-<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
-</label>
-<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="teal" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
-<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
 </label>
-<input aria-label="Switch to system preference" class="md-option" data-md-color-accent="teal" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
-<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to system preference">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"></path></svg>
+<input aria-label="Switch to custom theme" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to custom theme">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="custom" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
 </label>
 </form>
 <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
 <label class="md-header__button md-icon" for="__search">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
 </label>
-<div class="md-search" data-md-component="search" role="dialog">
+<div class="md-search" data-md-component="search" role="dialog" aria-label="Search the wiki">
 <label class="md-search__overlay" for="__search"></label>
 <div class="md-search__inner" role="search">
 <form class="md-search__form" name="search">
@@ -231,7 +395,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </div>
 </div>
 </nav>
-<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<nav aria-label="Site sections" class="md-tabs" data-md-component="tabs">
 <div class="md-grid">
 <ul class="md-tabs__list">
 <li class="md-tabs__item">
@@ -241,7 +405,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
   
     
   
-  Home
+  BSc EOR Wiki
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../bgm-credits.html">
+        
+  
+  
+    
+  
+  Background music credits
 
       </a>
 </li>
@@ -252,7 +427,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
   
     
   
-  Search &amp; Filter
+  Concept Finder
 
       </a>
 </li>
@@ -310,7 +485,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
 <div class="md-sidebar__scrollwrap">
 <div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<nav aria-label="Courses and concepts" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
 <a aria-label="BSc EOR Wiki" class="md-nav__button md-logo" data-md-component="logo" href="../../index.html" title="BSc EOR Wiki">
 <img alt="logo" src="../../assets/logo-navbar.svg"/>
@@ -323,7 +498,19 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Home
+    BSc EOR Wiki
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../bgm-credits.html">
+<span class="md-ellipsis">
+    
+  
+    Background music credits
   
 
     
@@ -335,7 +522,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Search &amp; Filter
+    Concept Finder
   
 
     
@@ -355,7 +542,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </a>
 </li>
 <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
 <a class="md-nav__link" href="../index.html">
 <span class="md-ellipsis">
@@ -367,12 +554,12 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     
   </span>
 </a>
-<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_4">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -381,9 +568,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_2" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../1a-Introduction-to-Data-Analytics/index.html">
 <span class="md-ellipsis">
     
@@ -393,24 +578,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_2_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_2">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    Introduction to Data Analytics
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_3" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../1a-Math-I-Calculus/index.html">
 <span class="md-ellipsis">
     
@@ -420,1755 +591,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-<label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
 <span class="md-nav__icon md-icon"></span>
-</label>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_3_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_3">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Math I: Calculus
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/absolute-value.html">
-<span class="md-ellipsis">
-    
-  
-    Absolute Value
-  
-
-    
-  </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/addition-and-sum.html">
-<span class="md-ellipsis">
-    
-  
-    Addition and Sum
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/algebraic-and-transendental-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Algebraic and Transcendental Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/alternating-series-test.html">
-<span class="md-ellipsis">
-    
-  
-    Alternating Series Test
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/alternating-series.html">
-<span class="md-ellipsis">
-    
-  
-    Alternating Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/antiderivative.html">
-<span class="md-ellipsis">
-    
-  
-    Antiderivative
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/arithmetic-series.html">
-<span class="md-ellipsis">
-    
-  
-    Arithmetic Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/asymptotic-equivalence.html">
-<span class="md-ellipsis">
-    
-  
-    Asymptotic Equivalence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/bijection-and-inverse-function.html">
-<span class="md-ellipsis">
-    
-  
-    Bijection and Inverse Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/bounded-function.html">
-<span class="md-ellipsis">
-    
-  
-    Bounded Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/bounded-sequence.html">
-<span class="md-ellipsis">
-    
-  
-    Bounded Sequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/bounded-set.html">
-<span class="md-ellipsis">
-    
-  
-    Bounded Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/cardinality.html">
-<span class="md-ellipsis">
-    
-  
-    Cardinality
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/cartesian-coordinate-system.html">
-<span class="md-ellipsis">
-    
-  
-    Cartesian Coordinate System
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/cauchy-sequence.html">
-<span class="md-ellipsis">
-    
-  
-    Cauchy Sequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/chain-rule.html">
-<span class="md-ellipsis">
-    
-  
-    Chain Rule
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/codomain.html">
-<span class="md-ellipsis">
-    
-  
-    Codomain
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/comparison-test-for-series.html">
-<span class="md-ellipsis">
-    
-  
-    Comparison Test for Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/complement.html">
-<span class="md-ellipsis">
-    
-  
-    Complement
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/composition-of-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Composition of Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/constant-function.html">
-<span class="md-ellipsis">
-    
-  
-    Constant Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/continuity.html">
-<span class="md-ellipsis">
-    
-  
-    Continuity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/convexity-and-concavity.html">
-<span class="md-ellipsis">
-    
-  
-    Convexity and Concavity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/countable-and-uncountable-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Countable and Uncountable Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/critical-point.html">
-<span class="md-ellipsis">
-    
-  
-    Critical Point
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/definite-integral.html">
-<span class="md-ellipsis">
-    
-  
-    Definite Integral
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/derivative-and-differentiability.html">
-<span class="md-ellipsis">
-    
-  
-    Derivative and Differentiability
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/difference-set.html">
-<span class="md-ellipsis">
-    
-  
-    Difference Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/differentiability-class.html">
-<span class="md-ellipsis">
-    
-  
-    Differentiability Class
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/differential.html">
-<span class="md-ellipsis">
-    
-  
-    Differential
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/differentiation-rules.html">
-<span class="md-ellipsis">
-    
-  
-    Differentiation Rules
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/dirichlet-function.html">
-<span class="md-ellipsis">
-    
-  
-    Dirichlet Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/disjoint-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Disjoint Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/divergence-to-infinity.html">
-<span class="md-ellipsis">
-    
-  
-    Divergence to Infinity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/division-and-quotient.html">
-<span class="md-ellipsis">
-    
-  
-    Division and Quotient
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/domain.html">
-<span class="md-ellipsis">
-    
-  
-    Domain
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/empty-set.html">
-<span class="md-ellipsis">
-    
-  
-    Empty Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/endpoint-and-bounded-interval.html">
-<span class="md-ellipsis">
-    
-  
-    Endpoint and Bounded Interval
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/equivalent-sequences.html">
-<span class="md-ellipsis">
-    
-  
-    Equivalent Sequences
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/eulers-number.html">
-<span class="md-ellipsis">
-    
-  
-    Euler's Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/exponential-function.html">
-<span class="md-ellipsis">
-    
-  
-    Exponential Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/exponentiation-and-power.html">
-<span class="md-ellipsis">
-    
-  
-    Exponentiation and Power
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/extended-real-number.html">
-<span class="md-ellipsis">
-    
-  
-    Extended Real Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/extreme-value-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Extreme Value Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/factorial.html">
-<span class="md-ellipsis">
-    
-  
-    Factorial
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/finite-and-infinite-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Finite and Infinite Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/finite-sequence.html">
-<span class="md-ellipsis">
-    
-  
-    Finite Sequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/finite-series.html">
-<span class="md-ellipsis">
-    
-  
-    Finite Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/first-order-condition.html">
-<span class="md-ellipsis">
-    
-  
-    First Order Condition
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/floor-and-ceiling-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Floor and Ceiling Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/function.html">
-<span class="md-ellipsis">
-    
-  
-    Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/fundamental-theorem-of-calculus-part-1.html">
-<span class="md-ellipsis">
-    
-  
-    Fundamental Theorem of Calculus Part 1
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/fundamental-theorem-of-calculus-part-2.html">
-<span class="md-ellipsis">
-    
-  
-    Fundamental Theorem of Calculus Part 2
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/gamma-function.html">
-<span class="md-ellipsis">
-    
-  
-    Gamma Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/geometric-series.html">
-<span class="md-ellipsis">
-    
-  
-    Geometric Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/global-extremum.html">
-<span class="md-ellipsis">
-    
-  
-    Global Extremum
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/graph-of-a-function.html">
-<span class="md-ellipsis">
-    
-  
-    Graph of a Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/harmonic-series.html">
-<span class="md-ellipsis">
-    
-  
-    Harmonic Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/higher-order-derivative.html">
-<span class="md-ellipsis">
-    
-  
-    Higher-order Derivative
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/horizontal-asymptote.html">
-<span class="md-ellipsis">
-    
-  
-    Horizontal Asymptote
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/identity-function.html">
-<span class="md-ellipsis">
-    
-  
-    Identity Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/improper-integral.html">
-<span class="md-ellipsis">
-    
-  
-    Improper Integral
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/indefinite-integral.html">
-<span class="md-ellipsis">
-    
-  
-    Indefinite Integral
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/indeterminate-form.html">
-<span class="md-ellipsis">
-    
-  
-    Indeterminate Form
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/indicator-function.html">
-<span class="md-ellipsis">
-    
-  
-    Indicator Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/inequality.html">
-<span class="md-ellipsis">
-    
-  
-    Inequality
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/infimum.html">
-<span class="md-ellipsis">
-    
-  
-    Infimum
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/infinite-series.html">
-<span class="md-ellipsis">
-    
-  
-    Infinite Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/infinity.html">
-<span class="md-ellipsis">
-    
-  
-    Infinity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/inflection-point.html">
-<span class="md-ellipsis">
-    
-  
-    Inflection Point
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/injective-function.html">
-<span class="md-ellipsis">
-    
-  
-    Injective Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/integer.html">
-<span class="md-ellipsis">
-    
-  
-    Integer
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/integral-test-for-convergence.html">
-<span class="md-ellipsis">
-    
-  
-    Integral Test for Convergence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/integrand.html">
-<span class="md-ellipsis">
-    
-  
-    Integrand
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/integration-by-parts.html">
-<span class="md-ellipsis">
-    
-  
-    Integration by Parts
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/integration-by-substitution-type-1.html">
-<span class="md-ellipsis">
-    
-  
-    Integration by Substitution Type 1
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/integration-by-substitution-type-2.html">
-<span class="md-ellipsis">
-    
-  
-    Integration by Substitution Type 2
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/intermediate-value-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Intermediate Value Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/intersection-of-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Intersection of Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/interval.html">
-<span class="md-ellipsis">
-    
-  
-    Interval
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/inverse-function-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Inverse Function Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/inverse-trigonometric-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Inverse Trigonometric Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/irrational-number.html">
-<span class="md-ellipsis">
-    
-  
-    Irrational Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/length-of-an-interval.html">
-<span class="md-ellipsis">
-    
-  
-    Length of an Interval
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/lhopitals-rule.html">
-<span class="md-ellipsis">
-    
-  
-    L'Hôpital's Rule
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/limit-at-a-point.html">
-<span class="md-ellipsis">
-    
-  
-    Limit at a Point
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/limit-at-infinity.html">
-<span class="md-ellipsis">
-    
-  
-    Limit at Infinity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/limit-laws-for-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Limit Laws for Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/limit-laws-for-sequences.html">
-<span class="md-ellipsis">
-    
-  
-    Limit Laws for Sequences
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/limit-of-a-sequence.html">
-<span class="md-ellipsis">
-    
-  
-    Limit of a Sequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/local-extremum.html">
-<span class="md-ellipsis">
-    
-  
-    Local Extremum
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/logarithm-and-logarithmic-function.html">
-<span class="md-ellipsis">
-    
-  
-    Logarithm and Logarithmic Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/lower-bound.html">
-<span class="md-ellipsis">
-    
-  
-    Lower Bound
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/maximum-of-a-set.html">
-<span class="md-ellipsis">
-    
-  
-    Maximum of a Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/mean-value-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Mean Value Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/minimum-of-a-set.html">
-<span class="md-ellipsis">
-    
-  
-    Minimum of a Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/monomial-and-power-function.html">
-<span class="md-ellipsis">
-    
-  
-    Monomial and Power Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/monotone-convergence-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Monotone Convergence Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/monotone-function.html">
-<span class="md-ellipsis">
-    
-  
-    Monotone Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/monotone-sequence.html">
-<span class="md-ellipsis">
-    
-  
-    Monotone Sequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/multiplication-and-product.html">
-<span class="md-ellipsis">
-    
-  
-    Multiplication and Product
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/multivalued-function.html">
-<span class="md-ellipsis">
-    
-  
-    Multivalued Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/n-th-root.html">
-<span class="md-ellipsis">
-    
-  
-    \(n\)-th Root
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/natural-number.html">
-<span class="md-ellipsis">
-    
-  
-    Natural Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/negation.html">
-<span class="md-ellipsis">
-    
-  
-    Negation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/newtons-approximation.html">
-<span class="md-ellipsis">
-    
-  
-    Newton's Approximation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/one-sided-continuity.html">
-<span class="md-ellipsis">
-    
-  
-    One-sided Continuity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/one-sided-derivative.html">
-<span class="md-ellipsis">
-    
-  
-    One-sided Derivative
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/one-sided-limit.html">
-<span class="md-ellipsis">
-    
-  
-    One-sided Limit
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/p-series.html">
-<span class="md-ellipsis">
-    
-  
-    \(p\)-series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/p-test.html">
-<span class="md-ellipsis">
-    
-  
-    \(p\)-test
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/partition-and-regular-subdivision.html">
-<span class="md-ellipsis">
-    
-  
-    Partition and Regular Subdivision
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/polynomial.html">
-<span class="md-ellipsis">
-    
-  
-    Polynomial
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/proper-subset.html">
-<span class="md-ellipsis">
-    
-  
-    Proper Subset
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/punctured-neighbourhood.html">
-<span class="md-ellipsis">
-    
-  
-    Punctured Neighbourhood
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/range.html">
-<span class="md-ellipsis">
-    
-  
-    Range and Image
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/rational-function.html">
-<span class="md-ellipsis">
-    
-  
-    Rational Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/rational-number.html">
-<span class="md-ellipsis">
-    
-  
-    Rational Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/real-number.html">
-<span class="md-ellipsis">
-    
-  
-    Real Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/reciprocal.html">
-<span class="md-ellipsis">
-    
-  
-    Reciprocal
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/riemann-integral.html">
-<span class="md-ellipsis">
-    
-  
-    Riemann Integral
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/riemann-sum.html">
-<span class="md-ellipsis">
-    
-  
-    Riemann Sum
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/rolles-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Rolle’s Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/second-order-condition.html">
-<span class="md-ellipsis">
-    
-  
-    Second Order Condition
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/sequence.html">
-<span class="md-ellipsis">
-    
-  
-    Sequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/set.html">
-<span class="md-ellipsis">
-    
-  
-    Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/signum-function.html">
-<span class="md-ellipsis">
-    
-  
-    Signum Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/singleton-set.html">
-<span class="md-ellipsis">
-    
-  
-    Singleton Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/singularity.html">
-<span class="md-ellipsis">
-    
-  
-    Singularity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/squeeze-theorem-for-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Squeeze Theorem for Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/squeeze-theorem-for-sequences.html">
-<span class="md-ellipsis">
-    
-  
-    Squeeze Theorem for Sequences
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/stationary-point.html">
-<span class="md-ellipsis">
-    
-  
-    Stationary Point
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/subsequence.html">
-<span class="md-ellipsis">
-    
-  
-    Subsequence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/subset.html">
-<span class="md-ellipsis">
-    
-  
-    Subset
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/subtraction-and-difference.html">
-<span class="md-ellipsis">
-    
-  
-    Subtraction and Difference
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/supremum.html">
-<span class="md-ellipsis">
-    
-  
-    Supremum
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/surjective-function.html">
-<span class="md-ellipsis">
-    
-  
-    Surjective Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/triangle-inequality.html">
-<span class="md-ellipsis">
-    
-  
-    Triangle Inequality
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/trichotomy-of-real-numbers.html">
-<span class="md-ellipsis">
-    
-  
-    Trichotomy of Real Numbers
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/trigonometric-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Trigonometric Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/union-of-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Union of Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/upper-bound.html">
-<span class="md-ellipsis">
-    
-  
-    Upper Bound
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/vertical-asymptote.html">
-<span class="md-ellipsis">
-    
-  
-    Vertical Asymptote
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1a-Math-I-Calculus/zero-of-a-function.html">
-<span class="md-ellipsis">
-    
-  
-    Zero of a Function
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_4" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../1a-OR-Modelling/index.html">
 <span class="md-ellipsis">
     
@@ -2178,23 +604,11 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_4">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    OR Modelling
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
 <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_4_5" type="checkbox"/>
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
 <a class="md-nav__link" href="index.html">
 <span class="md-ellipsis">
@@ -2206,12 +620,12 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     
   </span>
 </a>
-<label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="true" aria-labelledby="__nav_4_5_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_5">
+<nav aria-expanded="true" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -2220,6 +634,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="2-argument-arctangent.html">
+<span class="md-ellipsis">
+    
+  
+    2-argument Arctangent
+  
+
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="abelian-group.html">
 <span class="md-ellipsis">
@@ -2298,6 +724,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     
   
     Angle Between Vectors
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="argument-of-a-complex-number.html">
+<span class="md-ellipsis">
+    
+  
+    Argument of a Complex Number
   
 
     
@@ -2401,6 +839,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="cardinality.html">
+<span class="md-ellipsis">
+    
+  
+    Cardinality
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="cartesian-product.html">
 <span class="md-ellipsis">
     
@@ -2417,7 +867,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Cauchy-Schwarz Inequality
+    Cauchy-Schwarz Inequality (Math II: Linear Algebra)
   
 
     
@@ -2454,6 +904,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     
   
     Commutativity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complement.html">
+<span class="md-ellipsis">
+    
+  
+    Complement
   
 
     
@@ -2509,11 +971,71 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="complex-division.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Division
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complex-exponential-function.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Exponential Function
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complex-exponentiation.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Exponentiation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complex-logarithm.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Logarithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="complex-multiplication.html">
 <span class="md-ellipsis">
     
   
     Complex Multiplication
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complex-negation.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Negation
   
 
     
@@ -2557,6 +1079,42 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="complex-reciprocal.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Reciprocal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complex-subtraction.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Subtraction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="complex-trigonometric-functions.html">
+<span class="md-ellipsis">
+    
+  
+    Complex Trigonometric Functions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="composition-of-linear-maps.html">
 <span class="md-ellipsis">
     
@@ -2586,6 +1144,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     
   
     Coordinate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="countable-and-uncountable-sets.html">
+<span class="md-ellipsis">
+    
+  
+    Countable and Uncountable Sets
   
 
     
@@ -2825,7 +1395,31 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Euclidean Space
+    Euclidean Space (Math II: Linear Algebra)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="eulers-formula.html">
+<span class="md-ellipsis">
+    
+  
+    Euler's Formula
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="eulers-identity.html">
+<span class="md-ellipsis">
+    
+  
+    Euler's Identity
   
 
     
@@ -2933,7 +1527,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Hyperplane
+    Hyperplane (Math II: Linear Algebra)
   
 
     
@@ -3255,6 +1849,15 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#related-concepts">
+<span class="md-ellipsis">
+      
+        Related Concepts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#sources">
 <span class="md-ellipsis">
       
@@ -3355,7 +1958,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Permutation
+    Permutation (Math II: Linear Algebra)
   
 
     
@@ -3392,6 +1995,18 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
     
   
     Point-Normal Equation of a Plane
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="polar-coordinate-system.html">
+<span class="md-ellipsis">
+    
+  
+    Polar Coordinate System
   
 
     
@@ -3451,7 +2066,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <span class="md-ellipsis">
     
   
-    Quadratic Form
+    Quadratic Form (Math II: Linear Algebra)
   
 
     
@@ -3773,9 +2388,7 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_6" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/index.html">
 <span class="md-ellipsis">
     
@@ -3785,1167 +2398,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-<label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
 <span class="md-nav__icon md-icon"></span>
-</label>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_6_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_6">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Probability Theory For EOR
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/arrival-rate.html">
-<span class="md-ellipsis">
-    
-  
-    Arrival Rate
-  
-
-    
-  </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/axioms-of-probability.html">
-<span class="md-ellipsis">
-    
-  
-    Axioms of Probability
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/bayes-rule.html">
-<span class="md-ellipsis">
-    
-  
-    Bayes Rule
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/bernoulli-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Bernoulli Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/binomial-coefficient.html">
-<span class="md-ellipsis">
-    
-  
-    Binomial Coefficient
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/binomial-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Binomial Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/birthday-problem.html">
-<span class="md-ellipsis">
-    
-  
-    Birthday Problem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/central-moment.html">
-<span class="md-ellipsis">
-    
-  
-    Central Moment
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/chebyshev-inequality.html">
-<span class="md-ellipsis">
-    
-  
-    Chebyshev Inequality
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/combination.html">
-<span class="md-ellipsis">
-    
-  
-    Combination
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/complement-of-an-event.html">
-<span class="md-ellipsis">
-    
-  
-    Complement of an Event
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/conditional-expectation.html">
-<span class="md-ellipsis">
-    
-  
-    Conditional Expectation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/conditional-independence.html">
-<span class="md-ellipsis">
-    
-  
-    Conditional Independence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/conditional-probability.html">
-<span class="md-ellipsis">
-    
-  
-    Conditional Probability
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/conditional-variance.html">
-<span class="md-ellipsis">
-    
-  
-    Conditional Variance
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/continuous-random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Continuous Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/convergence-in-probability.html">
-<span class="md-ellipsis">
-    
-  
-    Convergence in Probability
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/counting.html">
-<span class="md-ellipsis">
-    
-  
-    Counting
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/cumulative-distribution-function.html">
-<span class="md-ellipsis">
-    
-  
-    Cumulative Distribution Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/degenerate-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Degenerate Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/discrete-random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Discrete Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/discrete-uniform-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Discrete Uniform Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/disjoint-events.html">
-<span class="md-ellipsis">
-    
-  
-    Disjoint Events
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/event.html">
-<span class="md-ellipsis">
-    
-  
-    Event
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/expectation.html">
-<span class="md-ellipsis">
-    
-  
-    Expectation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/exponential-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Exponential Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/factorial.html">
-<span class="md-ellipsis">
-    
-  
-    Factorial
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/folded-normal-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Folded Normal Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/function-of-a-random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Function of a Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/fundamental-bridge.html">
-<span class="md-ellipsis">
-    
-  
-    Fundamental Bridge
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/generated-event.html">
-<span class="md-ellipsis">
-    
-  
-    Generated Event
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/geometric-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Geometric Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/half-life.html">
-<span class="md-ellipsis">
-    
-  
-    Half-Life
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/histogram.html">
-<span class="md-ellipsis">
-    
-  
-    Histogram
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/hypergeometric-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Hypergeometric Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/identically-distributed-random-variables.html">
-<span class="md-ellipsis">
-    
-  
-    Identically Distributed Random Variables
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/iid-random-variables.html">
-<span class="md-ellipsis">
-    
-  
-    IID Random Variables
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/inclusion-exclusion-principle.html">
-<span class="md-ellipsis">
-    
-  
-    Inclusion-Exclusion Principle
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/independent-events.html">
-<span class="md-ellipsis">
-    
-  
-    Independent Events
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/independent-random-variables.html">
-<span class="md-ellipsis">
-    
-  
-    Independent Random Variables
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/indicator-random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Indicator Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/law-of-total-probability.html">
-<span class="md-ellipsis">
-    
-  
-    Law of Total Probability
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/linearity-of-expectation.html">
-<span class="md-ellipsis">
-    
-  
-    Linearity of Expectation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/lognormal-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Lognormal Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/lotus.html">
-<span class="md-ellipsis">
-    
-  
-    LOTUS
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/median.html">
-<span class="md-ellipsis">
-    
-  
-    Median
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/memoryless-property.html">
-<span class="md-ellipsis">
-    
-  
-    Memoryless Property
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/minimum-of-independent-exponentials.html">
-<span class="md-ellipsis">
-    
-  
-    Minimum of Independent Exponentials
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/mixture-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Mixture Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/mode.html">
-<span class="md-ellipsis">
-    
-  
-    Mode
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/moment.html">
-<span class="md-ellipsis">
-    
-  
-    Moment
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/monotonicity-of-expectation.html">
-<span class="md-ellipsis">
-    
-  
-    Monotonicity of Expectation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/multiplication-rule.html">
-<span class="md-ellipsis">
-    
-  
-    Multiplication Rule
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/naive-probability.html">
-<span class="md-ellipsis">
-    
-  
-    Naive Probability
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/negative-binomial-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Negative Binomial Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/normal-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Normal Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/order-statistic.html">
-<span class="md-ellipsis">
-    
-  
-    Order Statistic
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/outcome.html">
-<span class="md-ellipsis">
-    
-  
-    Outcome
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/partition.html">
-<span class="md-ellipsis">
-    
-  
-    Partition
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/permutation.html">
-<span class="md-ellipsis">
-    
-  
-    Permutation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/poisson-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Poisson Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/poisson-process.html">
-<span class="md-ellipsis">
-    
-  
-    Poisson Process
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/probability-density-function.html">
-<span class="md-ellipsis">
-    
-  
-    Probability Density Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/probability-function.html">
-<span class="md-ellipsis">
-    
-  
-    Probability Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/probability-mass-function.html">
-<span class="md-ellipsis">
-    
-  
-    Probability Mass Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/prosecutors-fallacy.html">
-<span class="md-ellipsis">
-    
-  
-    Prosecutors Fallacy
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/quantile-function.html">
-<span class="md-ellipsis">
-    
-  
-    Quantile Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/random-interval.html">
-<span class="md-ellipsis">
-    
-  
-    Random Interval
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/rayleigh-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Rayleigh Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-central-moment.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Central Moment
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-mean.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Mean
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-moment.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Moment
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-space.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-standard-deviation.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Standard Deviation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-standardized-moment.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Standardized Moment
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sample-variance.html">
-<span class="md-ellipsis">
-    
-  
-    Sample Variance
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/skewness-and-kurtosis.html">
-<span class="md-ellipsis">
-    
-  
-    Skewness and Kurtosis
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/standard-normal-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Standard Normal Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/standardization.html">
-<span class="md-ellipsis">
-    
-  
-    Standardization
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/standardized-moment.html">
-<span class="md-ellipsis">
-    
-  
-    Standardized Moment
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/stars-and-bars.html">
-<span class="md-ellipsis">
-    
-  
-    Stars and Bars
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/stochastic-process.html">
-<span class="md-ellipsis">
-    
-  
-    Stochastic Process
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/sum-of-independent-random-variables.html">
-<span class="md-ellipsis">
-    
-  
-    Sum of Independent Random Variables
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/summary-measures-of-a-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Summary Measures of a Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/support-of-a-random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Support of a Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/symmetric-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Symmetric Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/transformation-of-a-continuous-random-variable.html">
-<span class="md-ellipsis">
-    
-  
-    Transformation of a Continuous Random Variable
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/uniform-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Uniform Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/unimodal-and-multimodal-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Unimodal and Multimodal Distribution
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/union-and-intersection-of-events.html">
-<span class="md-ellipsis">
-    
-  
-    Union and Intersection of Events
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/universality-of-the-uniform.html">
-<span class="md-ellipsis">
-    
-  
-    Universality of the Uniform
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/variance-and-standard-deviation.html">
-<span class="md-ellipsis">
-    
-  
-    Variance and Standard Deviation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/weak-law-of-large-numbers.html">
-<span class="md-ellipsis">
-    
-  
-    Weak Law of Large Numbers
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_7" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../1b-Programming-for-EOR/index.html">
 <span class="md-ellipsis">
     
@@ -4955,24 +2411,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_7_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_7">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    Programming for EOR
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../2a-Finance-for-EOR/index.html">
 <span class="md-ellipsis">
     
@@ -4982,24 +2424,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_8">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    Finance for EOR
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_9" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../2a-Math-III-Analysis/index.html">
 <span class="md-ellipsis">
     
@@ -5009,1251 +2437,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-<label class="md-nav__link" for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
 <span class="md-nav__icon md-icon"></span>
-</label>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_9_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_9">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Math III: Analysis
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/2-argument-arctangent.html">
-<span class="md-ellipsis">
-    
-  
-    2-argument Arctangent
-  
-
-    
-  </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/accumulation-point.html">
-<span class="md-ellipsis">
-    
-  
-    Accumulation Point
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/adherent-point-and-closure-of-a-set.html">
-<span class="md-ellipsis">
-    
-  
-    Adherent Point and Closure of s Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/affine-transformation-and-linearity.html">
-<span class="md-ellipsis">
-    
-  
-    Affine Transformation and Linearity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/argument-of-a-complex-number.html">
-<span class="md-ellipsis">
-    
-  
-    Argument of a Complex Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/big-o-and-little-o-notations.html">
-<span class="md-ellipsis">
-    
-  
-    Big-\(O\) and Little-\(o\) Notations
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/bolzano-weierstrass-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Bolzano Weierstrass Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/boundary-of-a-set.html">
-<span class="md-ellipsis">
-    
-  
-    Boundary of a Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/bounded-set-in-a-metric-space.html">
-<span class="md-ellipsis">
-    
-  
-    Bounded Set in a Metric Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/cauchy-sequence-in-a-metric-space.html">
-<span class="md-ellipsis">
-    
-  
-    Cauchy Sequence in a Metric Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/closed-metric-ball.html">
-<span class="md-ellipsis">
-    
-  
-    Closed Metric Ball
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/compact-set.html">
-<span class="md-ellipsis">
-    
-  
-    Compact Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complete-metric-space.html">
-<span class="md-ellipsis">
-    
-  
-    Complete Metric Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-absolute-value.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Absolute Value
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-addition.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Addition
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-conjugate.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Conjugate
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-division.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Division
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-exponential-function.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Exponential Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-exponentiation.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Exponentiation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-logarithm.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Logarithm
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-multiplication.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Multiplication
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-negation.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Negation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-number.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Number
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-plane-cartesian-coordinate-system.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Plane (Cartesian Coordinate System)
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-plane-polar-coordinate-system.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Plane (Polar Coordinate System)
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-reciprocal.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Reciprocal
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-subtraction.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Subtraction
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/complex-trigonometric-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Complex Trigonometric Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/connected-and-disconnected-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Connected and Disconnected Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/continuity-between-metric-spaces.html">
-<span class="md-ellipsis">
-    
-  
-    Continuity between Metric Spaces
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/convergence-in-a-metric-space.html">
-<span class="md-ellipsis">
-    
-  
-    Convergence in a Metric Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/convergence-of-power-series.html">
-<span class="md-ellipsis">
-    
-  
-    Convergence of Power Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/cover.html">
-<span class="md-ellipsis">
-    
-  
-    Cover
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/de-moivres-formula.html">
-<span class="md-ellipsis">
-    
-  
-    De Moivre's Formula
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/directional-derivative.html">
-<span class="md-ellipsis">
-    
-  
-    Directional Derivative
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/discrete-metric.html">
-<span class="md-ellipsis">
-    
-  
-    Discrete Metric
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/equivalent-formulation-of-continuity.html">
-<span class="md-ellipsis">
-    
-  
-    Equivalent Formulation of Continuity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/equivalent-norms.html">
-<span class="md-ellipsis">
-    
-  
-    Equivalent Norms
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/euclidean-space.html">
-<span class="md-ellipsis">
-    
-  
-    Euclidean Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/eulers-formula.html">
-<span class="md-ellipsis">
-    
-  
-    Euler's Formula
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/eulers-identity.html">
-<span class="md-ellipsis">
-    
-  
-    Euler's Identity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/exterior-of-a-set.html">
-<span class="md-ellipsis">
-    
-  
-    Exterior of a Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/extreme-value-theorem-generalized-version.html">
-<span class="md-ellipsis">
-    
-  
-    Extreme Value Theorem Generalized Version
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/function-between-spaces.html">
-<span class="md-ellipsis">
-    
-  
-    Function between Spaces
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/gradient.html">
-<span class="md-ellipsis">
-    
-  
-    Gradient
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/heine-borel-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Heine-Borel Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/heine-cantor-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Heine-Cantor Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/hessian-matrix.html">
-<span class="md-ellipsis">
-    
-  
-    Hessian Matrix
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/homogeneous-function.html">
-<span class="md-ellipsis">
-    
-  
-    Homogeneous Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/homogeneous-polynomial.html">
-<span class="md-ellipsis">
-    
-  
-    Homogeneous Polynomial
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/hyperplane.html">
-<span class="md-ellipsis">
-    
-  
-    Hyperplane
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/image-and-preimage.html">
-<span class="md-ellipsis">
-    
-  
-    Image and Preimage
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/imaginary-unit.html">
-<span class="md-ellipsis">
-    
-  
-    Imaginary Unit
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/infinite-series-of-functions.html">
-<span class="md-ellipsis">
-    
-  
-    Infinite Series of Functions
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/interior-of-a-set.html">
-<span class="md-ellipsis">
-    
-  
-    Interior of a set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/intermediate-value-theorem-generalized-version.html">
-<span class="md-ellipsis">
-    
-  
-    Intermediate Value Theorem Generalized Version
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/jacobian-matrix.html">
-<span class="md-ellipsis">
-    
-  
-    Jacobian Matrix
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/level-set-and-level-curve.html">
-<span class="md-ellipsis">
-    
-  
-    Level Set and Level Curve
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/limit-superior-and-limit-inferior.html">
-<span class="md-ellipsis">
-    
-  
-    Limit Superior and Limit Inferior
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/linear-transformation.html">
-<span class="md-ellipsis">
-    
-  
-    Linear Transformation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/maximum-norm.html">
-<span class="md-ellipsis">
-    
-  
-    Maximum Norm
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/metric-and-metric-space.html">
-<span class="md-ellipsis">
-    
-  
-    Metric and Metric Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/monomial-on-rn.html">
-<span class="md-ellipsis">
-    
-  
-    Monomial on \(\mathbb R^n\)
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/norm-and-normed-vector-space.html">
-<span class="md-ellipsis">
-    
-  
-    Norm and Normed Vector Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/normal-convergence.html">
-<span class="md-ellipsis">
-    
-  
-    Normal Convergence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/open-and-closed-sets-in-a-metric-space.html">
-<span class="md-ellipsis">
-    
-  
-    Open and Closed Sets in a Metric Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/open-metric-ball.html">
-<span class="md-ellipsis">
-    
-  
-    Open Metric Ball
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/p-norm-and-p-metric.html">
-<span class="md-ellipsis">
-    
-  
-    \(p\)-norm and \(p\)-metric
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/partial-derivative.html">
-<span class="md-ellipsis">
-    
-  
-    Partial Derivative
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/path-connectedness.html">
-<span class="md-ellipsis">
-    
-  
-    Path Connectedness
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/path.html">
-<span class="md-ellipsis">
-    
-  
-    Path
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/pointwise-convergence.html">
-<span class="md-ellipsis">
-    
-  
-    Pointwise Convergence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/polar-coordinate-system.html">
-<span class="md-ellipsis">
-    
-  
-    Polar Coordinate System
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/polynomial-on-rn.html">
-<span class="md-ellipsis">
-    
-  
-    Polynomial on \(\mathbb R^n\)
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/power-series.html">
-<span class="md-ellipsis">
-    
-  
-    Power Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/quadratic-form.html">
-<span class="md-ellipsis">
-    
-  
-    Quadratic Form
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/radius-and-interval-of-convergence.html">
-<span class="md-ellipsis">
-    
-  
-    Radius and Interval of Convergence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/ratio-test.html">
-<span class="md-ellipsis">
-    
-  
-    Ratio Test
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/real-analytic-function.html">
-<span class="md-ellipsis">
-    
-  
-    Real Analytic Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/real-coordinate-space.html">
-<span class="md-ellipsis">
-    
-  
-    Real Coordinate Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/root-test.html">
-<span class="md-ellipsis">
-    
-  
-    Root Test
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/second-order-partial-derivative.html">
-<span class="md-ellipsis">
-    
-  
-    Second-order Partial Derivative
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/sequentially-compact-set.html">
-<span class="md-ellipsis">
-    
-  
-    Sequentially Compact Set
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/strongly-equivalent-metrics.html">
-<span class="md-ellipsis">
-    
-  
-    Strongly Equivalent Metrics
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/symmetry-of-second-derivatives.html">
-<span class="md-ellipsis">
-    
-  
-    Symmetry of Second Derivatives
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/taxicab-metric.html">
-<span class="md-ellipsis">
-    
-  
-    Taxicab Metric
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/taylor-polynomial.html">
-<span class="md-ellipsis">
-    
-  
-    Taylor Polynomial
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/taylor-series.html">
-<span class="md-ellipsis">
-    
-  
-    Taylor Series
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/taylors-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Taylor's Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/topologically-equivalent-metrics.html">
-<span class="md-ellipsis">
-    
-  
-    Topologically Equivalent Metrics
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/topology-and-topological-space.html">
-<span class="md-ellipsis">
-    
-  
-    Topology and Topological Space
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/total-derivative-as-a-linear-transformation.html">
-<span class="md-ellipsis">
-    
-  
-    Total Derivative as a Linear Transformation
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/twice-continuous-differentiability-on-rn.html">
-<span class="md-ellipsis">
-    
-  
-    Twice Continuous Differentiability on \(\mathbb R^n\)
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/uniform-continuity-between-metric-spaces.html">
-<span class="md-ellipsis">
-    
-  
-    Uniform Continuity between Metric Spaces
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/uniform-continuity.html">
-<span class="md-ellipsis">
-    
-  
-    Uniform Continuity
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/uniform-convergence.html">
-<span class="md-ellipsis">
-    
-  
-    Uniform Convergence
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/uniform-norm.html">
-<span class="md-ellipsis">
-    
-  
-    Uniform Norm
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/union-and-intersection-of-closed-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Union and Intersection of Closed Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/union-and-intersection-of-open-sets.html">
-<span class="md-ellipsis">
-    
-  
-    Union and Intersection of Open Sets
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/weierstrass-approximation-theorem.html">
-<span class="md-ellipsis">
-    
-  
-    Weierstrass Approximation Theorem
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/weierstrass-function.html">
-<span class="md-ellipsis">
-    
-  
-    Weierstrass Function
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2a-Math-III-Analysis/weierstrass-m-test.html">
-<span class="md-ellipsis">
-    
-  
-    Weierstrass \(M\)-test
-  
-
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_10" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../2a-Microeconomics-for-EOR/index.html">
 <span class="md-ellipsis">
     
@@ -6263,24 +2450,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_10_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_10">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    Microeconomics for EOR
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_11" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../2b-Math-IV-Multivariate-Calculus/index.html">
 <span class="md-ellipsis">
     
@@ -6290,66 +2463,23 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_11_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_11">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    Math IV: Multivariate Calculus
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_12" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../2b-Probability-Distributions/index.html">
 <span class="md-ellipsis">
     
   
-    Probability Distributions
+    2b Probability Distributions
   
 
     
   </span>
-</a>
-<label class="md-nav__link" for="__nav_4_12" id="__nav_4_12_label" tabindex="0">
 <span class="md-nav__icon md-icon"></span>
-</label>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_12_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_12">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Probability Distributions
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../2b-Probability-Distributions/gamma-distribution.html">
-<span class="md-ellipsis">
-    
-  
-    Gamma Distribution
-  
-
-    
-  </span>
 </a>
 </li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_4_13" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../2b-Statistical-Modelling-for-EOR/index.html">
 <span class="md-ellipsis">
     
@@ -6359,27 +2489,13 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_4_13_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_4_13">
 <span class="md-nav__icon md-icon"></span>
-            
-  
-    Statistical Modelling for EOR
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
+</a>
 </li>
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
 <a class="md-nav__link" href="../../Year-2/index.html">
 <span class="md-ellipsis">
     
@@ -6389,347 +2505,8 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 
     
   </span>
+<span class="md-nav__icon md-icon"></span>
 </a>
-<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-<span class="md-nav__icon md-icon"></span>
-</label>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_5">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Year 2
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/1a-Macroeconomics-for-EOR/index.html">
-<span class="md-ellipsis">
-    
-  
-    Macroeconomics for EOR
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_2">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Macroeconomics for EOR
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/1a-Math-V-Advanced-Linear-Algebra/index.html">
-<span class="md-ellipsis">
-    
-  
-    Math V Advanced Linear Algebra
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_3">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Math V Advanced Linear Algebra
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/1a-Statistical-Inference/index.html">
-<span class="md-ellipsis">
-    
-  
-    Statistical Inference
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_4">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Statistical Inference
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/1b-Linear-Models-in-Statistics/index.html">
-<span class="md-ellipsis">
-    
-  
-    Linear Models in Statistics
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_5">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Linear Models in Statistics
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_6" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/1b-Math-VI-Convexity-and-Optimization/index.html">
-<span class="md-ellipsis">
-    
-  
-    Math VI Convexity and Optimization
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_6_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_6">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Math VI Convexity and Optimization
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_7" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/1b-Stochastic-Operations-Research/index.html">
-<span class="md-ellipsis">
-    
-  
-    Stochastic Operations Research
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_7_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_7">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Stochastic Operations Research
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_8" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/2a-Discrete-Operations-Research/index.html">
-<span class="md-ellipsis">
-    
-  
-    Discrete Operations Research
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_8_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_8">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Discrete Operations Research
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_9" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/2a-Introduction-to-Econometrics/index.html">
-<span class="md-ellipsis">
-    
-  
-    Introduction to Econometrics
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_9_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_9">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Introduction to Econometrics
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_10" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/2a-Life-Insurance/index.html">
-<span class="md-ellipsis">
-    
-  
-    Life Insurance
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_10_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_10">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Life Insurance
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_11" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/2b-Dynamic-Econometrics/index.html">
-<span class="md-ellipsis">
-    
-  
-    Dynamic Econometrics
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_11_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_11">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Dynamic Econometrics
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_12" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/2b-Game-Theory/index.html">
-<span class="md-ellipsis">
-    
-  
-    Game Theory
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_12_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_12">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Game Theory
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_13" type="checkbox"/>
-<div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../Year-2/2b-Risk-Insurance/index.html">
-<span class="md-ellipsis">
-    
-  
-    Risk Insurance
-  
-
-    
-  </span>
-</a>
-</div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_13_label" class="md-nav" data-md-level="2">
-<label class="md-nav__title" for="__nav_5_13">
-<span class="md-nav__icon md-icon"></span>
-            
-  
-    Risk Insurance
-  
-
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../../random.html">
@@ -6803,6 +2580,15 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#related-concepts">
+<span class="md-ellipsis">
+      
+        Related Concepts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#sources">
 <span class="md-ellipsis">
       
@@ -6818,7 +2604,8 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<nav class="md-tags">
+<nav class="md-tags" aria-label="Concept tags">
+<span class="md-tag">curriculum-current</span>
 <span class="md-tag">m2la-week03</span>
 </nav>
 <h1 id="matrix-scalar-multiplication">Matrix Scalar Multiplication<a class="headerlink" href="#matrix-scalar-multiplication" title="Permanent link">¶</a></h1>
@@ -6837,20 +2624,17 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <h2 id="examples"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"></path></svg></span> Examples<a class="headerlink" href="#examples" title="Permanent link">¶</a></h2>
 <ul>
 <li><span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mrow><mo fence="true">(</mo><mtable columnalign="center center" columnspacing="1em" rowspacing="0.16em"><mtr><mtd><mstyle displaystyle="false" scriptlevel="0"><mn>1</mn></mstyle></mtd><mtd><mstyle displaystyle="false" scriptlevel="0"><mn>3</mn></mstyle></mtd></mtr><mtr><mtd><mstyle displaystyle="false" scriptlevel="0"><mn>0</mn></mstyle></mtd><mtd><mstyle displaystyle="false" scriptlevel="0"><mrow><mo>−</mo><mn>1</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow><mo>=</mo><mrow><mo fence="true">(</mo><mtable columnalign="center center" columnspacing="1em" rowspacing="0.16em"><mtr><mtd><mstyle displaystyle="false" scriptlevel="0"><mn>2</mn></mstyle></mtd><mtd><mstyle displaystyle="false" scriptlevel="0"><mn>6</mn></mstyle></mtd></mtr><mtr><mtd><mstyle displaystyle="false" scriptlevel="0"><mn>0</mn></mstyle></mtd><mtd><mstyle displaystyle="false" scriptlevel="0"><mrow><mo>−</mo><mn>2</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">2\begin{pmatrix}1&amp;3\\0&amp;-1\end{pmatrix}=\begin{pmatrix}2&amp;6\\0&amp;-2\end{pmatrix}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">−</span><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">−</span><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span>.</li>
-<li><span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">-A</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord mathnormal">A</span></span></span></span></span> is the additive inverse of <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span></span>.</li>
+<li><span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">-A</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord mathnormal">A</span></span></span></span></span> is the <a href="../1a-Math-I-Calculus/negation.html">additive inverse</a> of <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span></span>.</li>
 </ul>
 <hr/>
 <h2 id="prerequisites"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-8l-3.5 3.5-1.42-1.42L12 6.16l5.92 5.92-1.42 1.42L13 10zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"></path></svg></span> Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h2>
 <ul>
-<li>Matrix</li>
-<li>
-<p>Field## <span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.5 17c-.14 0-.26 0-.39.04L17.5 13.8c.45-.45.75-1.09.75-1.8a2.5 2.5 0 0 0-2.5-2.5c-.14 0-.25 0-.4.04L13.74 6.3c.47-.46.76-1.09.76-1.8a2.5 2.5 0 0 0-5 0c0 .7.29 1.34.76 1.79L8.65 9.54c-.15-.04-.26-.04-.4-.04a2.5 2.5 0 0 0-2.5 2.5c0 .71.29 1.34.75 1.79l-1.61 3.25C4.76 17 4.64 17 4.5 17a2.5 2.5 0 0 0 0 5A2.5 2.5 0 0 0 7 19.5c0-.7-.29-1.34-.76-1.79l1.62-3.25c.14.04.26.04.39.04s.25 0 .38-.04l1.63 3.25c-.47.45-.76 1.09-.76 1.79a2.5 2.5 0 0 0 5 0A2.5 2.5 0 0 0 12 17c-.13 0-.26 0-.39.04L10 13.8c.45-.45.75-1.09.75-1.8 0-.7-.29-1.33-.75-1.79l1.61-3.25c.13.04.26.04.39.04s.26 0 .39-.04L14 10.21a2.5 2.5 0 0 0 1.75 4.29c.13 0 .25 0 .38-.04l1.63 3.25c-.47.45-.76 1.09-.76 1.79a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-2.5-2.5m-15 3.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1m8.5-1c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1M7.25 12c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1M11 4.5c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1m3.75 7.5c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1m4.75 8.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1"></path></svg></span> Related Concepts</p>
-</li>
-<li>
-<p><a href="matrix.html">Matrix</a></p>
-</li>
-<li><a href="scalar-multiplication.html">Scalar Multiplication</a></li>
+<li><a href="matrix.html">Matrix</a></li>
 <li><a href="field.html">Field</a></li>
+</ul>
+<h2 id="related-concepts"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.5 17c-.14 0-.26 0-.39.04L17.5 13.8c.45-.45.75-1.09.75-1.8a2.5 2.5 0 0 0-2.5-2.5c-.14 0-.25 0-.4.04L13.74 6.3c.47-.46.76-1.09.76-1.8a2.5 2.5 0 0 0-5 0c0 .7.29 1.34.76 1.79L8.65 9.54c-.15-.04-.26-.04-.4-.04a2.5 2.5 0 0 0-2.5 2.5c0 .71.29 1.34.75 1.79l-1.61 3.25C4.76 17 4.64 17 4.5 17a2.5 2.5 0 0 0 0 5A2.5 2.5 0 0 0 7 19.5c0-.7-.29-1.34-.76-1.79l1.62-3.25c.14.04.26.04.39.04s.25 0 .38-.04l1.63 3.25c-.47.45-.76 1.09-.76 1.79a2.5 2.5 0 0 0 5 0A2.5 2.5 0 0 0 12 17c-.13 0-.26 0-.39.04L10 13.8c.45-.45.75-1.09.75-1.8 0-.7-.29-1.33-.75-1.79l1.61-3.25c.13.04.26.04.39.04s.26 0 .39-.04L14 10.21a2.5 2.5 0 0 0 1.75 4.29c.13 0 .25 0 .38-.04l1.63 3.25c-.47.45-.76 1.09-.76 1.79a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-2.5-2.5m-15 3.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1m8.5-1c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1M7.25 12c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1M11 4.5c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1m3.75 7.5c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1m4.75 8.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1"></path></svg></span> Related Concepts<a class="headerlink" href="#related-concepts" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="scalar-multiplication.html">Scalar Multiplication</a></li>
 <li><a href="matrix-addition.html">Matrix Addition</a></li>
 <li><a href="vector-space.html">Vector Space</a></li>
 </ul>
@@ -6859,9 +2643,10 @@ html body article.md-content__inner h1 .katex:not(:first-child),html body articl
 <li>Math II: Linear Algebra · Week 3</li>
 </ul>
 <p><span class="search-aliases" data-nosnippet="">
-Aliases: Matrix Scalar Multiplication
+Aliases: scalar multiplication of matrices, scalar multiple of a matrix
+Symbols: alpha
 </span></p>
-<p class="mk-last-updated">Last updated: 7 June 2026 13:38</p>
+<p class="mk-last-updated">Last updated: 22 June 2026 13:52</p>
 </article>
 </div>
 <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
@@ -6877,7 +2662,7 @@ Aliases: Matrix Scalar Multiplication
 <div class="md-footer-meta__inner md-grid">
 <div class="md-copyright">
 <div class="md-copyright__highlight">
-      Copyright © 2026 BSc EOR Wiki.<br/> Maintained by the BSc EOR teaching team.
+      Copyright © 2026 BSc EOR Wiki / BSc EOR teaching team. All rights reserved.<br/> Materials may be viewed for personal study and internal teaching purposes only.<br/> Original teaching materials, examples, diagrams, website structure, custom code, configuration and deployment workflow may not be copied, redistributed, scraped, adapted or reused without prior written permission.<br/> Third-party software remains governed by its own licences.
 
     </div>
   
@@ -6894,39 +2679,29 @@ Aliases: Matrix Scalar Multiplication
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "toc.follow", "search.suggest", "search.share", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.prune", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "toc.follow", "search.suggest", "search.share", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
 <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-<script src="../../javascripts/link-math-underline.js?h=8d6308998e19"></script>
-<script src="../../javascripts/sidebar-nav-sort.js?h=0a96e1375f56"></script>
-<script src="../../javascripts/motion-toggle.js?h=a76e7e3d951d"></script>
-<script src="../../javascripts/ui-guard.js?h=d436502c0288"></script>
-<script src="../../javascripts/fuzzy-core.js?h=57e2900b0532"></script>
-<script src="../../javascripts/mathjax.js?h=fe20f2c4b558"></script>
-<script src="../../javascripts/preload-guard.js?h=17d6409f0031"></script>
-<script src="../../javascripts/mastery-manager.js?h=a29f5cb7c58b"></script>
-<script src="../../javascripts/concept-mastery.js?h=5a8932a8da4e"></script>
-<script src="../../javascripts/ai-mcq-config.js?h=494b2edf6265"></script>
-<script src="../../javascripts/ai-mcq-quiz.js?h=994afd8864e2"></script>
-<script src="../../javascripts/mastery-widget.js?h=0937c3fc7bb2"></script>
-<script src="../../javascripts/learning-path.js?h=4ede5454e1d6"></script>
-<script src="../../javascripts/random.js?h=9027f0fa3c0f"></script>
-<script src="../../javascripts/random-tabs.js?h=aaac9c1ce7ed"></script>
-<script src="../../javascripts/search-enter.js?h=89da1c3477fb"></script>
-<script src="../../javascripts/search-results.js?h=7625dea2f481"></script>
-<script src="../../javascripts/search-filter.js?h=c2f8bfd1c707"></script>
-<script src="../../javascripts/find-builder.js?h=e3dde4205e5c"></script>
-<script src="../../javascripts/header-search-stabilizer.js?h=1024862572b0"></script>
-<script src="../../javascripts/custom-random.js?h=8a140ea7791c"></script>
-<script src="../../javascripts/custom-random-banner.js?h=b3560d8e00a3"></script>
-<script src="../../javascripts/random-fold.js?h=7a6ac401b229"></script>
-<script src="../../javascripts/track-views.js?h=38890c6c46da"></script>
-<script src="../../javascripts/engagement-comments.js?h=84541d186777"></script>
-<script src="../../javascripts/trending.js?h=400b93544d91"></script>
-<script src="../../javascripts/tag-search-links.js?h=d32bcd3c635e"></script>
-<script src="../../javascripts/course-search.js?h=828d3b1af5a1"></script>
-<script src="../../javascripts/search-history.js?h=b62ab1ac6c98"></script>
-<script src="../../javascripts/logo-lightbox.js?h=0b2fec0eb764"></script>
-<script src="../../javascripts/concept-hover-preview.js?h=24fe778a5bb1"></script>
-<script src="../../javascripts/math-scroll-force.js?h=ecf259a80165"></script>
+<script src="../../javascripts/perf-probe.js?h=ea289ef426e5"></script>
+<script src="../../javascripts/startup-preferences.js?h=45704c678cac"></script>
+<script src="../../javascripts/link-math-underline.js?h=e0c3b5c48fa1"></script>
+<script src="../../javascripts/style-shortcuts.js?h=86f8be5c857c"></script>
+<script src="../../javascripts/ui-guard.js?h=d12ed10a371d"></script>
+<script src="../../javascripts/a11y-landmarks.js?h=89016260de57"></script>
+<script src="../../javascripts/sync-status-indicator.js?h=5a99867d99dc"></script>
+<script src="../../javascripts/fuzzy-core.js?h=2104d6f6309d"></script>
+<script src="../../javascripts/search-suggestions.js?h=6d411241d851"></script>
+<script src="../../javascripts/search-history.js?h=8afc9a8bc51d"></script>
+<script src="../../javascripts/header-search-stabilizer.js?h=cdd630b06fd3"></script>
+<script src="../../javascripts/concept-hover-preview.js?h=8347ef71799d"></script>
+<script src="../../javascripts/mathjax.js?h=c15e6455b642"></script>
+<script src="../../javascripts/preload-guard.js?h=8780e35ce892"></script>
+<script src="../../javascripts/random.js?h=916d85556f64"></script>
+<script src="../../javascripts/random-tabs.js?h=0088914bb6d0"></script>
+<script src="../../javascripts/search-enter.js?h=ecfa6b413a1a"></script>
+<script src="../../javascripts/concept-fold.js?h=229ab05b9afd"></script>
+<script src="../../javascripts/tag-search-links.js?h=84cb5c2dd87f"></script>
+<script src="../../javascripts/logo-lightbox.js?h=fda4850b9a41"></script>
+<script src="../../javascripts/wiki-home.js?h=4318a2688b8d"></script>
+<script src="../../javascripts/teaching-workbench.js?h=ba93e7669dd3"></script>
 </body>
 </html>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" fill="none">
+<defs>
+<radialGradient id="ice-haze"><stop stop-color="#acd9ec" stop-opacity=".65"/><stop offset="1" stop-color="#e2f4fc" stop-opacity="0"/></radialGradient>
+<linearGradient id="ice-face" x1="182" y1="159" x2="360" y2="352" gradientUnits="userSpaceOnUse"><stop stop-color="#f5fcff"/><stop offset="1" stop-color="#91c5db"/></linearGradient>
+</defs>
+<ellipse cx="305" cy="250" rx="220" ry="180" fill="url(#ice-haze)"/>
+<path d="M116 335L152 229L202 189L236 213L305 98L353 171L379 148L421 237L470 212L504 326L399 373L277 401L154 374Z" fill="#97c8df" stroke="#a9cddd"/>
+<path d="M152 229L202 189L227 322L116 335Z" fill="#d9f0fa"/>
+<path d="M202 189L236 213L227 322Z" fill="#8cbad0"/>
+<path d="M236 213L305 98L296 313L227 322Z" fill="url(#ice-face)"/>
+<path d="M305 98L353 171L327 280L296 313Z" fill="#75aecb"/>
+<path d="M353 171L379 148L392 319L327 280Z" fill="#c3e4f1"/>
+<path d="M379 148L421 237L392 319Z" fill="#7eafc7"/>
+<path d="M421 237L470 212L450 344L392 319Z" fill="#d3ebf5"/>
+<path d="M470 212L504 326L450 344Z" fill="#84b4cc"/>
+<path d="M116 335L227 322L277 401L154 374Z" fill="#a6d2e5"/>
+<path d="M227 322L296 313L327 280L350 367L277 401Z" fill="#dff2f9"/>
+<path d="M327 280L392 319L450 344L399 373L350 367Z" fill="#5f9cb9"/>
+<g stroke="#ffffff" stroke-width="1.25" stroke-opacity=".84" stroke-linejoin="round">
+<path d="M152 229L202 189L236 213L305 98L353 171L379 148L421 237L470 212"/>
+<path d="M202 189L227 322L277 401M305 98L296 313L277 401M353 171L327 280L350 367M379 148L392 319L399 373M470 212L450 344"/>
+<path d="M135 332L227 322L296 313L327 280L392 319L479 339"/>
+</g>
+<g stroke="#457f9d" stroke-width="1" stroke-opacity=".52"><path d="M254 197L270 230L260 271M314 186L319 224L308 262M369 220L359 252L369 280M166 272L182 298L168 319"/><path d="M268 230L284 236M319 224L332 214"/></g>
+<path d="M140 405L168 397L191 410L162 425Z" fill="#c6e4f0" stroke="#94c0d4"/>
+<path d="M405 402L434 392L459 405L441 427L419 421Z" fill="#dceff7" stroke="#94c0d4"/>
+<path d="M230 428L280 419L311 429L275 440Z" fill="#b2d8e9"/>
+<g stroke="#80abc2" stroke-opacity=".5"><path d="M113 432H213M319 437H385M465 417H494"/><path d="M435 119V100M426 110H444"/></g>
+</svg>
+

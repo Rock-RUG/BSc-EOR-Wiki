@@ -1,0 +1,2816 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="A production-inventory model chooses production Pt and end-of-period stock It to meet known demands dt across periods." name="description"/>
+<link href="https://rock-rug.github.io/BSc-EOR-Wiki/Year-1/1a-OR-Modelling/production-inventory-model.html" rel="canonical"/>
+<link href="price-break-indifference-quantity.html" rel="prev"/>
+<link href="project-longest-path-model.html" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
+<title>Production-Inventory Model - BSc EOR Wiki</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link href="../../stylesheets/fonts-vendor.css?h=6f3b200e55fb" rel="stylesheet"/>
+<link href="../../stylesheets/katex-vendor.css?h=810f682352aa" rel="stylesheet"/>
+<link href="../../stylesheets/katex-fast.css?h=29ac38851d7d" rel="stylesheet"/>
+<link href="../../stylesheets/extra.css?h=1586f375acda" rel="stylesheet"/>
+<link href="../../stylesheets/mastery-widget.css?h=ac9184281879" rel="stylesheet"/>
+<link href="../../stylesheets/find-builder.css?h=68f6090ea745" rel="stylesheet"/>
+<link href="../../stylesheets/course-search.css?h=0e431d40c86d" rel="stylesheet"/>
+<link href="../../stylesheets/course-status.css?h=4224c998406e" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-surfaces.css?h=cb55e64aef1a" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-community.css?h=a283eeb6614f" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-maps.css?h=4e8d335fb9b8" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home.css?h=20b01d119048" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-image.css?h=94ca73b71a65" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-nature.css?h=0c3190e40fe2" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-worlds.css?h=32cb302d13c3" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-home-night.css?h=cbcaf276c44a" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-contributors.css?h=69704a737fb7" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-about.css?h=30c0332cb287" rel="stylesheet"/>
+<link href="../../stylesheets/teaching-workbench.css?h=fa5b92f7fa26" rel="stylesheet"/>
+<link href="../../stylesheets/course-home.css?h=3a41489c7105" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<meta content="website" property="og:type"/>
+<meta content="BSc EOR Wiki" property="og:site_name"/>
+<meta content="Production-Inventory Model - BSc EOR Wiki" property="og:title"/>
+<meta content="A production-inventory model chooses production Pt and end-of-period stock It to meet known demands dt across periods." property="og:description"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/Year-1/1a-OR-Modelling/production-inventory-model.html" property="og:url"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/assets/logo-navbar.png" property="og:image"/>
+<meta content="BSc EOR Wiki logo" property="og:image:alt"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="Production-Inventory Model - BSc EOR Wiki" name="twitter:title"/>
+<meta content="A production-inventory model chooses production Pt and end-of-period stock It to meet known demands dt across periods." name="twitter:description"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/assets/logo-navbar.png" name="twitter:image"/>
+<meta content="BSc EOR Wiki logo" name="twitter:image:alt"/>
+<script id="mk-search-index-network-cache">
+// Material uses XMLHttpRequest before extra_javascript. Let custom search reuse
+// that one index download/parse without changing the native request lifecycle.
+(function () {
+  if (!window.XMLHttpRequest || window.__mkMaterialSearchIndexPromises) return;
+  var pending = window.__mkMaterialSearchIndexPromises = Object.create(null);
+  var original = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (method, input) {
+    var result = original.apply(this, arguments), url;
+    try { url = new URL(input, document.baseURI); } catch (_) { return result; }
+    if (String(method).toUpperCase() !== 'GET' || url.origin !== location.origin || !/\/search\/search_index\.json$/.test(url.pathname)) return result;
+    var xhr = this, key = url.href;
+    var task = new Promise(function (resolve, reject) {
+      xhr.addEventListener('load', function () {
+        if (xhr.status < 200 || xhr.status >= 300) { reject(new Error('Search index unavailable')); return; }
+        try {
+          if (xhr.responseType === 'blob') xhr.response.text().then(JSON.parse).then(resolve, reject);
+          else resolve(xhr.responseType === 'json' ? xhr.response : JSON.parse(xhr.responseText));
+        } catch (error) { reject(error); }
+      }, { once: true });
+      ['error', 'abort', 'timeout'].forEach(function (type) {
+        xhr.addEventListener(type, function () { reject(new Error('Search index unavailable')); }, { once: true });
+      });
+    });
+    pending[key] = task;
+    task.catch(function () { if (pending[key] === task) delete pending[key]; });
+    return result;
+  };
+})();
+</script>
+<link as="font" crossorigin="anonymous" href="../../stylesheets/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="anonymous" href="../../stylesheets/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2"/>
+<!-- Start sidebar metadata early when its feature is enabled. A static preload
+     would still download it in Lite mode, where the sorter has no consumer. -->
+<script id="mk-sidebar-meta-prefetch-v1">
+(function(){
+  var enabled=true;
+  try{var p=JSON.parse(localStorage.getItem("mk_startup_features_v1")||"{}");if(p&&p.sidebarSort===false)enabled=false;}catch(_){}
+  try{var f=window.__mkForcedStartupPrefs;if(f&&typeof f.sidebarSort==="boolean")enabled=f.sidebarSort;}catch(_){}
+  
+  if(!enabled)return;
+  
+  try{var u="../../assets/sidebar/sidebar-meta.json";window.__mkSidebarMetaPromise=fetch(u,{cache:"default",priority:"high"}).then(function(r){return r&&r.ok?r.json():null;}).catch(function(){return null;});}catch(_){}
+})();
+</script>
+<!-- Default opaque status-bar tint so iOS always has a colour to use before the
+     theme-color sync (ui-guard.js) runs; updated live per active interface theme. -->
+<meta content="#3f51b5" name="theme-color"/>
+<script id="mk-startup-prefs-early-v1">
+(function(){
+  // Material removes q when its header search closes. Preserve the explicit
+  // Learning Path handoff before the deferred Finder scripts read the URL.
+  function preserveLpFindToken(){
+    try{
+      var url=new URL(location.href),params=url.searchParams;
+      if(!/\/find(?:\.html|\/(?:index\.html)?)?$/i.test(url.pathname)||params.get("lp_token"))return;
+      var direct=String(params.get("lp_direct")||params.get("fb_direct")||"").trim().toLowerCase();
+      var src=String(params.get("src")||"").trim().toLowerCase();
+      var q=String(params.get("q")||"").trim();
+      if(!q||(direct!=="1"&&direct!=="true"&&src!=="lp_direct"&&src!=="learning_path"))return;
+      params.set("lp_token",q);
+      history.replaceState(history.state,"",url.toString());
+    }catch(_){}
+  }
+  preserveLpFindToken();
+  document.addEventListener("DOMContentSwitch",preserveLpFindToken,true);
+  var KEY="mk_startup_features_v1";
+  var DEFAULTS={account:true,learningPath:true,mastery:true,aiQuiz:true,sidebarSort:true};
+  function kebab(k){return String(k||"").replace(/[A-Z]/g,function(m){return "-"+m.toLowerCase();});}
+  function prefs(){try{var o=JSON.parse(localStorage.getItem(KEY)||"{}")||{};return Object.assign({},DEFAULTS,o&&typeof o==="object"&&!Array.isArray(o)?o:{});}catch(_){return Object.assign({},DEFAULTS);}}
+  function enabled(k,p){p=p||prefs();if(k==="aiQuiz"&&p.mastery===false)return false;return p[k]!==false;}
+  function clearTheme(r){try{["data-mk-theme-mode","data-mk-interface-theme","data-mk-image-interface-theme","data-mk-img-hdr-clip","data-mk-public-profile-theme","data-mk-public-profile-theme-item","data-mk-header-skin","data-mk-search-box-effect","data-mk-page-effect","data-mk-dropdown-skin","data-mk-page-pattern","data-mk-profile-frame","data-mk-profile-background","data-mk-header-font","data-mk-body-font","data-mk-comment-effect","data-mk-finder-effect","data-mk-finder-builder-panel","data-mk-finder-builder-buttons","data-mk-finder-builder-tokens","data-mk-sidepanel-surface","data-mk-sidepanel-cards","data-mk-sidepanel-links","data-mk-ranking-effect","data-mk-map-effect","data-mk-map-animation","data-mk-mastery-effect-mastered","data-mk-mastery-effect-clear","data-mk-mastery-button-style","data-mk-mastery-background","data-mk-mastery-border","data-mk-connections-panel","data-mk-connections-sections","data-mk-connections-links","data-mk-nameplate-style","data-mk-reaction-effect","data-mk-reading-progress","data-mk-bookmark-effect","data-mk-quiz-celebration","data-mk-concept-card-skin","data-mk-sidebar-skin","data-mk-notification-skin","data-mk-sound-pack","data-mk-bgm-track"].forEach(function(a){r.removeAttribute(a);});["--mk-image-theme-header-image","--mk-image-theme-bg-image","--mk-image-theme-header-position","--mk-image-theme-bg-position","--mk-image-theme-header-blur","--mk-image-theme-bg-blur","--mk-image-theme-header-overlay","--mk-image-theme-bg-opacity","--mk-image-theme-seam-height","--mk-image-theme-seam-opacity","--mk-image-theme-seam-blur","--mk-image-theme-seam-saturate","--mk-image-theme-menu-bg","--mk-image-theme-menu-hover","--mk-image-theme-menu-border","--mk-image-theme-menu-accent","--mk-image-theme-header-stack-height","--mk-image-theme-header-self-height","--mk-image-theme-tabs-offset","--mk-active-page-bg","--mk-theme-sidebar-bg","--mk-theme-sticky-floor","--mk-theme-sidebar-card-bg","--mk-theme-sidebar-card-bg-hover","--mk-theme-sidebar-border","--mk-image-card-bg","--mk-image-card-bg-hover","--mk-image-card-border","--msb-sidebar-page-bg","--msb-sidebar-page-background","--msb-card-bg","--msb-card-bg-hover","--msb-card-border","--msb-card-border-strong","--md-primary-fg-color","--md-accent-fg-color"].forEach(function(n){r.style.removeProperty(n);});}catch(_){}}
+  function apply(){var p=prefs(),r=document.documentElement;["account","learningPath","mastery","aiQuiz","sidebarSort"].forEach(function(k){var on=enabled(k,p),slug=kebab(k);r.classList.toggle("mk-startup-"+slug+"-off",!on);r.classList.toggle("mk-startup-"+slug+"-on",on);try{r.setAttribute("data-mk-startup-"+slug,on?"on":"off");}catch(_){}});if(!enabled("account",p))clearTheme(r);window.__mkStartupFeatureEnabled=function(k){return enabled(k,prefs());};}
+  apply();
+})();
+</script>
+<script id="mk-unified-first-paint-gate-v12-fast-release">
+(function(){
+  var root=document.documentElement;
+  var id=0,timer=0,hard=0,start=0,lastReason="",forceTopThisBoot=false,userInteracted=false,lastScrollSig="",stableScrollFrames=0,topTimers=[];
+  function ensureCover(){try{var d=document.getElementById("mk-first-paint-cover");if(!d){d=document.createElement("div");d.id="mk-first-paint-cover";d.setAttribute("aria-hidden","true");(document.body||document.documentElement).appendChild(d);}return d;}catch(_){return null;}}
+  function removeCoverSoon(){try{setTimeout(function(){var d=document.getElementById("mk-first-paint-cover");if(d&&d.parentNode)d.parentNode.removeChild(d);},90);}catch(_){}}
+  function now(){return (window.performance&&performance.now)?performance.now():Date.now();}
+  function cancelTopTimers(){try{topTimers.forEach(function(t){clearTimeout(t);});topTimers=[];}catch(_){}}
+  function shouldForceTop(reason){try{if(location.hash)return false;var r=String(reason||"");if(r==="popstate"||r==="pageshow")return false;return true;}catch(_){return true;}}
+  function scrollTopValue(){try{var se=document.scrollingElement||document.documentElement;return Math.max(window.pageYOffset||0,document.documentElement.scrollTop||0,document.body?document.body.scrollTop||0:0,se?se.scrollTop||0:0);}catch(_){return window.pageYOffset||0;}}
+  function forceTopNow(){if(!forceTopThisBoot||userInteracted)return;try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(_){}try{var se=document.scrollingElement||document.documentElement;if(se)se.scrollTop=0;document.documentElement.scrollTop=0;if(document.body)document.body.scrollTop=0;window.scrollTo(0,0);}catch(_){}}
+  function armTopFix(){cancelTopTimers();if(!forceTopThisBoot)return;[0,8,16,32,64,120,220].forEach(function(ms){topTimers.push(setTimeout(forceTopNow,ms));});}
+  function viewportSig(){try{var vv=window.visualViewport;var y=Math.round(scrollTopValue());var oy=vv?Math.round(vv.offsetTop||0):0;var h=vv?Math.round(vv.height||0):Math.round(window.innerHeight||0);var w=vv?Math.round(vv.width||0):Math.round(window.innerWidth||0);return y+":"+oy+":"+h+":"+w;}catch(_){return String(Math.round(scrollTopValue()));}}
+  function viewportStable(ms){try{if(!forceTopThisBoot)return true;forceTopNow();var y=scrollTopValue();var sig=viewportSig();if(sig===lastScrollSig)stableScrollFrames+=1;else{lastScrollSig=sig;stableScrollFrames=0;}if(y>1&&ms<360)return false;return stableScrollFrames>=2||ms>180;}catch(_){return true;}}
+  function cleanPath(){try{return location.pathname.replace(/^\/+/,"").replace(/\/index\.html$/i,"/").replace(/\/+$/,"");}catch(_){return "";}}
+  function isFind(){try{var p=cleanPath().toLowerCase();return p==="find"||p.endsWith("/find")||p.endsWith("/find.html")||p.endsWith("/find/index.html");}catch(_){return false;}}
+  function markKind(){try{root.classList.toggle("mk-find-page",isFind());}catch(_){} }
+  function concept(){try{var p=cleanPath();var a=p.split("/").filter(Boolean);if(a.length<3)return false;var x=(a[a.length-1]||"").toLowerCase().replace(/\.html$/i,"");return x&&!/^(index|find|search|tags|trending|random|custom-random|home|about)$/.test(x)&&!/^random-\d/.test(x);}catch(_){return false;}}
+  function tabsReady(){try{if(!document.querySelector(".md-tabs__list"))return true;return !!(document.getElementById("year-dropdown")&&document.getElementById("random-dropdown")&&document.querySelector(".md-tabs__item.random-right-start"));}catch(_){return false;}}
+  function shellReady(){try{return !!document.querySelector(".md-container,.md-main,.md-content");}catch(_){return false;}}
+  function isDesktopSidebar(){try{return !!(window.matchMedia&&window.matchMedia("(min-width: 960px)").matches);}catch(_){return false;}}
+  function shouldGateDesktopSidebar(ms){try{if(!concept())return false;if(!isDesktopSidebar())return false;var s=document.querySelector(".md-sidebar--primary");if(s)return true;return ms<720;}catch(_){return false;}}
+  function motionReady(ms){try{var h=document.querySelector(".md-header");if(!h)return true;var w=document.getElementById("mk-site-motion-toggle");return !!(w&&w.classList.contains("is-ready"))||ms>220;}catch(_){return true;}}
+  function startupOn(k){try{return !window.__mkStartupFeatureEnabled||window.__mkStartupFeatureEnabled(k)!==false;}catch(_){return true;}}
+  function sidebarReady(ms){try{if(!shouldGateDesktopSidebar(ms)||!startupOn("sidebarSort"))return true;var s=document.querySelector(".md-sidebar--primary");if(!s)return ms>420;if(!root.classList.contains("mk-sidebar-sort-ready"))return ms>420;return root.classList.contains("mk-sidebar-sort-centered")||ms>420;}catch(_){return ms>420;}}
+  function masteryReady(c,ms){if(!c||!startupOn("mastery"))return true;try{return !!(document.getElementById("mw-mastery")||document.getElementById("mw-mastery-compact")||document.querySelector(".mw-title-menu")||window.__mkMasteryWidgetReadyRel===location.pathname)||ms>360;}catch(_){return ms>460;}}
+  function lpReady(c,ms){if(!c||!startupOn("learningPath"))return true;try{return !!(document.getElementById("lp-side-panel")||document.getElementById("lp-mobile-sheet")||window.__lpLastRenderedRel||window.__mkLearningPathReadyRel===location.pathname)||ms>390;}catch(_){return ms>520;}}
+  function findReady(ms){if(!isFind())return true;try{var fb=document.getElementById("find-builder");var form=document.getElementById("search-form");return !!(fb&&form&&(root.classList.contains("mk-find-ready")||window.__fbReadyV1||window.__fbReadyDispatchedV1))||ms>430;}catch(_){return ms>430;}}
+  function isHeaderSearchActive(){try{var ae=document.activeElement,t=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search'),s=document.querySelector('.md-header .md-search'),b=document.body;return !!((t&&t.checked)||(ae&&ae.closest&&ae.closest('.md-header .md-search'))||(s&&s.classList&&s.classList.contains('md-search--active'))||(s&&s.getAttribute&&s.getAttribute('data-mk-search-force-active')==='1')||root.classList.contains('md-search--active')||root.classList.contains('mk-hsf-open')||(b&&b.classList&&b.classList.contains('md-search--active')));}catch(_){return false;}}
+  function clearFindFx(){try{var r=document.getElementById("search-results");if(r)r.classList.remove("fb-preblur");var fb=document.getElementById("find-builder");if(fb)fb.classList.remove("fb-dream-active","fb-undo-bump","fb-redo-bump");document.querySelectorAll("#search-results .csr-cols,#search-results .csr-list,#search-results .csr-foot,#find-builder .fb-board,#find-builder .fb-hint").forEach(function(el){el.style.filter="";el.style.opacity="";el.style.transform="";el.classList.remove("fb-hint--pending","fb-hint--reveal");});}catch(_){} }
+  function clearFindSearchResidue(){if(!isFind())return;clearFindFx();var active=isHeaderSearchActive();root.classList.toggle("mk-header-search-open",!!active);if(active)return;try{var toggle=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search');if(toggle)toggle.checked=false;document.querySelectorAll('.md-header .md-search.md-search--active').forEach(function(el){el.classList.remove('md-search--active');});root.classList.remove('md-search--active');if(document.body)document.body.classList.remove('md-search--active');document.querySelectorAll('.md-header .md-search__output,.md-header .md-search__overlay,.md-header .mk-search-history,.md-header .mk-search-suggest').forEach(function(el){try{el.style.display='none';el.style.pointerEvents='none';el.style.opacity='0';el.setAttribute('aria-hidden','true');}catch(_){}});var bd=document.getElementById('mk-mobile-search-backdrop');if(bd){bd.dataset.mkFindHidden='1';bd.style.display='none';bd.style.opacity='0';bd.style.backdropFilter='none';bd.style.webkitBackdropFilter='none';}}catch(_){} }
+  function blank(reason){markKind();ensureCover();lastReason=reason||"";userInteracted=false;forceTopThisBoot=shouldForceTop(lastReason);lastScrollSig="";stableScrollFrames=0;clearFindSearchResidue();forceTopNow();armTopFix();root.classList.remove("mk-app-ready","mk-first-paint-release","mk-tabs-ready","mk-sidebar-sort-centered");root.classList.add("mk-app-booting","mk-nav-pending","mk-startup-no-motion","mk-tabs-boot","mk-sidebar-sort-boot","mk-scroll-stabilizing");if(reason==="find"||isFind())root.classList.add("mk-find-booting","mk-find-entering");}
+  function revealCommit(n){if(n!==id)return;clearFindSearchResidue();forceTopNow();markKind();root.classList.add("mk-app-ready","mk-first-paint-release","mk-tabs-ready");removeCoverSoon();root.classList.remove("mk-app-booting","mk-nav-pending","mk-tabs-boot","mk-sidebar-sort-boot","mk-find-booting","mk-find-entering","mk-scroll-stabilizing");forceTopNow();setTimeout(forceTopNow,0);setTimeout(forceTopNow,60);setTimeout(function(){if(n===id){root.classList.remove("mk-startup-no-motion","mk-first-paint-release");cancelTopTimers();}},90);}
+  /* revealCommit is idempotent (class add/remove + cover removal), so the paths
+     below may race safely. A HIDDEN tab never paints, so requestAnimationFrame
+     never fires in it and the reveal never ran: #mk-first-paint-cover is an
+     opaque full-screen layer at z-index 2147483647, so a page opened in a
+     background tab stayed blank until it was focused - and then had to reveal
+     AND run the whole deferred script burst at once. Commit straight away when
+     there is no paint to wait for, and keep a timer fallback for tabs that are
+     visible but rAF-throttled. */
+  function reveal(n){if(n!==id)return;clearTimeout(timer);clearTimeout(hard);clearFindSearchResidue();forceTopNow();if(document.hidden){revealCommit(n);return;}requestAnimationFrame(function(){forceTopNow();requestAnimationFrame(function(){revealCommit(n);});});setTimeout(function(){revealCommit(n);},400);}
+  function probe(n){if(n!==id)return;markKind();clearFindSearchResidue();var ms=now()-start;if(ms>=18&&shellReady()&&tabsReady()&&sidebarReady(ms)&&motionReady(ms)&&findReady(ms)&&viewportStable(ms))return reveal(n);clearTimeout(timer);timer=setTimeout(function(){probe(n);},16);}
+  function boot(reason){markKind();id++;start=now();clearTimeout(timer);clearTimeout(hard);blank(reason);var n=id;timer=setTimeout(function(){probe(n);},0);hard=setTimeout(function(){hardRevealWhenSafe(n);},isFind()?500:480);}
+  function hardRevealWhenSafe(n){if(n!==id)return;var ms=now()-start;if(shouldGateDesktopSidebar(ms)&&!sidebarReady(ms)&&ms<650){clearTimeout(hard);hard=setTimeout(function(){hardRevealWhenSafe(n);},50);return;}reveal(n);}
+  function releaseForInteraction(e){try{if(e&&e.isTrusted===false)return;userInteracted=true;forceTopThisBoot=false;cancelTopTimers();if(root.classList.contains("mk-app-booting"))reveal(id);}catch(_){}}
+  function searchTarget(t){try{if(t&&t.closest&&t.closest(".mk-page-comments, .mk-comment-form, .mk-comment-composer"))return false;return !!(t&&t.closest&&t.closest(".md-header .md-search, .md-search, label[for='__search'], input#__search, input[data-md-component='search-query'], form"));}catch(_){return false;}}
+  document.addEventListener("submit",function(e){if(searchTarget(e&&e.target))boot("find");},true);
+  document.addEventListener("keydown",function(e){if(e&&e.key==="Enter"&&searchTarget(e.target))boot("find");},true);
+  window.addEventListener("find:autofill",function(){boot("find");},true);
+  try{["pushState","replaceState"].forEach(function(k){var orig=history[k];if(!orig||orig.__mkGateWrappedV8)return;var wrapped=function(){var ret=orig.apply(this,arguments);setTimeout(function(){markKind();if(isFind())boot("history-find");else probe(id);},0);return ret;};wrapped.__mkGateWrappedV8=true;history[k]=wrapped;});}catch(_){}
+  window.__mkUnifiedFirstPaintStart=boot;window.__mkUnifiedFirstPaintBlank=function(reason){boot(reason||"manual")};window.__mkUnifiedFirstPaintProbe=function(){probe(id)};window.__mkClearFindSearchResidue=clearFindSearchResidue;
+  ["wheel","touchstart","pointerdown"].forEach(function(e){window.addEventListener(e,releaseForInteraction,{passive:true,capture:true});});window.addEventListener("keydown",function(e){if(e&&/^(ArrowDown|ArrowUp|PageDown|PageUp|Home|End| )$/.test(String(e.key||"")))releaseForInteraction(e);},true);
+  ["mk:random-tabs-ready","mk:sidebar-sort-done","mk:sidebar-sort-rendered","mk:sidebar-sort-centered","mk:mastery-widget-ready","mk:learning-path-ready","mk:site-motion-change","mk:motionchange","fb:ready"].forEach(function(e){window.addEventListener(e,function(){probe(id);},true);});
+  boot("initial");document.addEventListener("DOMContentLoaded",function(){probe(id);},{once:true});document.addEventListener("DOMContentSwitch",function(){boot("switch");});window.addEventListener("pageshow",function(e){if(e&&e.persisted)boot("pageshow");else probe(id);},{passive:true});window.addEventListener("popstate",function(){boot("popstate");},{passive:true});[0,60,160,340,700,1200,1800].forEach(function(ms){setTimeout(clearFindSearchResidue,ms);});
+})();
+</script>
+<style id="mk-unified-first-paint-css-v12-fast-release">
+html.mk-app-booting,html.mk-app-booting body{background:var(--md-default-bg-color,#fff)!important;overflow-anchor:none!important;scroll-behavior:auto!important;overscroll-behavior:none!important}
+html.mk-app-booting::before,html.mk-app-booting body::before,#mk-first-paint-cover{content:"";position:fixed!important;top:calc(-1 * env(safe-area-inset-top,0px) - 120px)!important;left:calc(-1 * env(safe-area-inset-left,0px) - 120px)!important;right:calc(-1 * env(safe-area-inset-right,0px) - 120px)!important;bottom:calc(-1 * env(safe-area-inset-bottom,0px) - 80vh)!important;min-height:calc(100dvh + 80vh + env(safe-area-inset-bottom,0px) + 240px)!important;z-index:2147483647!important;background:var(--md-default-bg-color,#fff)!important;pointer-events:none!important;display:block!important;visibility:visible!important;opacity:1!important;transform:translateZ(0)!important;contain:paint!important}
+html.mk-app-booting .md-header,html.mk-app-booting .md-tabs{visibility:hidden!important;opacity:0!important}
+html.mk-app-booting .md-container,html.mk-app-booting .md-main,html.mk-app-booting .md-content,html.mk-app-booting .md-sidebar,html.mk-app-booting .md-footer,html.mk-app-booting .md-dialog,html.mk-app-booting .md-search{visibility:hidden!important;opacity:0!important;transition:none!important;animation:none!important;overflow-anchor:none!important}
+html.mk-app-ready #mk-first-paint-cover,html:not(.mk-app-booting) #mk-first-paint-cover{display:none!important;opacity:0!important;visibility:hidden!important}
+html.mk-startup-no-motion *,html.mk-startup-no-motion *:before,html.mk-startup-no-motion *:after,html.mk-first-paint-release *,html.mk-first-paint-release *:before,html.mk-first-paint-release *:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+#find-builder.fb-dream-active .fb-board,#search-results.fb-preblur,#search-results.fb-preblur .csr-cols,#search-results.fb-preblur .csr-list,#search-results.fb-preblur .csr-foot,html.mk-find-page #find-builder .fb-board,html.mk-find-page #search-results .csr-cols,html.mk-find-page #search-results .csr-list,html.mk-find-page #search-results .csr-foot,html.mk-find-page .fb-hint--pending{filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;opacity:1!important;transform:none!important;transition:none!important;animation:none!important}
+html.mk-find-page:not(.mk-header-search-open) #mk-mobile-search-backdrop{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important;pointer-events:none!important}
+html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .md-search__overlay,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .md-search__output,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .mk-search-history,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .mk-search-suggest{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;pointer-events:none!important}
+html.rk-preload .md-header,html.rk-loading .md-header,html:not(.rk-ready) .md-header,html.rk-preload .md-tabs,html.rk-loading .md-tabs,html:not(.rk-ready) .md-tabs,html.rk-preload .md-container,html.rk-loading .md-container,html:not(.rk-ready) .md-container,html.rk-preload .md-main,html.rk-loading .md-main,html.rk-preload .md-content,html.rk-loading .md-content{opacity:1!important;visibility:visible!important;pointer-events:auto!important;animation:none!important;transition:none!important}
+.md-tabs__list{justify-content:flex-start}.md-tabs__list>.md-tabs__item.random-right-start{margin-left:auto}.md-tab-dropdown-panel{position:fixed;z-index:9999;display:none}.md-tab-dropdown-panel.open{display:block}.md-tabs__link.md-tab-dropdown,.md-tabs__link-btn.md-tab-dropdown-btn{display:inline-flex;align-items:center}.md-tabs__link-btn.md-tab-dropdown-btn{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0}.md-tab-dropdown-btn .rd-icon{display:inline-flex;align-items:center;justify-content:center;color:currentColor}
+html body article.md-content__inner h1 .arithmatex-inline,html body article.md-content__inner h1 .arithmatex-prerendered,html body article.md-content__inner h1 mjx-container,html body article.md-content__inner h1 .MathJax,html body article.md-content__inner h1 .katex{margin-left:0!important;margin-right:0!important}
+html body article.md-content__inner h1 .katex:not(:first-child),html body article.md-content__inner h1 mjx-container:not(:first-child),html body article.md-content__inner h1 .MathJax:not(:first-child){margin-left:0!important}
+</style>
+<script id="mk-ios-drawer-vv-gap-v1">
+(function(){
+  var frame=0;
+  var drawer=null;
+  var overlay=null;
+  var lastGap=-1;
+
+  function findDrawer(){
+    try{
+      if(drawer&&drawer.isConnected)return drawer;
+      var next=document.querySelector('input.md-toggle[data-md-toggle="drawer"], input#__drawer, #__drawer');
+      if(next===drawer)return drawer;
+      if(drawer)drawer.removeEventListener('change',onDrawerChange);
+      drawer=next||null;
+      if(drawer)drawer.addEventListener('change',onDrawerChange,{passive:true});
+      return drawer;
+    }catch(_){return null;}
+  }
+
+  function drawerOpen(){
+    var input=findDrawer();
+    return !!(input&&input.checked);
+  }
+
+  function findOverlay(){
+    try{
+      if(overlay&&overlay.isConnected)return overlay;
+      var next=document.querySelector('.md-overlay');
+      if(next!==overlay){overlay=next||null;lastGap=-1;}
+      return overlay;
+    }catch(_){return null;}
+  }
+
+  function syncNow(){
+    frame=0;
+    if(!drawerOpen())return;
+    try{
+      var vv = window.visualViewport;
+      var gap = 0;
+      if (vv) {
+        gap = Math.max(0, Math.round((window.innerHeight || 0) - (vv.height || 0) - (vv.offsetTop || 0)));
+      }
+      var target=findOverlay();
+      if(!target||gap===lastGap)return;
+      lastGap=gap;
+      target.style.setProperty('--mk-ios-vv-bottom-gap',gap+'px');
+    }catch(_){}
+  }
+
+  function schedule(){
+    if(!drawerOpen()||frame)return;
+    frame=window.requestAnimationFrame(syncNow);
+  }
+
+  function onDrawerChange(){
+    if(drawer&&drawer.checked)syncNow();
+  }
+
+  function refresh(){
+    findDrawer();
+    findOverlay();
+    schedule();
+  }
+
+  refresh();
+  window.addEventListener('resize', schedule, {passive:true});
+  window.addEventListener('orientationchange', schedule, {passive:true});
+  window.addEventListener('pageshow', refresh, {passive:true});
+  document.addEventListener('DOMContentLoaded', refresh, {once:true});
+  document.addEventListener('DOMContentSwitch', refresh);
+  try{
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', schedule, {passive:true});
+      window.visualViewport.addEventListener('scroll', schedule, {passive:true});
+    }
+  }catch(_){}
+})();
+</script>
+<style id="mk-ios-drawer-overlay-clip-v1">
+@media (max-width: 76.1875em), (pointer: coarse) {
+  /* iOS Safari drawer fix, conservative version.
+     Do not change the drawer itself. Keep the overlay as the outside-tap
+     closer, but stop it before Safari's dynamic bottom toolbar area.
+     The forgiving :is() list preserves the sibling fallback on Safari versions
+     that do not support :has(); an ordinary comma list would be discarded. */
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--mk-ios-vv-bottom-gap, 0px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay)::before,
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay)::after {
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+}
+</style>
+</head>
+<body data-md-color-accent="teal" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#production-inventory-model">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="BSc EOR Wiki" class="md-header__button md-logo" data-md-component="logo" href="../../index.html" title="BSc EOR Wiki">
+<img alt="logo" src="../../assets/logo-navbar.svg"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            BSc EOR Wiki
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Production-Inventory Model
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+</label>
+<input aria-label="Switch to custom theme" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to custom theme">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="custom" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog" aria-label="Search the wiki">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Site sections" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../index.html">
+        
+  
+  
+    
+  
+  BSc EOR Wiki
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../bgm-credits.html">
+        
+  
+  
+    
+  
+  Background music credits
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../custom-random.html">
+        
+  
+  
+    
+  
+  Concept Finder
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../trending.html">
+        
+  
+  
+    
+  
+  Rankings
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../index.html">
+          
+  
+  
+    
+  
+  Year 1
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../Year-2/index.html">
+          
+  
+  
+    
+  
+  Year 2
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../random.html">
+        
+  
+  
+    
+  
+  Random
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Courses and concepts" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="BSc EOR Wiki" class="md-nav__button md-logo" data-md-component="logo" href="../../index.html" title="BSc EOR Wiki">
+<img alt="logo" src="../../assets/logo-navbar.svg"/>
+</a>
+    BSc EOR Wiki
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../index.html">
+<span class="md-ellipsis">
+    
+  
+    BSc EOR Wiki
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../bgm-credits.html">
+<span class="md-ellipsis">
+    
+  
+    Background music credits
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../custom-random.html">
+<span class="md-ellipsis">
+    
+  
+    Concept Finder
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../trending.html">
+<span class="md-ellipsis">
+    
+  
+    Rankings
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../index.html">
+<span class="md-ellipsis">
+    
+  
+    Year 1
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Year 1
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../1a-Introduction-to-Data-Analytics/index.html">
+<span class="md-ellipsis">
+    
+  
+    Introduction to Data Analytics
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../1a-Math-I-Calculus/index.html">
+<span class="md-ellipsis">
+    
+  
+    Math I: Calculus
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="index.html">
+<span class="md-ellipsis">
+    
+  
+    OR Modelling
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    OR Modelling
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="algorithm.html">
+<span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="ambulance-location-model.html">
+<span class="md-ellipsis">
+    
+  
+    Ambulance Location Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="artificial-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Artificial Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="assignment-cost-transformation.html">
+<span class="md-ellipsis">
+    
+  
+    Assignment Cost Transformation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="assignment-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Assignment Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="augmented-form.html">
+<span class="md-ellipsis">
+    
+  
+    Augmented Form
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="augmenting-path-algorithm.html">
+<span class="md-ellipsis">
+    
+  
+    Augmenting Path Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="augmenting-path.html">
+<span class="md-ellipsis">
+    
+  
+    Augmenting Path
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="basic-feasible-solution.html">
+<span class="md-ellipsis">
+    
+  
+    Basic Feasible Solution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="basic-solution.html">
+<span class="md-ellipsis">
+    
+  
+    Basic Solution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="basic-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Basic Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="bin-packing-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Bin Packing Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="binary-integer-program.html">
+<span class="md-ellipsis">
+    
+  
+    Binary Integer Program
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="binary-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Binary Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="bipartite-matching.html">
+<span class="md-ellipsis">
+    
+  
+    Bipartite Matching
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="branch-and-bound-pruning.html">
+<span class="md-ellipsis">
+    
+  
+    Branch-and-Bound Pruning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="branch-and-bound.html">
+<span class="md-ellipsis">
+    
+  
+    Branch-and-Bound
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="bus-scheduling-model.html">
+<span class="md-ellipsis">
+    
+  
+    Bus Scheduling Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="capacity-expansion-model.html">
+<span class="md-ellipsis">
+    
+  
+    Capacity Expansion Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="chinese-postman-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Chinese Postman Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="classical-eoq-model.html">
+<span class="md-ellipsis">
+    
+  
+    Classical EOQ Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="connected-network.html">
+<span class="md-ellipsis">
+    
+  
+    Connected Network
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="constraint.html">
+<span class="md-ellipsis">
+    
+  
+    Constraint
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="contingent-decisions.html">
+<span class="md-ellipsis">
+    
+  
+    Contingent Decisions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="continuous-newsvendor-rule.html">
+<span class="md-ellipsis">
+    
+  
+    Continuous Newsvendor Rule
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="convex-combination-of-optimal-solutions.html">
+<span class="md-ellipsis">
+    
+  
+    Convex Combination of Optimal Solutions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="corner-point-optimality.html">
+<span class="md-ellipsis">
+    
+  
+    Corner Point Optimality
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="corner-point.html">
+<span class="md-ellipsis">
+    
+  
+    Corner Point
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="critical-ratio.html">
+<span class="md-ellipsis">
+    
+  
+    Critical Ratio
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="cycle.html">
+<span class="md-ellipsis">
+    
+  
+    Cycle
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="decision-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Decision Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="degeneracy.html">
+<span class="md-ellipsis">
+    
+  
+    Degeneracy
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="diet-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Diet Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="dijkstra-prim-method.html">
+<span class="md-ellipsis">
+    
+  
+    Dijkstra-Prim Method
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="directed-network.html">
+<span class="md-ellipsis">
+    
+  
+    Directed Network
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="discrete-newsvendor-rule.html">
+<span class="md-ellipsis">
+    
+  
+    Discrete Newsvendor Rule
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="dummy-assignment.html">
+<span class="md-ellipsis">
+    
+  
+    Dummy Assignment
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="dynamic-lot-size-model.html">
+<span class="md-ellipsis">
+    
+  
+    Dynamic Lot-Size Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="dynamic-programming.html">
+<span class="md-ellipsis">
+    
+  
+    Dynamic Programming
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="economic-order-quantity.html">
+<span class="md-ellipsis">
+    
+  
+    Economic Order Quantity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="effective-lead-time.html">
+<span class="md-ellipsis">
+    
+  
+    Effective Lead Time
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="either-or-constraints.html">
+<span class="md-ellipsis">
+    
+  
+    Either-Or Constraints
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="entering-variable-rule.html">
+<span class="md-ellipsis">
+    
+  
+    Entering Variable Rule
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="eoq-with-lead-times.html">
+<span class="md-ellipsis">
+    
+  
+    EOQ with Lead Times
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="eoq-with-planned-shortages.html">
+<span class="md-ellipsis">
+    
+  
+    EOQ with Planned Shortages
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="eoq-with-price-breaks.html">
+<span class="md-ellipsis">
+    
+  
+    EOQ with Price Breaks
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="euclidean-network.html">
+<span class="md-ellipsis">
+    
+  
+    Euclidean Network
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="euler-network-characterization.html">
+<span class="md-ellipsis">
+    
+  
+    Euler Network Characterization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="euler-tour-algorithm.html">
+<span class="md-ellipsis">
+    
+  
+    Euler Tour Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="euler-tour.html">
+<span class="md-ellipsis">
+    
+  
+    Euler Tour
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="excel-sensitivity-report.html">
+<span class="md-ellipsis">
+    
+  
+    Excel Sensitivity Report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="excel-solver-for-linear-programming.html">
+<span class="md-ellipsis">
+    
+  
+    Excel Solver for Linear Programming
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="feasible-region.html">
+<span class="md-ellipsis">
+    
+  
+    Feasible Region
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="feasible-solution.html">
+<span class="md-ellipsis">
+    
+  
+    Feasible Solution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="finite-value-constraint.html">
+<span class="md-ellipsis">
+    
+  
+    Finite-Value Constraint
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="first-fit-heuristic.html">
+<span class="md-ellipsis">
+    
+  
+    First-Fit Heuristic
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="forbidden-assignment.html">
+<span class="md-ellipsis">
+    
+  
+    Forbidden Assignment
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="giapetto-production-model.html">
+<span class="md-ellipsis">
+    
+  
+    Giapetto Production Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="graphical-integer-programming.html">
+<span class="md-ellipsis">
+    
+  
+    Graphical Integer Programming
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="graphical-method.html">
+<span class="md-ellipsis">
+    
+  
+    Graphical Method
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="heuristic.html">
+<span class="md-ellipsis">
+    
+  
+    Heuristic
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="holding-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Holding Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="hungarian-algorithm.html">
+<span class="md-ellipsis">
+    
+  
+    Hungarian Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="incumbent-solution.html">
+<span class="md-ellipsis">
+    
+  
+    Incumbent Solution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="infeasible-linear-program.html">
+<span class="md-ellipsis">
+    
+  
+    Infeasible Linear Program
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="integer-linear-programming.html">
+<span class="md-ellipsis">
+    
+  
+    Integer Linear Programming
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="inventory-policy.html">
+<span class="md-ellipsis">
+    
+  
+    Inventory Policy
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="job-sequencing-model.html">
+<span class="md-ellipsis">
+    
+  
+    Job Sequencing Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="k-out-of-n-constraints.html">
+<span class="md-ellipsis">
+    
+  
+    K-Out-of-N Constraints
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="konigsberg-bridge-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Königsberg Bridge Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="kruskal-method.html">
+<span class="md-ellipsis">
+    
+  
+    Kruskal Method
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="linear-program-formulation.html">
+<span class="md-ellipsis">
+    
+  
+    Linear Program Formulation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="linear-programming.html">
+<span class="md-ellipsis">
+    
+  
+    Linear Programming
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="lot-size-bellman-recursion.html">
+<span class="md-ellipsis">
+    
+  
+    Lot-Size Bellman Recursion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="lp-relaxation.html">
+<span class="md-ellipsis">
+    
+  
+    LP Relaxation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="maximum-flow-linear-program.html">
+<span class="md-ellipsis">
+    
+  
+    Maximum Flow Linear Program
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="maximum-flow-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Maximum Flow Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="minimization-to-maximization.html">
+<span class="md-ellipsis">
+    
+  
+    Minimization-to-Maximization Transformation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="minimum-ratio-test.html">
+<span class="md-ellipsis">
+    
+  
+    Minimum-Ratio Test
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="minimum-spanning-tree.html">
+<span class="md-ellipsis">
+    
+  
+    Minimum Spanning Tree
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="minimum-weight-perfect-matching.html">
+<span class="md-ellipsis">
+    
+  
+    Minimum-Weight Perfect Matching
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="minimum-zero-cover.html">
+<span class="md-ellipsis">
+    
+  
+    Minimum Zero Cover
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="mixed-integer-program.html">
+<span class="md-ellipsis">
+    
+  
+    Mixed Integer Program
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="model-parameter.html">
+<span class="md-ellipsis">
+    
+  
+    Model Parameter
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="multiple-optimal-solutions.html">
+<span class="md-ellipsis">
+    
+  
+    Multiple Optimal Solutions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="mutually-exclusive-decisions.html">
+<span class="md-ellipsis">
+    
+  
+    Mutually Exclusive Decisions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="negative-rhs-transformation.html">
+<span class="md-ellipsis">
+    
+  
+    Negative RHS Transformation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="network.html">
+<span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="newsvendor-model.html">
+<span class="md-ellipsis">
+    
+  
+    Newsvendor Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="newsvendor-price-sensitivity.html">
+<span class="md-ellipsis">
+    
+  
+    Newsvendor Price Sensitivity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="nonbasic-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Nonbasic Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="nonconvex-region-modelling.html">
+<span class="md-ellipsis">
+    
+  
+    Nonconvex Region Modelling
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="nonnegativity-constraint.html">
+<span class="md-ellipsis">
+    
+  
+    Nonnegativity Constraint (OR Modelling)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="normal-demand-distribution.html">
+<span class="md-ellipsis">
+    
+  
+    Normal Demand Distribution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="objective-coefficient-range.html">
+<span class="md-ellipsis">
+    
+  
+    Objective Coefficient Range
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="objective-function.html">
+<span class="md-ellipsis">
+    
+  
+    Objective Function
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="objective-line.html">
+<span class="md-ellipsis">
+    
+  
+    Objective Line
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="operations-research.html">
+<span class="md-ellipsis">
+    
+  
+    Operations Research
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="optimal-solution.html">
+<span class="md-ellipsis">
+    
+  
+    Optimal Solution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="optimization-bounds.html">
+<span class="md-ellipsis">
+    
+  
+    Optimization Bounds
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="optimization-model.html">
+<span class="md-ellipsis">
+    
+  
+    Optimization Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="or-study-cycle.html">
+<span class="md-ellipsis">
+    
+  
+    OR Study Cycle
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="ordering-cycle.html">
+<span class="md-ellipsis">
+    
+  
+    Ordering Cycle
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="overage-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Overage Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="parity-constraint.html">
+<span class="md-ellipsis">
+    
+  
+    Parity Constraint
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="path.html">
+<span class="md-ellipsis">
+    
+  
+    Path (OR Modelling)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="positive-part.html">
+<span class="md-ellipsis">
+    
+  
+    Positive Part
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="price-break-indifference-quantity.html">
+<span class="md-ellipsis">
+    
+  
+    Price-Break Indifference Quantity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Production-Inventory Model
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="production-inventory-model.html">
+<span class="md-ellipsis">
+    
+  
+    Production-Inventory Model
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#definition">
+<span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#interpretation">
+<span class="md-ellipsis">
+      
+        Interpretation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-results">
+<span class="md-ellipsis">
+      
+        Key Results
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#examples">
+<span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites">
+<span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-concepts">
+<span class="md-ellipsis">
+      
+        Related Concepts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sources">
+<span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="project-longest-path-model.html">
+<span class="md-ellipsis">
+    
+  
+    Project Longest Path Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="project-selection-model.html">
+<span class="md-ellipsis">
+    
+  
+    Project Selection Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="purchasing-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Purchasing Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="pure-integer-program.html">
+<span class="md-ellipsis">
+    
+  
+    Pure Integer Program
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="reduced-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Reduced Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="relaxation.html">
+<span class="md-ellipsis">
+    
+  
+    Relaxation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="residual-network.html">
+<span class="md-ellipsis">
+    
+  
+    Residual Network
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="rhs-sensitivity-range.html">
+<span class="md-ellipsis">
+    
+  
+    RHS Sensitivity Range
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="rounding-heuristic.html">
+<span class="md-ellipsis">
+    
+  
+    Rounding Heuristic
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="sensitivity-analysis.html">
+<span class="md-ellipsis">
+    
+  
+    Sensitivity Analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="setup-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Setup Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="shadow-price.html">
+<span class="md-ellipsis">
+    
+  
+    Shadow Price (OR Modelling)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="shortage-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Shortage Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="shortest-path-algorithm.html">
+<span class="md-ellipsis">
+    
+  
+    Shortest Path Algorithm
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="shortest-path-binary-formulation.html">
+<span class="md-ellipsis">
+    
+  
+    Shortest Path Binary Formulation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="shortest-path-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Shortest Path Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="silver-meal-heuristic.html">
+<span class="md-ellipsis">
+    
+  
+    Silver-Meal Heuristic
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="simplex-method.html">
+<span class="md-ellipsis">
+    
+  
+    Simplex Method
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="simplex-optimality-test.html">
+<span class="md-ellipsis">
+    
+  
+    Simplex Optimality Test
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="simplex-pivot.html">
+<span class="md-ellipsis">
+    
+  
+    Simplex Pivot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="simplex-tableau.html">
+<span class="md-ellipsis">
+    
+  
+    Simplex Tableau
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="slack-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Slack Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="spanning-tree.html">
+<span class="md-ellipsis">
+    
+  
+    Spanning Tree
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="standard-normal-distribution.html">
+<span class="md-ellipsis">
+    
+  
+    Standard Normal Distribution (OR Modelling)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="surplus-variable.html">
+<span class="md-ellipsis">
+    
+  
+    Surplus Variable
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="task-quota-assignment.html">
+<span class="md-ellipsis">
+    
+  
+    Task Quota Assignment
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="transportation-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Transportation Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="tree.html">
+<span class="md-ellipsis">
+    
+  
+    Tree
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="two-phase-method.html">
+<span class="md-ellipsis">
+    
+  
+    Two-Phase Method
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="unbounded-linear-program.html">
+<span class="md-ellipsis">
+    
+  
+    Unbounded Linear Program
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="underage-cost.html">
+<span class="md-ellipsis">
+    
+  
+    Underage Cost
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="undirected-network.html">
+<span class="md-ellipsis">
+    
+  
+    Undirected Network
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="uniform-demand-distribution.html">
+<span class="md-ellipsis">
+    
+  
+    Uniform Demand Distribution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="unrestricted-variable-transformation.html">
+<span class="md-ellipsis">
+    
+  
+    Unrestricted Variable Transformation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="vehicle-routing-problem.html">
+<span class="md-ellipsis">
+    
+  
+    Vehicle Routing Problem
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="vertex-degree.html">
+<span class="md-ellipsis">
+    
+  
+    Vertex Degree
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="weibull-demand-distribution.html">
+<span class="md-ellipsis">
+    
+  
+    Weibull Demand Distribution
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zero-cost-matching-via-maximum-flow.html">
+<span class="md-ellipsis">
+    
+  
+    Zero-Cost Matching via Maximum Flow
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zero-inventory-ordering-property.html">
+<span class="md-ellipsis">
+    
+  
+    Zero-Inventory Ordering Property
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../1b-Math-II-Linear-Algebra/index.html">
+<span class="md-ellipsis">
+    
+  
+    Math II: Linear Algebra
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../1b-Probability-Theory-for-EOR/index.html">
+<span class="md-ellipsis">
+    
+  
+    Probability Theory For EOR
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../1b-Programming-for-EOR/index.html">
+<span class="md-ellipsis">
+    
+  
+    Programming for EOR
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../2a-Finance-for-EOR/index.html">
+<span class="md-ellipsis">
+    
+  
+    Finance for EOR
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../2a-Math-III-Analysis/index.html">
+<span class="md-ellipsis">
+    
+  
+    Math III: Analysis
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../2a-Microeconomics-for-EOR/index.html">
+<span class="md-ellipsis">
+    
+  
+    Microeconomics for EOR
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../2b-Math-IV-Multivariate-Calculus/index.html">
+<span class="md-ellipsis">
+    
+  
+    Math IV: Multivariate Calculus
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../2b-Probability-Distributions/index.html">
+<span class="md-ellipsis">
+    
+  
+    2b Probability Distributions
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../2b-Statistical-Modelling-for-EOR/index.html">
+<span class="md-ellipsis">
+    
+  
+    Statistical Modelling for EOR
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../Year-2/index.html">
+<span class="md-ellipsis">
+    
+  
+    Year 2
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../random.html">
+<span class="md-ellipsis">
+    
+  
+    Random
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#definition">
+<span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#interpretation">
+<span class="md-ellipsis">
+      
+        Interpretation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-results">
+<span class="md-ellipsis">
+      
+        Key Results
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#examples">
+<span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prerequisites">
+<span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#related-concepts">
+<span class="md-ellipsis">
+      
+        Related Concepts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sources">
+<span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<nav class="md-tags" aria-label="Concept tags">
+<span class="md-tag">curriculum-current</span>
+<span class="md-tag">orm-week02</span>
+</nav>
+<h1 id="production-inventory-model">Production-Inventory Model<a class="headerlink" href="#production-inventory-model" title="Permanent link">¶</a></h1>
+<h2 id="definition"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 7h4a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9zm2 2v6h2V9zM3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm2 0v14h14V5z"></path></svg></span> Definition<a class="headerlink" href="#definition" title="Permanent link">¶</a></h2>
+<p>A <strong>production-inventory model</strong> chooses production <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">P_t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> and end-of-period stock <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">I_t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> to meet known demands <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">d_t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> across periods. With given initial stock <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">I_0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>, unit production costs <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">c_t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>, and end-of-period holding costs <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">h_t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>, the course problem is represented by</p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>⁡</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><mo stretchy="false">(</mo><msub><mi>c</mi><mi>t</mi></msub><msub><mi>P</mi><mi>t</mi></msub><mo>+</mo><msub><mi>h</mi><mi>t</mi></msub><msub><mi>I</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mspace width="2em"></mspace><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>P</mi><mi>t</mi></msub><mo>−</mo><msub><mi>d</mi><mi>t</mi></msub><mo>=</mo><msub><mi>I</mi><mi>t</mi></msub><mo separator="true">,</mo><mspace width="2em"></mspace><msub><mi>P</mi><mi>t</mi></msub><mo separator="true">,</mo><msub><mi>I</mi><mi>t</mi></msub><mo>≥</mo><mn>0.</mn></mrow><annotation encoding="application/x-tex">\min\sum_{t=1}^T(c_tP_t+h_tI_t),\qquad
+I_{t-1}+P_t-d_t=I_t,\qquad P_t,I_t\ge0.</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:3.0954em;vertical-align:-1.2671em;"></span><span class="mop">min</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283em;"><span style="top:-1.8829em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2671em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.</span></span></span></span></span></div>
+<hr/>
+<h2 id="interpretation"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 3c3.9 0 7 3.1 7 7 0 2.8-1.6 5.2-4 6.3V21H9v-3H8c-1.1 0-2-.9-2-2v-3H4.5c-.4 0-.7-.5-.4-.8L6 9.7C6.2 5.9 9.2 3 13 3m0-2C8.4 1 4.6 4.4 4.1 8.9L2.5 11c-.6.8-.6 1.8-.2 2.6.4.7 1 1.2 1.7 1.3V16c0 1.9 1.3 3.4 3 3.9V23h11v-5.5c2.5-1.7 4-4.4 4-7.5 0-5-4-9-9-9m1 13h-2v-1h2zm1.6-4.5c-.3.4-.6.8-1.1 1.1V12h-3v-1.4c-1.4-.8-1.9-2.7-1.1-4.1s2.7-1.9 4.1-1.1 1.9 2.7 1.1 4.1"></path></svg></span> Interpretation<a class="headerlink" href="#interpretation" title="Permanent link">¶</a></h2>
+<p>Production in a cheaper month may be stored for a later month. The inventory balance ensures that every unit sold comes from current production or previously held stock.</p>
+<hr/>
+<h2 id="key-results"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m8.58 17.25.92-3.89-3-2.58 3.95-.37L12 6.8l1.55 3.65 3.95.33-3 2.58.92 3.89L12 15.19zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"></path></svg></span> Key Results<a class="headerlink" href="#key-results" title="Permanent link">¶</a></h2>
+<ul>
+<li>Nonnegative inventory rules out shortages.</li>
+<li>The PDF charges 8 per window per month on end-of-month inventory.</li>
+<li>The six-month exercise does not specify initial stock; taking <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>0</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">I_0=0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> is an explicit modelling assumption.</li>
+<li>With positive production and holding costs and no required final stock, surplus final inventory is unnecessary.</li>
+</ul>
+<hr/>
+<h2 id="examples"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"></path></svg></span> Examples<a class="headerlink" href="#examples" title="Permanent link">¶</a></h2>
+<ul>
+<li>Month 1 requires 100 windows; producing 120 from zero stock leaves 20.</li>
+<li>Producing a month-3 window in month 2 costs 45 plus 8 holding, compared with 55 in month 3.</li>
+</ul>
+<hr/>
+<h2 id="prerequisites"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-8l-3.5 3.5-1.42-1.42L12 6.16l5.92 5.92-1.42 1.42L13 10zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"></path></svg></span> Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="linear-program-formulation.html">Linear Program Formulation</a></li>
+</ul>
+<h2 id="related-concepts"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.5 17c-.14 0-.26 0-.39.04L17.5 13.8c.45-.45.75-1.09.75-1.8a2.5 2.5 0 0 0-2.5-2.5c-.14 0-.25 0-.4.04L13.74 6.3c.47-.46.76-1.09.76-1.8a2.5 2.5 0 0 0-5 0c0 .7.29 1.34.76 1.79L8.65 9.54c-.15-.04-.26-.04-.4-.04a2.5 2.5 0 0 0-2.5 2.5c0 .71.29 1.34.75 1.79l-1.61 3.25C4.76 17 4.64 17 4.5 17a2.5 2.5 0 0 0 0 5A2.5 2.5 0 0 0 7 19.5c0-.7-.29-1.34-.76-1.79l1.62-3.25c.14.04.26.04.39.04s.25 0 .38-.04l1.63 3.25c-.47.45-.76 1.09-.76 1.79a2.5 2.5 0 0 0 5 0A2.5 2.5 0 0 0 12 17c-.13 0-.26 0-.39.04L10 13.8c.45-.45.75-1.09.75-1.8 0-.7-.29-1.33-.75-1.79l1.61-3.25c.13.04.26.04.39.04s.26 0 .39-.04L14 10.21a2.5 2.5 0 0 0 1.75 4.29c.13 0 .25 0 .38-.04l1.63 3.25c-.47.45-.76 1.09-.76 1.79a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-2.5-2.5m-15 3.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1m8.5-1c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1M7.25 12c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1M11 4.5c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1m3.75 7.5c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1m4.75 8.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1"></path></svg></span> Related Concepts<a class="headerlink" href="#related-concepts" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="dynamic-lot-size-model.html">Dynamic Lot-Size Model</a></li>
+<li><a href="holding-cost.html">Holding Cost</a></li>
+</ul>
+<h2 id="sources"><span class="twemoji"><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20.7c0 .46.1.9.27 1.3H6c-1.11 0-2-.89-2-2V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6.11c-.32-.07-.66-.11-1-.11s-.68.04-1 .11V4h-5v8l-2.5-2.25L8 12V4H6v16h7zm10-3.4v3.5c0 .6-.6 1.2-1.3 1.2h-5.5c-.6 0-1.2-.6-1.2-1.3v-3.5c0-.6.6-1.2 1.2-1.2v-1.5c0-1.4 1.4-2.5 2.8-2.5s2.8 1.1 2.8 2.5V16c.6 0 1.2.6 1.2 1.3m-2.5-2.8c0-.8-.7-1.3-1.5-1.3s-1.5.5-1.5 1.3V16h3z"></path></svg></span> Sources<a class="headerlink" href="#sources" title="Permanent link">¶</a></h2>
+<ul>
+<li>OR Modelling - Week 2</li>
+</ul>
+<p><span class="search-aliases" data-nosnippet="">
+Symbols: sum
+</span></p>
+<p class="mk-last-updated">Last updated: 5 September 2026 01:36</p>
+</article>
+</div>
+<script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">
+      Copyright © 2026 BSc EOR Wiki / BSc EOR teaching team. All rights reserved.<br/> Materials may be viewed for personal study and internal teaching purposes only.<br/> Original teaching materials, examples, diagrams, website structure, custom code, configuration and deployment workflow may not be copied, redistributed, scraped, adapted or reused without prior written permission.<br/> Third-party software remains governed by its own licences.
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.prune", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "toc.follow", "search.suggest", "search.share", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "content.tabs.link", "content.tooltips", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../javascripts/perf-probe.js?h=ea289ef426e5"></script>
+<script src="../../javascripts/startup-preferences.js?h=45704c678cac"></script>
+<script src="../../javascripts/link-math-underline.js?h=e0c3b5c48fa1"></script>
+<script src="../../javascripts/style-shortcuts.js?h=86f8be5c857c"></script>
+<script src="../../javascripts/ui-guard.js?h=d12ed10a371d"></script>
+<script src="../../javascripts/a11y-landmarks.js?h=89016260de57"></script>
+<script src="../../javascripts/sync-status-indicator.js?h=5a99867d99dc"></script>
+<script src="../../javascripts/fuzzy-core.js?h=2104d6f6309d"></script>
+<script src="../../javascripts/search-suggestions.js?h=6d411241d851"></script>
+<script src="../../javascripts/search-history.js?h=8afc9a8bc51d"></script>
+<script src="../../javascripts/header-search-stabilizer.js?h=cdd630b06fd3"></script>
+<script src="../../javascripts/concept-hover-preview.js?h=8347ef71799d"></script>
+<script src="../../javascripts/mathjax.js?h=c15e6455b642"></script>
+<script src="../../javascripts/preload-guard.js?h=8780e35ce892"></script>
+<script src="../../javascripts/random.js?h=916d85556f64"></script>
+<script src="../../javascripts/random-tabs.js?h=0088914bb6d0"></script>
+<script src="../../javascripts/search-enter.js?h=ecfa6b413a1a"></script>
+<script src="../../javascripts/concept-fold.js?h=229ab05b9afd"></script>
+<script src="../../javascripts/tag-search-links.js?h=84cb5c2dd87f"></script>
+<script src="../../javascripts/logo-lightbox.js?h=fda4850b9a41"></script>
+<script src="../../javascripts/wiki-home.js?h=4318a2688b8d"></script>
+<script src="../../javascripts/teaching-workbench.js?h=ba93e7669dd3"></script>
+</body>
+</html>
