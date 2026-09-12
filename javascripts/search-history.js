@@ -1,73 +1,9 @@
-// docs/javascripts/search-history.js
-// Search history dropdown for MkDocs Material search.
-//
-// Fixes:
-// - Desktop intermittent "clicking history doesn't fill the input":
-//   Always write into the *same input that owns the dropdown*, not a different hidden search input.
-// - Only show history when the search input is empty.
-// - After selecting a history item, immediately collapse the dropdown.
-// - Safe under instant navigation (no duplicate listeners).
-(function () {
-  "use strict";
-
-  // Prevent double-install if this script is injected twice.
-  if (window.__mkSearchHistoryInstalledV5) return;
-  window.__mkSearchHistoryInstalledV5 = true;
-  try { window.__mkSearchHistoryVersion = "v5.2.2-separate-rounded-surfaces"; } catch (_) {}
-
-  const STORAGE_KEY = "mk_search_history_v1";
-  const MAX_ITEMS = 12;
-
-  const ROOT_CLASS = "mk-search-history";
-  const LIST_CLASS = "mk-search-history__list";
-  const ITEM_CLASS = "mk-search-history__item";
-  const ACTIVE_CLASS = "is-active";
-
-  const INPUT_SELECTOR = 'input[data-md-component="search-query"]';
-
-  function isHeaderSearchRoot(root) {
-    return !!(root && root.closest && root.closest('.md-header'));
-  }
-
-  function isHeaderSearchInput(input) {
-    return !!(input && input.matches && input.matches(INPUT_SELECTOR) && isHeaderSearchRoot(input.closest('.md-search')));
-  }
-
-  function getHeaderSearchRoot(input) {
-    const i = input && isHeaderSearchInput(input) ? input : null;
-    return (i && i.closest('.md-search')) || document.querySelector('.md-header .md-search.md-search--active') || document.querySelector('.md-header .md-search') || null;
-  }
-
-  function getSearchToggle() {
-    return (
-      document.querySelector('input.md-toggle[data-md-toggle="search"]') ||
-      document.querySelector("input#__search") ||
-      document.querySelector("#__search") ||
-      null
-    );
-  }
-
-  function ensureSearchUiPatchStyle() {
-    const STYLE_ID = "mk-search-history-patch-style-v7";
-    if (document.getElementById(STYLE_ID)) return;
-
-    [
-      "mk-search-history-patch-style-v6",
-      "mk-search-history-patch-style-v5",
-      "mk-search-history-patch-style-v4",
-      "mk-search-history-patch-style-v3",
-      "mk-search-history-patch-style-v2",
-      "mk-search-history-patch-style-v1"
-    ].forEach((id) => {
-      try {
-        const oldStyle = document.getElementById(id);
-        if (oldStyle && oldStyle.parentNode) oldStyle.parentNode.removeChild(oldStyle);
-      } catch (_) {}
-    });
-
-    const style = document.createElement("style");
-    style.id = STYLE_ID;
-    style.textContent = `
+(function(){"use strict";if(window.__mkSearchHistoryInstalledV5)return;window.__mkSearchHistoryInstalledV5=true;try{window.__mkSearchHistoryVersion="v5.2.2-separate-rounded-surfaces";}catch(_){}
+const STORAGE_KEY="mk_search_history_v1";const MAX_ITEMS=12;const ROOT_CLASS="mk-search-history";const LIST_CLASS="mk-search-history__list";const ITEM_CLASS="mk-search-history__item";const ACTIVE_CLASS="is-active";const INPUT_SELECTOR='input[data-md-component="search-query"]';function isHeaderSearchRoot(root){return!!(root&&root.closest&&root.closest('.md-header'));}
+function isHeaderSearchInput(input){return!!(input&&input.matches&&input.matches(INPUT_SELECTOR)&&isHeaderSearchRoot(input.closest('.md-search')));}
+function getHeaderSearchRoot(input){const i=input&&isHeaderSearchInput(input)?input:null;return(i&&i.closest('.md-search'))||document.querySelector('.md-header .md-search.md-search--active')||document.querySelector('.md-header .md-search')||null;}
+function getSearchToggle(){return(document.querySelector('input.md-toggle[data-md-toggle="search"]')||document.querySelector("input#__search")||document.querySelector("#__search")||null);}
+function ensureSearchUiPatchStyle(){const STYLE_ID="mk-search-history-patch-style-v7";if(document.getElementById(STYLE_ID))return;["mk-search-history-patch-style-v6","mk-search-history-patch-style-v5","mk-search-history-patch-style-v4","mk-search-history-patch-style-v3","mk-search-history-patch-style-v2","mk-search-history-patch-style-v1"].forEach((id)=>{try{const oldStyle=document.getElementById(id);if(oldStyle&&oldStyle.parentNode)oldStyle.parentNode.removeChild(oldStyle);}catch(_){}});const style=document.createElement("style");style.id=STYLE_ID;style.textContent=`
       /*
        * Search history surface model v5.2.2
        *
@@ -539,1212 +475,140 @@
         html[data-mk-search-box-effect] #__search:checked ~ .md-header .md-search__scrollwrap{ max-height:calc(100dvh - 2.4rem - 12px) !important; border-radius:var(--mk-header-search-mobile-radius,18px) !important; }
       }
 
-    `;
-    (document.head || document.documentElement).appendChild(style);
-  }
-
-  // Treat recent pointer interactions inside the dropdown as "internal"
-  // so we don't collapse it on input blur.
-  let suppressBlurHideUntil = 0;
-  let searchUiGraceUntil = 0;
-  let explicitCloseUntil = 0;
-  let historyApplyUntil = 0;
-  let historyActionLockUntil = 0;
-  let emptyClearUntil = 0;
-
-  // Important: Material can leave .md-search--active / toggle state around during
-  // first page load or refresh. That state is not enough to mean the user opened
-  // search. History is allowed to appear only after a real header-search
-  // interaction in this page lifecycle, and it is reset on outside close / init.
-  let headerSearchUserOpened = false;
-
-  function markHeaderSearchUserOpened() {
-    headerSearchUserOpened = true;
-    try { window.__mkSearchHistoryUserOpened = "1"; } catch (_) {}
-  }
-
-  function clearHeaderSearchUserOpened() {
-    headerSearchUserOpened = false;
-    try { window.__mkSearchHistoryUserOpened = "0"; } catch (_) {}
-  }
-
-  function hasHeaderSearchUserOpened() {
-    try {
-      return headerSearchUserOpened || window.__mkSearchHistoryUserOpened === "1";
-    } catch (_) {
-      return headerSearchUserOpened;
-    }
-  }
-
-  function markHistoryApply(ms) {
-    historyApplyUntil = Date.now() + Math.max(420, Number(ms) || 0);
-    try { window.__mkSearchHistoryApplyingUntil = historyApplyUntil; } catch (_) {}
-  }
-
-  function hasHistoryApply() {
-    try {
-      const shared = Number(window.__mkSearchHistoryApplyingUntil || 0);
-      return Date.now() < Math.max(historyApplyUntil, shared);
-    } catch (_) {
-      return Date.now() < historyApplyUntil;
-    }
-  }
-
-  function clearHistoryApply() {
-    historyApplyUntil = 0;
-    try { window.__mkSearchHistoryApplyingUntil = 0; } catch (_) {}
-  }
-
-  function markEmptyClear(ms) {
-    emptyClearUntil = Date.now() + Math.max(260, Number(ms) || 0);
-    try { window.__mkSearchHistoryEmptyClearUntil = emptyClearUntil; } catch (_) {}
-  }
-
-  function hasEmptyClear() {
-    try {
-      const shared = Number(window.__mkSearchHistoryEmptyClearUntil || 0);
-      return Date.now() < Math.max(emptyClearUntil, shared);
-    } catch (_) {
-      return Date.now() < emptyClearUntil;
-    }
-  }
-
-  function clearEmptyClear() {
-    emptyClearUntil = 0;
-    try { window.__mkSearchHistoryEmptyClearUntil = 0; } catch (_) {}
-  }
-
-  function lockHistoryAction(ms) {
-    historyActionLockUntil = Date.now() + Math.max(220, Number(ms) || 0);
-  }
-
-  function isHistoryActionLocked() {
-    return Date.now() < historyActionLockUntil;
-  }
-
-  function markSearchUiGrace(ms) {
-    const extra = Math.max(320, Number(ms) || 0);
-    const until = Date.now() + extra;
-    if (until > searchUiGraceUntil) searchUiGraceUntil = until;
-    try {
-      const prev = Number(window.__mkFindHeaderSearchGraceUntil || 0);
-      if (until > prev) window.__mkFindHeaderSearchGraceUntil = until;
-    } catch (_) {}
-  }
-
-  function markHeaderSearchInteraction(ms) {
-    markHeaderSearchUserOpened();
-    try { window.__mkHeaderSearchUserTouchTs = Date.now(); } catch (_) {}
-    markSearchUiGrace(ms);
-  }
-
-  function clearSearchUiGrace() {
-    searchUiGraceUntil = 0;
-    clearHeaderSearchUserOpened();
-    try { window.__mkFindHeaderSearchGraceUntil = 0; } catch (_) {}
-  }
-
-  function markExplicitClose(ms) {
-    const until = Date.now() + Math.max(1800, Number(ms) || 0);
-    if (until > explicitCloseUntil) explicitCloseUntil = until;
-    try { window.__mkSearchHistoryExplicitCloseUntil = until; } catch (_) {}
-  }
-
-  function clearExplicitClose() {
-    explicitCloseUntil = 0;
-    try { window.__mkSearchHistoryExplicitCloseUntil = 0; } catch (_) {}
-  }
-
-  function hasExplicitClose() {
-    try {
-      const shared = Number(window.__mkSearchHistoryExplicitCloseUntil || 0);
-      return Date.now() < Math.max(explicitCloseUntil, shared);
-    } catch (_) {
-      return Date.now() < explicitCloseUntil;
-    }
-  }
-
-  function isSearchClearControl(el) {
-    const ctrl = el && el.closest ? el.closest('button, label, [role="button"], .md-search__icon, .md-icon') : null;
-    if (!ctrl) return false;
-    try {
-      const title = String((ctrl.getAttribute && ctrl.getAttribute('title')) || '').trim().toLowerCase();
-      const aria = String((ctrl.getAttribute && ctrl.getAttribute('aria-label')) || '').trim().toLowerCase();
-      const cls = String(ctrl.className || '').toLowerCase();
-      if (title === 'clear' || aria === 'clear') return true;
-      if (cls.includes('clear')) return true;
-    } catch (_) {}
-    return false;
-  }
-
-  function collapseHeaderSearchUi(reason) {
-    try {
-      const root = document.querySelector('.md-header .md-search.md-search--active') || document.querySelector('.md-header .md-search');
-      const toggle = getSearchToggle();
-      const input = resolveLiveInput(root && root.querySelector ? root.querySelector(INPUT_SELECTOR) : getLikelyInput(), root || document);
-      if (root && root.classList) root.classList.remove('md-search--active');
-      if (toggle) toggle.checked = false;
-      if (input) {
-        try { input.blur(); } catch (_) {}
-      }
-      if (reason === 'outside') {
-        clearSearchUiGrace();
-        clearHistoryApply();
-        markExplicitClose(640);
-      }
-      hideAllDropdowns();
-      if (input) setMaterialOutputSuppressed(input, false);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  function hasSearchUiGrace(input) {
-    try {
-      if (!input || !input.isConnected) return false;
-      const sharedUntil = Number(window.__mkFindHeaderSearchGraceUntil || 0);
-      const until = Math.max(searchUiGraceUntil, sharedUntil);
-      if (Date.now() >= until) return false;
-
-      const shell = getHeaderSearchRoot(input);
-      const toggle = getSearchToggle();
-      const ae = document.activeElement;
-
-      if (ae === input) return true;
-      if (shell && ae && shell.contains && shell.contains(ae)) return true;
-      if (shell && shell.classList && shell.classList.contains('md-search--active')) return true;
-      if (toggle && toggle.checked) return true;
-      return false;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  function markDropdownInteraction() {
-    suppressBlurHideUntil = Date.now() + 260;
-    markSearchUiGrace(640);
-  }
-
-  function stopEvent(e) {
-    if (!e) return;
-    try { e.preventDefault(); } catch (_) {}
-    try { e.stopPropagation(); } catch (_) {}
-    try { if (e.stopImmediatePropagation) e.stopImmediatePropagation(); } catch (_) {}
-  }
-
-  function bindTouchActivation(el, handler, capture) {
-    if (!el || !handler) return;
-    let lastTouchTs = 0;
-    const useCapture = !!capture;
-    el.addEventListener(
-      "touchend",
-      (e) => {
-        lastTouchTs = Date.now();
-        handler(e);
-      },
-      { capture: useCapture, passive: false }
-    );
-    el.addEventListener(
-      "click",
-      (e) => {
-        if (Date.now() - lastTouchTs < 420) {
-          stopEvent(e);
-          return;
-        }
-        handler(e);
-      },
-      useCapture
-    );
-  }
-
-  function blockSuggestionClicks(ms) {
-    try { window.__mkSearchSuggestClickBlockUntil = Date.now() + Math.max(180, Number(ms) || 420); } catch (_) {}
-  }
-
-  // Track most recently focused search input.
-  let lastFocusedInput = null;
-
-  // ---------------- storage ----------------
-  function readHistory() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr.filter(Boolean).map(String) : [];
-    } catch (_) {
-      return [];
-    }
-  }
-
-  function writeHistory(arr) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify((arr || []).slice(0, MAX_ITEMS)));
-    } catch (_) {}
-  }
-
-  function addToHistory(q) {
-    const s = String(q || "").trim();
-    if (!s) return;
-    const arr = readHistory();
-    const next = [s, ...arr.filter((x) => x.toLowerCase() !== s.toLowerCase())];
-    writeHistory(next);
-  }
-
-  function removeFromHistory(q) {
-    const s = String(q || "").trim();
-    if (!s) return;
-    writeHistory(readHistory().filter((x) => x.toLowerCase() !== s.toLowerCase()));
-  }
-
-  function clearHistory() {
-    writeHistory([]);
-  }
-
-  // ---------------- DOM helpers ----------------
-  function getAllInputs() {
-    return Array.from(document.querySelectorAll('.md-header ' + INPUT_SELECTOR)).filter(isHeaderSearchInput);
-  }
-
-  function isVisible(el) {
-    try {
-      if (!el) return false;
-      if (el.offsetParent === null) return false;
-      const cs = window.getComputedStyle(el);
-      return cs.visibility !== "hidden" && cs.display !== "none";
-    } catch (_) {
-      return false;
-    }
-  }
-
-  // Prefer:
-  // 1) activeElement if it's a query input
-  // 2) last focused query input
-  // 3) visible query input in active search component
-  // 4) any visible input
-  function getLikelyInput() {
-    const ae = document.activeElement;
-    if (isHeaderSearchInput(ae)) return ae;
-
-    if (lastFocusedInput && lastFocusedInput.isConnected && lastFocusedInput.matches(INPUT_SELECTOR)) {
-      return lastFocusedInput;
-    }
-
-    const inputs = getAllInputs();
-    if (!inputs.length) return null;
-
-    const activeSearch =
-      document.querySelector('.md-header .md-search.md-search--active') ||
-      document.querySelector('.md-header .md-search');
-
-    if (activeSearch) {
-      const inActive = inputs.find((i) => activeSearch.contains(i) && isVisible(i));
-      if (inActive) return inActive;
-    }
-
-    const visible = inputs.find(isVisible);
-    return visible || inputs[0];
-  }
-
-  function getSearchRoot(input) {
-    const i = input || getLikelyInput();
-    return getHeaderSearchRoot(i) || document;
-  }
-
-  function scheduleRefresh(input, delays) {
-    const live = input || getLikelyInput();
-    if (!live) return;
-    const seq = Array.isArray(delays) && delays.length ? delays : [0, 20, 80, 160];
-    seq.forEach((ms) => {
-      window.setTimeout(() => {
-        try {
-          const current = resolveLiveInput(live, getSearchRoot(live)) || live;
-          if (!isHeaderSearchInput(current)) return;
-          if (!current || !current.isConnected) return;
-          if (hasExplicitClose()) {
-            hideDropdown(current);
-            setMaterialOutputSuppressed(current, false);
-            return;
-          }
-          updateModeForInput(current);
-        } catch (_) {}
-      }, ms);
-    });
-  }
-
-  function getOverlayContainer(input) {
-    const i = input || getLikelyInput();
-    if (!i) return null;
-    return i.closest(".md-search__inner") || i.parentElement;
-  }
-  function getSearchInner(input) {
-    try {
-      const i = input || getLikelyInput();
-      if (i && i.closest) return i.closest(".md-search__inner");
-    } catch (_) {}
-    return null;
-  }
-
-  function setHistorySurfaceOpen(input, open) {
-    try {
-      const inner = getSearchInner(input);
-      if (inner && inner.classList) inner.classList.toggle("mk-search-history-open", !!open);
-      const search = inner && inner.closest ? inner.closest(".md-search") : getHeaderSearchRoot(input);
-      if (search && search.classList) search.classList.toggle("mk-search-history-open", !!open);
-    } catch (_) {}
-  }
-
-  function setResultSurfaceOpen(input, open) {
-    try {
-      const inner = getSearchInner(input);
-      if (inner && inner.classList) inner.classList.toggle("mk-search-result-open", !!open);
-      const search = inner && inner.closest ? inner.closest(".md-search") : getHeaderSearchRoot(input);
-      if (search && search.classList) search.classList.toggle("mk-search-result-open", !!open);
-    } catch (_) {}
-  }
-
-
-  function resolveLiveInput(input, root) {
-    if (input && input.isConnected && input.matches && input.matches(INPUT_SELECTOR)) return input;
-
-    try {
-      const host = root && root.parentElement;
-      if (host) {
-        const local = host.querySelector(INPUT_SELECTOR);
-        if (local) return local;
-      }
-    } catch (_) {}
-
-    try {
-      const searchRoot = root && root.__mkSearchRoot;
-      if (searchRoot && searchRoot.isConnected) {
-        const inside = Array.from(searchRoot.querySelectorAll(INPUT_SELECTOR)).find(isVisible);
-        if (inside) return inside;
-      }
-    } catch (_) {}
-
-    try {
-      const fallback = getLikelyInput();
-      if (fallback) return fallback;
-    } catch (_) {}
-
-    return null;
-  }
-
-  function getMaterialOutput(input) {
-    const root = getSearchRoot(input);
-    return root ? root.querySelector(".md-search__output") : null;
-  }
-
-  function setMaterialOutputSuppressed(input, suppressed) {
-    const out = getMaterialOutput(input);
-    if (!out || !out.style) return;
-
-    if (suppressed) {
-      out.dataset.mkHistorySuppressed = "1";
-      out.style.setProperty("display", "none", "important");
-      out.style.setProperty("pointer-events", "none", "important");
-    } else {
-      // Restore any inline style we might have applied.
-      try { out.style.removeProperty("display"); } catch (_) {}
-      try { out.style.removeProperty("pointer-events"); } catch (_) {}
-      try { out.style.removeProperty("visibility"); } catch (_) {}
-      try { out.style.removeProperty("opacity"); } catch (_) {}
-      try { out.removeAttribute("aria-hidden"); } catch (_) {}
-      try { delete out.dataset.mkHistorySuppressed; } catch (_) {}
-    }
-  }
-
-  function hideAllDropdowns() {
-    try {
-      document.querySelectorAll(`.${ROOT_CLASS}`).forEach((root) => {
-        try { root.style.display = "none"; } catch (_) {}
-        try { root.setAttribute("aria-hidden", "true"); } catch (_) {}
-        try {
-          const inner = root.closest && root.closest(".md-search__inner");
-          if (inner && inner.classList) { inner.classList.remove("mk-search-history-open"); inner.classList.remove("mk-search-result-open"); }
-          const search = root.closest && root.closest(".md-search");
-          if (search && search.classList) { search.classList.remove("mk-search-history-open"); search.classList.remove("mk-search-result-open"); }
-        } catch (_) {}
-        try {
-          root.querySelectorAll(`.${ITEM_CLASS}.${ACTIVE_CLASS}`).forEach((el) => el.classList.remove(ACTIVE_CLASS));
-        } catch (_) {}
-      });
-    } catch (_) {}
-
-    // Also restore Material outputs that might still be suppressed
-    try {
-      document.querySelectorAll(".md-search__output").forEach((out) => {
-        if (!out || !out.style) return;
-        if (out.dataset && out.dataset.mkHistorySuppressed === "1") {
-          // only restore if it's ours
-          try { out.style.removeProperty("display"); } catch (_) {}
-          try { out.style.removeProperty("pointer-events"); } catch (_) {}
-          try { delete out.dataset.mkHistorySuppressed; } catch (_) {}
-        }
-      });
-    } catch (_) {}
-  }
-
-  function ensureDropdown(input) {
-    const host = getOverlayContainer(input);
-    if (!host) return null;
-
-    let root = host.querySelector(`.${ROOT_CLASS}`);
-    if (root) {
-      try {
-        root.__mkOwnerInput = input || root.__mkOwnerInput || null;
-        root.__mkSearchRoot = getSearchRoot(input) || root.__mkSearchRoot || null;
-      } catch (_) {}
-      return root;
-    }
-
-    // Make host a positioning context (for absolute dropdown positioning)
-    try {
-      const cs = window.getComputedStyle(host);
-      if (cs.position === "static") host.style.position = "relative";
-    } catch (_) {}
-
-    root = document.createElement("div");
-    root.className = ROOT_CLASS;
-    root.setAttribute("role", "listbox");
-    root.style.display = "none";
-
-    const list = document.createElement("div");
-    list.className = LIST_CLASS;
-    root.appendChild(list);
-
-    const footer = document.createElement("div");
-    footer.className = "mk-search-history__footer";
-
-    const clearBtn = document.createElement("button");
-    clearBtn.type = "button";
-    clearBtn.className = "mk-search-history__clear";
-    clearBtn.textContent = "Clear history";
-    clearBtn.addEventListener(
-      "pointerdown",
-      (e) => {
-        markDropdownInteraction();
-        e.stopPropagation();
-      },
-      true
-    );
-    clearBtn.addEventListener("mousedown", (e) => { markDropdownInteraction(); e.stopPropagation(); }, true);
-    clearBtn.addEventListener("touchstart", (e) => { markDropdownInteraction(); e.stopPropagation(); }, { capture: true, passive: true });
-
-    const handleClear = (e) => {
-      stopEvent(e);
-      const liveInput = resolveLiveInput(input, root) || input;
-      clearHistory();
-      blockSuggestionClicks(520);
-      hideDropdown(liveInput);
-      hideAllDropdowns();
-      try { liveInput.focus({ preventScroll: true }); } catch (_) { try { liveInput.focus(); } catch (_) {} }
-    };
-    bindTouchActivation(clearBtn, handleClear, true);
-    footer.appendChild(clearBtn);
-
-    root.appendChild(footer);
-
-    // Mark interactions as internal so blur doesn't immediately collapse the UI.
-    // IMPORTANT: do not stop propagation here.
-    // On mobile, stopping capture-phase pointer events on the dropdown root can block
-    // the row / delete button from ever receiving the tap activation they need.
-    root.addEventListener(
-      "pointerdown",
-      () => {
-        markDropdownInteraction();
-      },
-      true
-    );
-    root.addEventListener(
-      "mousedown",
-      () => {
-        markDropdownInteraction();
-      },
-      true
-    );
-    root.addEventListener(
-      "touchstart",
-      () => {
-        markDropdownInteraction();
-      },
-      { capture: true, passive: true }
-    );
-
-    try {
-      root.__mkOwnerInput = input || null;
-      root.__mkSearchRoot = getSearchRoot(input) || null;
-    } catch (_) {}
-
-    host.appendChild(root);
-    return root;
-  }
-
-  function filteredHistory(query) {
-    const q = String(query || "").trim().toLowerCase();
-    const arr = readHistory();
-    if (!q) return arr;
-    return arr.filter((x) => x.toLowerCase().includes(q));
-  }
-
-  function setActiveIndex(root, idx) {
-    const items = Array.from(root.querySelectorAll(`.${ITEM_CLASS}`));
-    items.forEach((el) => el.classList.remove(ACTIVE_CLASS));
-    if (idx < 0 || idx >= items.length) return -1;
-    items[idx].classList.add(ACTIVE_CLASS);
-    try { items[idx].scrollIntoView({ block: "nearest" }); } catch (_) {}
-    return idx;
-  }
-
-  function applyHistoryToInput(input, text, root) {
-    const liveInput = resolveLiveInput(input, root);
-    if (!liveInput) return;
-
-    liveInput.value = text;
-    lastFocusedInput = liveInput;
-    clearExplicitClose();
-    markHeaderSearchInteraction(1200);
-    markHistoryApply(900);
-    lockHistoryAction(520);
-    blockSuggestionClicks(520);
-
-    // Collapse immediately and restore Material output before synthetic events fire.
-    hideAllDropdowns();
-    setMaterialOutputSuppressed(liveInput, false);
-
-    const searchRoot = getSearchRoot(liveInput);
-    try {
-      if (searchRoot && searchRoot.classList) searchRoot.classList.add("md-search--active");
-    } catch (_) {}
-
-    // Keep focus on the same query input so Material treats the query as active.
-    try { liveInput.focus({ preventScroll: true }); } catch (_) { try { liveInput.focus(); } catch (_) {} }
-    try {
-      const n = String(text || "").length;
-      if (typeof liveInput.setSelectionRange === "function") liveInput.setSelectionRange(n, n);
-    } catch (_) {}
-
-    const dispatchSignals = () => {
-      try {
-        let iev = null;
-        try {
-          iev = new InputEvent("input", { bubbles: true, data: null, inputType: "insertReplacementText" });
-        } catch (_) {
-          iev = new Event("input", { bubbles: true });
-        }
-        liveInput.dispatchEvent(iev);
-      } catch (_) {}
-
-      try { liveInput.dispatchEvent(new Event("change", { bubbles: true })); } catch (_) {}
-      try { liveInput.dispatchEvent(new Event("search", { bubbles: true })); } catch (_) {}
-      try {
-        liveInput.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, cancelable: true, key: "End", code: "End" }));
-      } catch (_) {}
-    };
-
-    dispatchSignals();
-    window.setTimeout(dispatchSignals, 0);
-    window.setTimeout(dispatchSignals, 28);
-    window.setTimeout(dispatchSignals, 96);
-    window.setTimeout(() => {
-      try {
-        const current = resolveLiveInput(liveInput, root) || liveInput;
-        if (!current || !current.isConnected) return;
-        if ((current.value || '').trim()) {
-          hideDropdown(current);
-          setMaterialOutputSuppressed(current, false);
-        }
-      } catch (_) {}
-      clearHistoryApply();
-    }, 420);
-  }
-
-  function renderDropdown(input) {
-    const root = ensureDropdown(input);
-    if (!input || !root) return;
-
-    const list = root.querySelector(`.${LIST_CLASS}`);
-    if (!list) return;
-
-    const items = filteredHistory(input.value);
-    list.innerHTML = "";
-
-    if (!items.length) {
-      const empty = document.createElement("div");
-      empty.className = "mk-search-history__empty";
-      empty.textContent = "No recent searches";
-      list.appendChild(empty);
-      return;
-    }
-
-    for (const text of items) {
-      const row = document.createElement("div");
-      row.className = ITEM_CLASS;
-      row.setAttribute("role", "option");
-      row.tabIndex = -1;
-      row.dataset.mkHistoryText = text;
-
-      const left = document.createElement("div");
-      left.className = "mk-search-history__text";
-      left.textContent = text;
-
-      const del = document.createElement("button");
-      del.type = "button";
-      del.className = "mk-search-history__del";
-      del.setAttribute("aria-label", "Remove");
-      del.textContent = "×";
-
-      del.addEventListener(
-        "pointerdown",
-        (e) => {
-          markDropdownInteraction();
-          e.stopPropagation();
-        },
-        true
-      );
-      del.addEventListener("mousedown", (e) => { markDropdownInteraction(); e.stopPropagation(); }, true);
-      del.addEventListener("touchstart", (e) => { markDropdownInteraction(); e.stopPropagation(); }, { capture: true, passive: true });
-
-      const handleDelete = (e) => {
-        if (isHistoryActionLocked()) { stopEvent(e); return; }
-        lockHistoryAction(320);
-        stopEvent(e);
-        const liveInput = resolveLiveInput(input, root) || input;
-        removeFromHistory(text);
-        blockSuggestionClicks(420);
-        if (!readHistory().length) {
-          hideDropdown(liveInput);
-          hideAllDropdowns();
-        } else {
-          renderDropdown(liveInput);
-          root.style.display = "block";
-        }
-        try { liveInput.focus({ preventScroll: true }); } catch (_) { try { liveInput.focus(); } catch (_) {} }
-      };
-      bindTouchActivation(del, handleDelete, true);
-
-      row.appendChild(left);
-      row.appendChild(del);
-
-      const pick = (e) => {
-        if (e && e.target && e.target.closest && e.target.closest(".mk-search-history__del")) return;
-        // only primary button when available
-        if (e && typeof e.button === "number" && e.button !== 0) return;
-        if (isHistoryActionLocked()) {
-          stopEvent(e);
-          return;
-        }
-        lockHistoryAction(520);
-
-        markDropdownInteraction();
-        if (e) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-
-        const liveInput = resolveLiveInput(input, root) || input;
-        blockSuggestionClicks(520);
-        applyHistoryToInput(liveInput, text, root);
-        // History should remain collapsed once query is non-empty.
-        requestAnimationFrame(() => updateModeForInput(resolveLiveInput(liveInput, root) || liveInput));
-      };
-
-      // Capture pointer/mouse down so we run *before* any focus/blur side effects.
-      row.addEventListener("pointerdown", pick, true);
-      row.addEventListener("mousedown", pick, true);
-      // Touch/click activation for mobile. bindTouchActivation also dedupes the follow-up click.
-      bindTouchActivation(row, pick, true);
-
-      list.appendChild(row);
-    }
-  }
-
-  function showDropdown(input) {
-    const root = ensureDropdown(input);
-    if (!input || !root) return;
-
-    hideAllDropdowns();
-    renderDropdown(input);
-    root.style.display = "block";
-    try { root.setAttribute("aria-hidden", "false"); } catch (_) {}
-    setHistorySurfaceOpen(input, true);
-    setResultSurfaceOpen(input, false);
-
-    // While history is shown we hide Material's sibling output so suggestions don't overlap.
-    setMaterialOutputSuppressed(input, true);
-  }
-
-  function hideDropdown(input) {
-    const root = ensureDropdown(input);
-    if (root) {
-      root.style.display = "none";
-      try { root.setAttribute("aria-hidden", "true"); } catch (_) {}
-    }
-    setHistorySurfaceOpen(input, false);
-    try { if (!input || !(input.value || "").trim()) setResultSurfaceOpen(input, false); } catch (_) {}
-    if (input) setMaterialOutputSuppressed(input, false);
-    if (root) {
-      try {
-        root.querySelectorAll(`.${ITEM_CLASS}.${ACTIVE_CLASS}`).forEach((el) => el.classList.remove(ACTIVE_CLASS));
-      } catch (_) {}
-    }
-  }
-
-  // Only show history when the user has actually opened/interacted with the
-  // header search UI in this page lifecycle. Do not trust Material's persisted
-  // active class alone on initial load / refresh.
-  function isSearchUiActive(input) {
-    if (!hasHeaderSearchUserOpened()) return false;
-
-    const toggle = getSearchToggle();
-    if (toggle && toggle.checked) return true;
-
-    const ae = document.activeElement;
-    if (input && ae === input) return true;
-    if (ae && ae.closest && ae.closest(".md-header .md-search")) return true;
-
-    const activeSearch = document.querySelector(".md-header .md-search.md-search--active");
-    if (activeSearch) return true;
-
-    return false;
-  }
-
-  function updateModeForInput(input) {
-    if (!input || !input.isConnected) return;
-
-    const root = ensureDropdown(input);
-    if (!root) return;
-
-    if (hasExplicitClose()) {
-      const ae = document.activeElement;
-      const inside = !!(root && ae && (ae === input || root.contains(ae) || (ae.closest && ae.closest('.md-header .md-search'))));
-      if (!inside) {
-        hideDropdown(input);
-        setMaterialOutputSuppressed(input, false);
-        return;
-      }
-    }
-
-    const q = (input.value || "").trim();
-    const hasHistory = readHistory().length > 0;
-
-    if (hasHistoryApply()) {
-      hideDropdown(input);
-      setMaterialOutputSuppressed(input, false);
-      return;
-    }
-
-    if (!isSearchUiActive(input)) {
-      hideDropdown(input);
-      setResultSurfaceOpen(input, false);
-      setMaterialOutputSuppressed(input, false);
-      return;
-    }
-
-    if (q) {
-      // Typing => Material suggestions/results. Show the result dropdown as its own rounded surface.
-      hideDropdown(input);
-      setResultSurfaceOpen(input, true);
-      return;
-    }
-
-    if (hasEmptyClear()) {
-      hideDropdown(input);
-      setResultSurfaceOpen(input, false);
-      setMaterialOutputSuppressed(input, false);
-      return;
-    }
-
-    // Empty query
-    if (hasHistory) {
-      showDropdown(input);
-    } else {
-      hideDropdown(input);
-    }
-  }
-
-  function bindPerInput(input) {
-    if (!input || !input.matches || !input.matches(INPUT_SELECTOR)) return;
-
-    if (input.dataset.mkHistoryBound === "1") return;
-    input.dataset.mkHistoryBound = "1";
-
-    input.addEventListener(
-      "focus",
-      (ev) => {
-        lastFocusedInput = input;
-        try { input.dataset.mkHistoryPrevValue = String(input.value || ""); } catch (_) {}
-        clearExplicitClose();
-        if ((input.value || '').trim()) clearEmptyClear();
-
-        // Trusted focus means the user tabbed/clicked into search. Programmatic
-        // focus during boot must not open the history dropdown by itself.
-        if (!ev || ev.isTrusted) markHeaderSearchInteraction(1200);
-
-        updateModeForInput(input);
-        scheduleRefresh(input, [0, 30, 90, 180, 320, 520, 900]);
-      },
-      { passive: true }
-    );
-
-    input.addEventListener(
-      "input",
-      () => {
-        lastFocusedInput = input;
-        const nextValue = String(input.value || '');
-        const nextTrim = nextValue.trim();
-        const prevValue = String((input.dataset && input.dataset.mkHistoryPrevValue) || '');
-        const prevTrim = prevValue.trim();
-        try { input.dataset.mkHistoryPrevValue = nextValue; } catch (_) {}
-        clearExplicitClose();
-        if (nextTrim) {
-          clearHistoryApply();
-          clearEmptyClear();
-        } else if (prevTrim) {
-          markEmptyClear(360);
-        }
-        markSearchUiGrace(nextTrim ? 240 : 1200);
-        updateModeForInput(input);
-      },
-      { passive: true }
-    );
-
-    input.addEventListener(
-      "search",
-      () => {
-        lastFocusedInput = input;
-        try { input.dataset.mkHistoryPrevValue = String(input.value || ''); } catch (_) {}
-        clearExplicitClose();
-        if ((input.value || '').trim()) {
-          clearEmptyClear();
-          markSearchUiGrace(640);
-          scheduleRefresh(input);
-          return;
-        }
-        markEmptyClear(620);
-        hideDropdown(input);
-        setMaterialOutputSuppressed(input, false);
-      },
-      { passive: true }
-    );
-
-    input.addEventListener(
-      "change",
-      () => {
-        lastFocusedInput = input;
-        try { input.dataset.mkHistoryPrevValue = String(input.value || ''); } catch (_) {}
-        clearExplicitClose();
-        if ((input.value || '').trim()) {
-          clearEmptyClear();
-          markSearchUiGrace(640);
-          scheduleRefresh(input);
-          return;
-        }
-        if (hasEmptyClear()) {
-          hideDropdown(input);
-          setMaterialOutputSuppressed(input, false);
-          return;
-        }
-        markSearchUiGrace(640);
-        scheduleRefresh(input);
-      },
-      { passive: true }
-    );
-
-    input.addEventListener("blur", () => {
-      window.setTimeout(() => {
-        const now = Date.now();
-        const root = ensureDropdown(input);
-        const ae = document.activeElement;
-        const inside = root && ae && (ae === root || root.contains(ae));
-
-        // If blur was caused by clicking inside dropdown, keep it open only when query is still empty.
-        if (inside || now < suppressBlurHideUntil) {
-          const qv = (input.value || "").trim();
-          if (qv) {
-            hideDropdown(input);
-            return;
-          }
-          if (root) root.style.display = "block";
-          try { input.focus({ preventScroll: true }); } catch (_) { try { input.focus(); } catch (_) {} }
-          return;
-        }
-
-        const qv = (input.value || "").trim();
-        if (!qv && hasEmptyClear()) {
-          hideDropdown(input);
-          setMaterialOutputSuppressed(input, false);
-          return;
-        }
-        if (hasExplicitClose()) {
-          hideDropdown(input);
-          setMaterialOutputSuppressed(input, false);
-          return;
-        }
-        if (hasHistoryApply()) {
-          hideDropdown(input);
-          setMaterialOutputSuppressed(input, false);
-          return;
-        }
-        if (!isSearchUiActive(input)) {
-          hideDropdown(input);
-          setMaterialOutputSuppressed(input, false);
-          return;
-        }
-        if (!qv && hasSearchUiGrace(input)) {
-          showDropdown(input);
-          return;
-        }
-
-        hideDropdown(input);
-      }, 80);
-    });
-
-    // Key navigation: ↑ ↓ Enter Esc
-    input.addEventListener(
-      "keydown",
-      (ev) => {
-        const root = ensureDropdown(input);
-        const dropdownVisible = root && root.style.display !== "none";
-
-        if (!dropdownVisible) {
-          if (ev.key === "Escape") hideDropdown(input);
-          return;
-        }
-
-        const items = Array.from(root.querySelectorAll(`.${ITEM_CLASS}`));
-        const active = root.querySelector(`.${ITEM_CLASS}.${ACTIVE_CLASS}`);
-        let idx = active ? items.indexOf(active) : -1;
-
-        if (ev.key === "ArrowDown") {
-          ev.preventDefault();
-          ev.stopPropagation();
-          if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-          idx = Math.min(items.length - 1, idx + 1);
-          setActiveIndex(root, idx);
-        } else if (ev.key === "ArrowUp") {
-          ev.preventDefault();
-          ev.stopPropagation();
-          if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-          idx = Math.max(0, idx - 1);
-          setActiveIndex(root, idx);
-        } else if (ev.key === "Enter") {
-          if (active) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-            const text = String(active.dataset.mkHistoryText || active.querySelector(".mk-search-history__text")?.textContent || "").trim();
-            if (text) {
-              const liveInput = resolveLiveInput(input, root) || input;
-              applyHistoryToInput(liveInput, text, root);
-              requestAnimationFrame(() => updateModeForInput(resolveLiveInput(liveInput, root) || liveInput));
-            }
-            return;
-          }
-          // Otherwise let Material handle Enter; capture listener below also records history.
-        } else if (ev.key === "Escape") {
-          ev.preventDefault();
-          ev.stopPropagation();
-          if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-          hideDropdown(input);
-        }
-      },
-      true
-    );
-
-    // Ensure it starts closed.
-    hideDropdown(input);
-  }
-
-  function bindGlobalOnce() {
-    if (window.__mkSearchHistoryGlobalBoundV5) return;
-    window.__mkSearchHistoryGlobalBoundV5 = true;
-
-    document.addEventListener(
-      "pointerdown",
-      (ev) => {
-        const t = ev && ev.target;
-        if (!t || !t.closest) return;
-        if (t.closest(`.${ROOT_CLASS}`)) {
-          markSearchUiGrace(640);
-          return;
-        }
-        if (t.closest('.md-header .md-search, label[for="__search"], [for="__search"], input#__search, input.md-toggle[data-md-toggle="search"]')) {
-          markHeaderSearchInteraction(1200);
-          return;
-        }
-        clearSearchUiGrace();
-        clearHistoryApply();
-        clearEmptyClear();
-        markExplicitClose(640);
-        collapseHeaderSearchUi('outside');
-        hideAllDropdowns();
-      },
-      true
-    );
-
-    // When the built-in clear/close control clears the query, Material may not
-    // leave us in a state where history reappears automatically. Refresh the
-    // current search input shortly after toolbar/icon clicks inside the search UI.
-    document.addEventListener(
-      "click",
-      (ev) => {
-        const t = ev.target;
-        if (!t || !t.closest) return;
-
-        const root = t.closest(".md-search");
-        if (!root) return;
-
-        const ctrl = t.closest("button, label, [role=button], .md-search__icon, .md-icon");
-        if (!ctrl) return;
-
-        if (Date.now() < suppressBlurHideUntil) return;
-        if (hasExplicitClose()) return;
-        if (t.closest(`.${ROOT_CLASS}`) || t.closest('.mk-search-suggest')) return;
-
-        const input = resolveLiveInput(root.querySelector(INPUT_SELECTOR) || getLikelyInput(), root);
-        if (!isHeaderSearchInput(input)) return;
-        if (!input) return;
-
-        lastFocusedInput = input;
-        if (isSearchClearControl(ctrl)) {
-          markEmptyClear(620);
-          hideDropdown(input);
-          setMaterialOutputSuppressed(input, false);
-          return;
-        }
-        clearEmptyClear();
-        markSearchUiGrace(640);
-        scheduleRefresh(input, [0, 30, 90, 180, 320, 520, 900]);
-      },
-      true
-    );
-
-    document.addEventListener(
-      "change",
-      (ev) => {
-        const t = ev && ev.target;
-        if (!t || !t.matches) return;
-        if (!(t.matches('input.md-toggle[data-md-toggle="search"]') || t.matches('input#__search') || t.matches('#__search'))) return;
-
-        if (t.checked) {
-          clearExplicitClose();
-          clearEmptyClear();
-          markHeaderSearchInteraction(1200);
-          const input = getLikelyInput();
-          if (input) scheduleRefresh(input, [0, 30, 90, 180, 320, 520, 900]);
-          return;
-        }
-
-        clearSearchUiGrace();
-        clearHistoryApply();
-        clearEmptyClear();
-        markExplicitClose(640);
-        hideAllDropdowns();
-      },
-      true
-    );
-
-    // Record searches on Enter (capture, before redirects).
-    document.addEventListener(
-      "keydown",
-      (ev) => {
-        const t = ev.target;
-        if (!isHeaderSearchInput(t)) return;
-        if (ev.key !== "Enter") return;
-        addToHistory(t.value);
-      },
-      true
-    );
-
-    // Clicking a result in Material overlay -> store current query.
-    document.addEventListener(
-      "click",
-      (ev) => {
-        const a = ev.target && ev.target.closest ? ev.target.closest("a.md-search-result__link") : null;
-        if (!a) return;
-        const input = getLikelyInput();
-        const q = input ? (input.value || "").trim() : "";
-        if (q) addToHistory(q);
-      },
-      true
-    );
-  }
-
-  function bindAllInputs() {
-    getAllInputs().forEach(bindPerInput);
-  }
-
-  function init() {
-    ensureSearchUiPatchStyle();
-    bindGlobalOnce();
-    bindAllInputs();
-
-    // Hide any stale dropdown remnants after initial load / refresh / instant navigation.
-    // Also clear the per-page "user opened search" gate so Material's own restored
-    // active state cannot reopen history until the user interacts with search again.
-    clearExplicitClose();
-    clearHistoryApply();
-    clearEmptyClear();
-    clearSearchUiGrace();
-    hideAllDropdowns();
-
-    // If the user is already in the search UI, update mode for that input. The
-    // user-open gate above prevents this from showing history on boot.
-    const active = getLikelyInput();
-    if (active) {
-      updateModeForInput(active);
-      scheduleRefresh(active, [0, 30, 90, 180, 320, 520, 900]);
-    }
-  }
-
-  // Re-bind after instant navigation / partial page loads.
-  // This is intentionally idempotent.
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-
-  document.addEventListener("DOMContentSwitch", init);
-
-  // Also watch for late-created search inputs.
-  const mo = new MutationObserver(() => {
-    // Avoid heavy work; just bind any new inputs.
-    bindAllInputs();
-  });
-  try { mo.observe(document.documentElement, { childList: true, subtree: true }); } catch (_) {}
-
-
-  // v8: when the Find page is opened from tabs/refresh, stale header-search layers can leave
-  // #mk-mobile-search-backdrop visible. Kill them unless the user is actively focusing header search.
-  function __mkFindResidueCleanupV8() {
-    try {
-      var path = String(location.pathname || '').toLowerCase().replace(/\/index\.html$/, '/');
-      var isFind = path.endsWith('/find/') || path.endsWith('/find.html') || path.endsWith('/find');
-      if (!isFind) return;
-      var ae = document.activeElement;
-      var active = !!(ae && ae.closest && ae.closest('.md-header .md-search'));
-      if (active) return;
-      var toggle = document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search');
-      if (toggle) toggle.checked = false;
-      document.querySelectorAll('.md-header .md-search.md-search--active,.md-search.md-search--active').forEach(function(el){ el.classList.remove('md-search--active'); });
-      document.documentElement.classList.remove('md-search--active');
-      if (document.body) document.body.classList.remove('md-search--active');
-      document.querySelectorAll('.md-search__output,.md-search__overlay,.mk-search-history,.mk-search-suggest').forEach(function(el){
-        try { el.style.display='none'; el.style.opacity='0'; el.style.pointerEvents='none'; el.setAttribute('aria-hidden','true'); } catch (_) {}
-      });
-      document.querySelectorAll('.md-search__inner.mk-search-history-open,.md-search.mk-search-history-open,.md-search__inner.mk-search-result-open,.md-search.mk-search-result-open').forEach(function(el){
-        try { el.classList.remove('mk-search-history-open'); el.classList.remove('mk-search-result-open'); } catch (_) {}
-      });
-      var bd = document.getElementById('mk-mobile-search-backdrop');
-      if (bd) { bd.style.display='none'; bd.style.opacity='0'; bd.style.backdropFilter='none'; bd.style.webkitBackdropFilter='none'; }
-      try { if (window.__mkFindNoBlurCleanupV8) window.__mkFindNoBlurCleanupV8(); } catch (_) {}
-    } catch (_) {}
-  }
-  try {
-    [0, 40, 120, 280, 700, 1200, 1800].forEach(function(ms){ setTimeout(__mkFindResidueCleanupV8, ms); });
-    document.addEventListener('DOMContentSwitch', function(){ [0, 40, 120, 280, 700, 1200].forEach(function(ms){ setTimeout(__mkFindResidueCleanupV8, ms); }); });
-    window.addEventListener('pageshow', function(){ [0, 40, 120, 280, 700, 1200].forEach(function(ms){ setTimeout(__mkFindResidueCleanupV8, ms); }); }, { passive: true });
-  } catch (_) {}
-})();
+    `;(document.head||document.documentElement).appendChild(style);}
+let suppressBlurHideUntil=0;let searchUiGraceUntil=0;let explicitCloseUntil=0;let historyApplyUntil=0;let historyActionLockUntil=0;let emptyClearUntil=0;let headerSearchUserOpened=false;function markHeaderSearchUserOpened(){headerSearchUserOpened=true;try{window.__mkSearchHistoryUserOpened="1";}catch(_){}}
+function clearHeaderSearchUserOpened(){headerSearchUserOpened=false;try{window.__mkSearchHistoryUserOpened="0";}catch(_){}}
+function hasHeaderSearchUserOpened(){try{return headerSearchUserOpened||window.__mkSearchHistoryUserOpened==="1";}catch(_){return headerSearchUserOpened;}}
+function markHistoryApply(ms){historyApplyUntil=Date.now()+Math.max(420,Number(ms)||0);try{window.__mkSearchHistoryApplyingUntil=historyApplyUntil;}catch(_){}}
+function hasHistoryApply(){try{const shared=Number(window.__mkSearchHistoryApplyingUntil||0);return Date.now()<Math.max(historyApplyUntil,shared);}catch(_){return Date.now()<historyApplyUntil;}}
+function clearHistoryApply(){historyApplyUntil=0;try{window.__mkSearchHistoryApplyingUntil=0;}catch(_){}}
+function markEmptyClear(ms){emptyClearUntil=Date.now()+Math.max(260,Number(ms)||0);try{window.__mkSearchHistoryEmptyClearUntil=emptyClearUntil;}catch(_){}}
+function hasEmptyClear(){try{const shared=Number(window.__mkSearchHistoryEmptyClearUntil||0);return Date.now()<Math.max(emptyClearUntil,shared);}catch(_){return Date.now()<emptyClearUntil;}}
+function clearEmptyClear(){emptyClearUntil=0;try{window.__mkSearchHistoryEmptyClearUntil=0;}catch(_){}}
+function lockHistoryAction(ms){historyActionLockUntil=Date.now()+Math.max(220,Number(ms)||0);}
+function isHistoryActionLocked(){return Date.now()<historyActionLockUntil;}
+function markSearchUiGrace(ms){const extra=Math.max(320,Number(ms)||0);const until=Date.now()+extra;if(until>searchUiGraceUntil)searchUiGraceUntil=until;try{const prev=Number(window.__mkFindHeaderSearchGraceUntil||0);if(until>prev)window.__mkFindHeaderSearchGraceUntil=until;}catch(_){}}
+function markHeaderSearchInteraction(ms){markHeaderSearchUserOpened();try{window.__mkHeaderSearchUserTouchTs=Date.now();}catch(_){}
+markSearchUiGrace(ms);}
+function clearSearchUiGrace(){searchUiGraceUntil=0;clearHeaderSearchUserOpened();try{window.__mkFindHeaderSearchGraceUntil=0;}catch(_){}}
+function markExplicitClose(ms){const until=Date.now()+Math.max(1800,Number(ms)||0);if(until>explicitCloseUntil)explicitCloseUntil=until;try{window.__mkSearchHistoryExplicitCloseUntil=until;}catch(_){}}
+function clearExplicitClose(){explicitCloseUntil=0;try{window.__mkSearchHistoryExplicitCloseUntil=0;}catch(_){}}
+function hasExplicitClose(){try{const shared=Number(window.__mkSearchHistoryExplicitCloseUntil||0);return Date.now()<Math.max(explicitCloseUntil,shared);}catch(_){return Date.now()<explicitCloseUntil;}}
+function isSearchClearControl(el){const ctrl=el&&el.closest?el.closest('button, label, [role="button"], .md-search__icon, .md-icon'):null;if(!ctrl)return false;try{const title=String((ctrl.getAttribute&&ctrl.getAttribute('title'))||'').trim().toLowerCase();const aria=String((ctrl.getAttribute&&ctrl.getAttribute('aria-label'))||'').trim().toLowerCase();const cls=String(ctrl.className||'').toLowerCase();if(title==='clear'||aria==='clear')return true;if(cls.includes('clear'))return true;}catch(_){}
+return false;}
+function collapseHeaderSearchUi(reason){try{const root=document.querySelector('.md-header .md-search.md-search--active')||document.querySelector('.md-header .md-search');const toggle=getSearchToggle();const input=resolveLiveInput(root&&root.querySelector?root.querySelector(INPUT_SELECTOR):getLikelyInput(),root||document);if(root&&root.classList)root.classList.remove('md-search--active');if(toggle)toggle.checked=false;if(input){try{input.blur();}catch(_){}}
+if(reason==='outside'){clearSearchUiGrace();clearHistoryApply();markExplicitClose(640);}
+hideAllDropdowns();if(input)setMaterialOutputSuppressed(input,false);return true;}catch(_){return false;}}
+function hasSearchUiGrace(input){try{if(!input||!input.isConnected)return false;const sharedUntil=Number(window.__mkFindHeaderSearchGraceUntil||0);const until=Math.max(searchUiGraceUntil,sharedUntil);if(Date.now()>=until)return false;const shell=getHeaderSearchRoot(input);const toggle=getSearchToggle();const ae=document.activeElement;if(ae===input)return true;if(shell&&ae&&shell.contains&&shell.contains(ae))return true;if(shell&&shell.classList&&shell.classList.contains('md-search--active'))return true;if(toggle&&toggle.checked)return true;return false;}catch(_){return false;}}
+function markDropdownInteraction(){suppressBlurHideUntil=Date.now()+260;markSearchUiGrace(640);}
+function stopEvent(e){if(!e)return;try{e.preventDefault();}catch(_){}
+try{e.stopPropagation();}catch(_){}
+try{if(e.stopImmediatePropagation)e.stopImmediatePropagation();}catch(_){}}
+function bindTouchActivation(el,handler,capture){if(!el||!handler)return;let lastTouchTs=0;const useCapture=!!capture;el.addEventListener("touchend",(e)=>{lastTouchTs=Date.now();handler(e);},{capture:useCapture,passive:false});el.addEventListener("click",(e)=>{if(Date.now()-lastTouchTs<420){stopEvent(e);return;}
+handler(e);},useCapture);}
+function blockSuggestionClicks(ms){try{window.__mkSearchSuggestClickBlockUntil=Date.now()+Math.max(180,Number(ms)||420);}catch(_){}}
+let lastFocusedInput=null;function readHistory(){try{const raw=localStorage.getItem(STORAGE_KEY);const arr=raw?JSON.parse(raw):[];return Array.isArray(arr)?arr.filter(Boolean).map(String):[];}catch(_){return[];}}
+function writeHistory(arr){try{localStorage.setItem(STORAGE_KEY,JSON.stringify((arr||[]).slice(0,MAX_ITEMS)));}catch(_){}}
+function addToHistory(q){const s=String(q||"").trim();if(!s)return;const arr=readHistory();const next=[s,...arr.filter((x)=>x.toLowerCase()!==s.toLowerCase())];writeHistory(next);}
+function removeFromHistory(q){const s=String(q||"").trim();if(!s)return;writeHistory(readHistory().filter((x)=>x.toLowerCase()!==s.toLowerCase()));}
+function clearHistory(){writeHistory([]);}
+function getAllInputs(){return Array.from(document.querySelectorAll('.md-header '+INPUT_SELECTOR)).filter(isHeaderSearchInput);}
+function isVisible(el){try{if(!el)return false;if(el.offsetParent===null)return false;const cs=window.getComputedStyle(el);return cs.visibility!=="hidden"&&cs.display!=="none";}catch(_){return false;}}
+function getLikelyInput(){const ae=document.activeElement;if(isHeaderSearchInput(ae))return ae;if(lastFocusedInput&&lastFocusedInput.isConnected&&lastFocusedInput.matches(INPUT_SELECTOR)){return lastFocusedInput;}
+const inputs=getAllInputs();if(!inputs.length)return null;const activeSearch=document.querySelector('.md-header .md-search.md-search--active')||document.querySelector('.md-header .md-search');if(activeSearch){const inActive=inputs.find((i)=>activeSearch.contains(i)&&isVisible(i));if(inActive)return inActive;}
+const visible=inputs.find(isVisible);return visible||inputs[0];}
+function getSearchRoot(input){const i=input||getLikelyInput();return getHeaderSearchRoot(i)||document;}
+function scheduleRefresh(input,delays){const live=input||getLikelyInput();if(!live)return;const seq=Array.isArray(delays)&&delays.length?delays:[0,20,80,160];seq.forEach((ms)=>{window.setTimeout(()=>{try{const current=resolveLiveInput(live,getSearchRoot(live))||live;if(!isHeaderSearchInput(current))return;if(!current||!current.isConnected)return;if(hasExplicitClose()){hideDropdown(current);setMaterialOutputSuppressed(current,false);return;}
+updateModeForInput(current);}catch(_){}},ms);});}
+function getOverlayContainer(input){const i=input||getLikelyInput();if(!i)return null;return i.closest(".md-search__inner")||i.parentElement;}
+function getSearchInner(input){try{const i=input||getLikelyInput();if(i&&i.closest)return i.closest(".md-search__inner");}catch(_){}
+return null;}
+function setHistorySurfaceOpen(input,open){try{const inner=getSearchInner(input);if(inner&&inner.classList)inner.classList.toggle("mk-search-history-open",!!open);const search=inner&&inner.closest?inner.closest(".md-search"):getHeaderSearchRoot(input);if(search&&search.classList)search.classList.toggle("mk-search-history-open",!!open);}catch(_){}}
+function setResultSurfaceOpen(input,open){try{const inner=getSearchInner(input);if(inner&&inner.classList)inner.classList.toggle("mk-search-result-open",!!open);const search=inner&&inner.closest?inner.closest(".md-search"):getHeaderSearchRoot(input);if(search&&search.classList)search.classList.toggle("mk-search-result-open",!!open);}catch(_){}}
+function resolveLiveInput(input,root){if(input&&input.isConnected&&input.matches&&input.matches(INPUT_SELECTOR))return input;try{const host=root&&root.parentElement;if(host){const local=host.querySelector(INPUT_SELECTOR);if(local)return local;}}catch(_){}
+try{const searchRoot=root&&root.__mkSearchRoot;if(searchRoot&&searchRoot.isConnected){const inside=Array.from(searchRoot.querySelectorAll(INPUT_SELECTOR)).find(isVisible);if(inside)return inside;}}catch(_){}
+try{const fallback=getLikelyInput();if(fallback)return fallback;}catch(_){}
+return null;}
+function getMaterialOutput(input){const root=getSearchRoot(input);return root?root.querySelector(".md-search__output"):null;}
+function setMaterialOutputSuppressed(input,suppressed){const out=getMaterialOutput(input);if(!out||!out.style)return;if(suppressed){out.dataset.mkHistorySuppressed="1";out.style.setProperty("display","none","important");out.style.setProperty("pointer-events","none","important");}else{try{out.style.removeProperty("display");}catch(_){}
+try{out.style.removeProperty("pointer-events");}catch(_){}
+try{out.style.removeProperty("visibility");}catch(_){}
+try{out.style.removeProperty("opacity");}catch(_){}
+try{out.removeAttribute("aria-hidden");}catch(_){}
+try{delete out.dataset.mkHistorySuppressed;}catch(_){}}}
+function hideAllDropdowns(){try{document.querySelectorAll(`.${ROOT_CLASS}`).forEach((root)=>{try{root.style.display="none";}catch(_){}
+try{root.setAttribute("aria-hidden","true");}catch(_){}
+try{const inner=root.closest&&root.closest(".md-search__inner");if(inner&&inner.classList){inner.classList.remove("mk-search-history-open");inner.classList.remove("mk-search-result-open");}
+const search=root.closest&&root.closest(".md-search");if(search&&search.classList){search.classList.remove("mk-search-history-open");search.classList.remove("mk-search-result-open");}}catch(_){}
+try{root.querySelectorAll(`.${ITEM_CLASS}.${ACTIVE_CLASS}`).forEach((el)=>el.classList.remove(ACTIVE_CLASS));}catch(_){}});}catch(_){}
+try{document.querySelectorAll(".md-search__output").forEach((out)=>{if(!out||!out.style)return;if(out.dataset&&out.dataset.mkHistorySuppressed==="1"){try{out.style.removeProperty("display");}catch(_){}
+try{out.style.removeProperty("pointer-events");}catch(_){}
+try{delete out.dataset.mkHistorySuppressed;}catch(_){}}});}catch(_){}}
+function ensureDropdown(input){const host=getOverlayContainer(input);if(!host)return null;let root=host.querySelector(`.${ROOT_CLASS}`);if(root){try{root.__mkOwnerInput=input||root.__mkOwnerInput||null;root.__mkSearchRoot=getSearchRoot(input)||root.__mkSearchRoot||null;}catch(_){}
+return root;}
+try{const cs=window.getComputedStyle(host);if(cs.position==="static")host.style.position="relative";}catch(_){}
+root=document.createElement("div");root.className=ROOT_CLASS;root.setAttribute("role","listbox");root.style.display="none";const list=document.createElement("div");list.className=LIST_CLASS;root.appendChild(list);const footer=document.createElement("div");footer.className="mk-search-history__footer";const clearBtn=document.createElement("button");clearBtn.type="button";clearBtn.className="mk-search-history__clear";clearBtn.textContent="Clear history";clearBtn.addEventListener("pointerdown",(e)=>{markDropdownInteraction();e.stopPropagation();},true);clearBtn.addEventListener("mousedown",(e)=>{markDropdownInteraction();e.stopPropagation();},true);clearBtn.addEventListener("touchstart",(e)=>{markDropdownInteraction();e.stopPropagation();},{capture:true,passive:true});const handleClear=(e)=>{stopEvent(e);const liveInput=resolveLiveInput(input,root)||input;clearHistory();blockSuggestionClicks(520);hideDropdown(liveInput);hideAllDropdowns();try{liveInput.focus({preventScroll:true});}catch(_){try{liveInput.focus();}catch(_){}}};bindTouchActivation(clearBtn,handleClear,true);footer.appendChild(clearBtn);root.appendChild(footer);root.addEventListener("pointerdown",()=>{markDropdownInteraction();},true);root.addEventListener("mousedown",()=>{markDropdownInteraction();},true);root.addEventListener("touchstart",()=>{markDropdownInteraction();},{capture:true,passive:true});try{root.__mkOwnerInput=input||null;root.__mkSearchRoot=getSearchRoot(input)||null;}catch(_){}
+host.appendChild(root);return root;}
+function filteredHistory(query){const q=String(query||"").trim().toLowerCase();const arr=readHistory();if(!q)return arr;return arr.filter((x)=>x.toLowerCase().includes(q));}
+function setActiveIndex(root,idx){const items=Array.from(root.querySelectorAll(`.${ITEM_CLASS}`));items.forEach((el)=>el.classList.remove(ACTIVE_CLASS));if(idx<0||idx>=items.length)return-1;items[idx].classList.add(ACTIVE_CLASS);try{items[idx].scrollIntoView({block:"nearest"});}catch(_){}
+return idx;}
+function applyHistoryToInput(input,text,root){const liveInput=resolveLiveInput(input,root);if(!liveInput)return;liveInput.value=text;lastFocusedInput=liveInput;clearExplicitClose();markHeaderSearchInteraction(1200);markHistoryApply(900);lockHistoryAction(520);blockSuggestionClicks(520);hideAllDropdowns();setMaterialOutputSuppressed(liveInput,false);const searchRoot=getSearchRoot(liveInput);try{if(searchRoot&&searchRoot.classList)searchRoot.classList.add("md-search--active");}catch(_){}
+try{liveInput.focus({preventScroll:true});}catch(_){try{liveInput.focus();}catch(_){}}
+try{const n=String(text||"").length;if(typeof liveInput.setSelectionRange==="function")liveInput.setSelectionRange(n,n);}catch(_){}
+const dispatchSignals=()=>{try{let iev=null;try{iev=new InputEvent("input",{bubbles:true,data:null,inputType:"insertReplacementText"});}catch(_){iev=new Event("input",{bubbles:true});}
+liveInput.dispatchEvent(iev);}catch(_){}
+try{liveInput.dispatchEvent(new Event("change",{bubbles:true}));}catch(_){}
+try{liveInput.dispatchEvent(new Event("search",{bubbles:true}));}catch(_){}
+try{liveInput.dispatchEvent(new KeyboardEvent("keyup",{bubbles:true,cancelable:true,key:"End",code:"End"}));}catch(_){}};dispatchSignals();window.setTimeout(dispatchSignals,0);window.setTimeout(dispatchSignals,28);window.setTimeout(dispatchSignals,96);window.setTimeout(()=>{try{const current=resolveLiveInput(liveInput,root)||liveInput;if(!current||!current.isConnected)return;if((current.value||'').trim()){hideDropdown(current);setMaterialOutputSuppressed(current,false);}}catch(_){}
+clearHistoryApply();},420);}
+function renderDropdown(input){const root=ensureDropdown(input);if(!input||!root)return;const list=root.querySelector(`.${LIST_CLASS}`);if(!list)return;const items=filteredHistory(input.value);list.innerHTML="";if(!items.length){const empty=document.createElement("div");empty.className="mk-search-history__empty";empty.textContent="No recent searches";list.appendChild(empty);return;}
+for(const text of items){const row=document.createElement("div");row.className=ITEM_CLASS;row.setAttribute("role","option");row.tabIndex=-1;row.dataset.mkHistoryText=text;const left=document.createElement("div");left.className="mk-search-history__text";left.textContent=text;const del=document.createElement("button");del.type="button";del.className="mk-search-history__del";del.setAttribute("aria-label","Remove");del.textContent="×";del.addEventListener("pointerdown",(e)=>{markDropdownInteraction();e.stopPropagation();},true);del.addEventListener("mousedown",(e)=>{markDropdownInteraction();e.stopPropagation();},true);del.addEventListener("touchstart",(e)=>{markDropdownInteraction();e.stopPropagation();},{capture:true,passive:true});const handleDelete=(e)=>{if(isHistoryActionLocked()){stopEvent(e);return;}
+lockHistoryAction(320);stopEvent(e);const liveInput=resolveLiveInput(input,root)||input;removeFromHistory(text);blockSuggestionClicks(420);if(!readHistory().length){hideDropdown(liveInput);hideAllDropdowns();}else{renderDropdown(liveInput);root.style.display="block";}
+try{liveInput.focus({preventScroll:true});}catch(_){try{liveInput.focus();}catch(_){}}};bindTouchActivation(del,handleDelete,true);row.appendChild(left);row.appendChild(del);const pick=(e)=>{if(e&&e.target&&e.target.closest&&e.target.closest(".mk-search-history__del"))return;if(e&&typeof e.button==="number"&&e.button!==0)return;if(isHistoryActionLocked()){stopEvent(e);return;}
+lockHistoryAction(520);markDropdownInteraction();if(e){e.preventDefault();e.stopPropagation();}
+const liveInput=resolveLiveInput(input,root)||input;blockSuggestionClicks(520);applyHistoryToInput(liveInput,text,root);requestAnimationFrame(()=>updateModeForInput(resolveLiveInput(liveInput,root)||liveInput));};row.addEventListener("pointerdown",pick,true);row.addEventListener("mousedown",pick,true);bindTouchActivation(row,pick,true);list.appendChild(row);}}
+function showDropdown(input){const root=ensureDropdown(input);if(!input||!root)return;hideAllDropdowns();renderDropdown(input);root.style.display="block";try{root.setAttribute("aria-hidden","false");}catch(_){}
+setHistorySurfaceOpen(input,true);setResultSurfaceOpen(input,false);setMaterialOutputSuppressed(input,true);}
+function hideDropdown(input){const root=ensureDropdown(input);if(root){root.style.display="none";try{root.setAttribute("aria-hidden","true");}catch(_){}}
+setHistorySurfaceOpen(input,false);try{if(!input||!(input.value||"").trim())setResultSurfaceOpen(input,false);}catch(_){}
+if(input)setMaterialOutputSuppressed(input,false);if(root){try{root.querySelectorAll(`.${ITEM_CLASS}.${ACTIVE_CLASS}`).forEach((el)=>el.classList.remove(ACTIVE_CLASS));}catch(_){}}}
+function isSearchUiActive(input){if(!hasHeaderSearchUserOpened())return false;const toggle=getSearchToggle();if(toggle&&toggle.checked)return true;const ae=document.activeElement;if(input&&ae===input)return true;if(ae&&ae.closest&&ae.closest(".md-header .md-search"))return true;const activeSearch=document.querySelector(".md-header .md-search.md-search--active");if(activeSearch)return true;return false;}
+function updateModeForInput(input){if(!input||!input.isConnected)return;const root=ensureDropdown(input);if(!root)return;if(hasExplicitClose()){const ae=document.activeElement;const inside=!!(root&&ae&&(ae===input||root.contains(ae)||(ae.closest&&ae.closest('.md-header .md-search'))));if(!inside){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}}
+const q=(input.value||"").trim();const hasHistory=readHistory().length>0;if(hasHistoryApply()){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+if(!isSearchUiActive(input)){hideDropdown(input);setResultSurfaceOpen(input,false);setMaterialOutputSuppressed(input,false);return;}
+if(q){hideDropdown(input);setResultSurfaceOpen(input,true);return;}
+if(hasEmptyClear()){hideDropdown(input);setResultSurfaceOpen(input,false);setMaterialOutputSuppressed(input,false);return;}
+if(hasHistory){showDropdown(input);}else{hideDropdown(input);}}
+function bindPerInput(input){if(!input||!input.matches||!input.matches(INPUT_SELECTOR))return;if(input.dataset.mkHistoryBound==="1")return;input.dataset.mkHistoryBound="1";input.addEventListener("focus",(ev)=>{lastFocusedInput=input;try{input.dataset.mkHistoryPrevValue=String(input.value||"");}catch(_){}
+clearExplicitClose();if((input.value||'').trim())clearEmptyClear();if(!ev||ev.isTrusted)markHeaderSearchInteraction(1200);updateModeForInput(input);scheduleRefresh(input,[0,30,90,180,320,520,900]);},{passive:true});input.addEventListener("input",()=>{lastFocusedInput=input;const nextValue=String(input.value||'');const nextTrim=nextValue.trim();const prevValue=String((input.dataset&&input.dataset.mkHistoryPrevValue)||'');const prevTrim=prevValue.trim();try{input.dataset.mkHistoryPrevValue=nextValue;}catch(_){}
+clearExplicitClose();if(nextTrim){clearHistoryApply();clearEmptyClear();}else if(prevTrim){markEmptyClear(360);}
+markSearchUiGrace(nextTrim?240:1200);updateModeForInput(input);},{passive:true});input.addEventListener("search",()=>{lastFocusedInput=input;try{input.dataset.mkHistoryPrevValue=String(input.value||'');}catch(_){}
+clearExplicitClose();if((input.value||'').trim()){clearEmptyClear();markSearchUiGrace(640);scheduleRefresh(input);return;}
+markEmptyClear(620);hideDropdown(input);setMaterialOutputSuppressed(input,false);},{passive:true});input.addEventListener("change",()=>{lastFocusedInput=input;try{input.dataset.mkHistoryPrevValue=String(input.value||'');}catch(_){}
+clearExplicitClose();if((input.value||'').trim()){clearEmptyClear();markSearchUiGrace(640);scheduleRefresh(input);return;}
+if(hasEmptyClear()){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+markSearchUiGrace(640);scheduleRefresh(input);},{passive:true});input.addEventListener("blur",()=>{window.setTimeout(()=>{const now=Date.now();const root=ensureDropdown(input);const ae=document.activeElement;const inside=root&&ae&&(ae===root||root.contains(ae));if(inside||now<suppressBlurHideUntil){const qv=(input.value||"").trim();if(qv){hideDropdown(input);return;}
+if(root)root.style.display="block";try{input.focus({preventScroll:true});}catch(_){try{input.focus();}catch(_){}}
+return;}
+const qv=(input.value||"").trim();if(!qv&&hasEmptyClear()){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+if(hasExplicitClose()){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+if(hasHistoryApply()){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+if(!isSearchUiActive(input)){hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+if(!qv&&hasSearchUiGrace(input)){showDropdown(input);return;}
+hideDropdown(input);},80);});input.addEventListener("keydown",(ev)=>{if(ev.isComposing||ev.keyCode===229||input.__mkSearchComposing)return;const root=ensureDropdown(input);const dropdownVisible=root&&root.style.display!=="none";if(!dropdownVisible){if(ev.key==="Escape")hideDropdown(input);return;}
+const items=Array.from(root.querySelectorAll(`.${ITEM_CLASS}`));const active=root.querySelector(`.${ITEM_CLASS}.${ACTIVE_CLASS}`);let idx=active?items.indexOf(active):-1;if(ev.key==="ArrowDown"){ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();idx=Math.min(items.length-1,idx+1);setActiveIndex(root,idx);}else if(ev.key==="ArrowUp"){ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();idx=Math.max(0,idx-1);setActiveIndex(root,idx);}else if(ev.key==="Enter"){if(active){ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();const text=String(active.dataset.mkHistoryText||active.querySelector(".mk-search-history__text")?.textContent||"").trim();if(text){const liveInput=resolveLiveInput(input,root)||input;applyHistoryToInput(liveInput,text,root);requestAnimationFrame(()=>updateModeForInput(resolveLiveInput(liveInput,root)||liveInput));}
+return;}}else if(ev.key==="Escape"){ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();hideDropdown(input);}},true);hideDropdown(input);}
+function bindGlobalOnce(){if(window.__mkSearchHistoryGlobalBoundV5)return;window.__mkSearchHistoryGlobalBoundV5=true;document.addEventListener("pointerdown",(ev)=>{const t=ev&&ev.target;if(!t||!t.closest)return;if(t.closest(`.${ROOT_CLASS}`)){markSearchUiGrace(640);return;}
+if(t.closest('.md-header .md-search, label[for="__search"], [for="__search"], input#__search, input.md-toggle[data-md-toggle="search"]')){markHeaderSearchInteraction(1200);return;}
+clearSearchUiGrace();clearHistoryApply();clearEmptyClear();markExplicitClose(640);collapseHeaderSearchUi('outside');hideAllDropdowns();},true);document.addEventListener("click",(ev)=>{const t=ev.target;if(!t||!t.closest)return;const root=t.closest(".md-search");if(!root)return;const ctrl=t.closest("button, label, [role=button], .md-search__icon, .md-icon");if(!ctrl)return;if(Date.now()<suppressBlurHideUntil)return;if(hasExplicitClose())return;if(t.closest(`.${ROOT_CLASS}`)||t.closest('.mk-search-suggest'))return;const input=resolveLiveInput(root.querySelector(INPUT_SELECTOR)||getLikelyInput(),root);if(!isHeaderSearchInput(input))return;if(!input)return;lastFocusedInput=input;if(isSearchClearControl(ctrl)){markEmptyClear(620);hideDropdown(input);setMaterialOutputSuppressed(input,false);return;}
+clearEmptyClear();markSearchUiGrace(640);scheduleRefresh(input,[0,30,90,180,320,520,900]);},true);document.addEventListener("change",(ev)=>{const t=ev&&ev.target;if(!t||!t.matches)return;if(!(t.matches('input.md-toggle[data-md-toggle="search"]')||t.matches('input#__search')||t.matches('#__search')))return;if(t.checked){clearExplicitClose();clearEmptyClear();markHeaderSearchInteraction(1200);const input=getLikelyInput();if(input)scheduleRefresh(input,[0,30,90,180,320,520,900]);return;}
+clearSearchUiGrace();clearHistoryApply();clearEmptyClear();markExplicitClose(640);hideAllDropdowns();},true);document.addEventListener("keydown",(ev)=>{const t=ev.target;if(!isHeaderSearchInput(t))return;if(ev.isComposing||ev.keyCode===229||t.__mkSearchComposing)return;if(ev.key!=="Enter")return;addToHistory(t.value);},true);document.addEventListener("click",(ev)=>{const a=ev.target&&ev.target.closest?ev.target.closest("a.md-search-result__link"):null;if(!a)return;const input=getLikelyInput();const q=input?(input.value||"").trim():"";if(q)addToHistory(q);},true);}
+function bindAllInputs(){getAllInputs().forEach(bindPerInput);}
+function bindInputsFromAddedNodes(records){for(const record of records||[]){const added=record&&record.addedNodes;if(!added||!added.length)continue;for(const node of added){if(!node||node.nodeType!==1)continue;try{if(node.matches&&node.matches(INPUT_SELECTOR)&&isHeaderSearchInput(node)){bindPerInput(node);}
+if(node.querySelectorAll){node.querySelectorAll(INPUT_SELECTOR).forEach((input)=>{if(isHeaderSearchInput(input))bindPerInput(input);});}}catch(_){}}}}
+function init(){ensureSearchUiPatchStyle();bindGlobalOnce();bindAllInputs();clearExplicitClose();clearHistoryApply();clearEmptyClear();clearSearchUiGrace();hideAllDropdowns();const active=getLikelyInput();if(active){updateModeForInput(active);scheduleRefresh(active,[0,30,90,180,320,520,900]);}}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init);}else{init();}
+document.addEventListener("DOMContentSwitch",init);const mo=new MutationObserver(bindInputsFromAddedNodes);try{mo.observe(document.documentElement,{childList:true,subtree:true});}catch(_){}
+function __mkFindResidueCleanupV8(){try{var path=String(location.pathname||'').toLowerCase().replace(/\/index\.html$/,'/');var isFind=path.endsWith('/find/')||path.endsWith('/find.html')||path.endsWith('/find');if(!isFind)return;var ae=document.activeElement;var toggle=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search');var shell=document.querySelector('.md-header .md-search');var html=document.documentElement;var body=document.body;var active=!!((toggle&&toggle.checked)||(ae&&ae.closest&&ae.closest('.md-header .md-search'))||(shell&&shell.classList&&shell.classList.contains('md-search--active'))||(shell&&shell.getAttribute&&shell.getAttribute('data-mk-search-force-active')==='1')||(html&&html.classList&&(html.classList.contains('md-search--active')||html.classList.contains('mk-hsf-open')))||(body&&body.classList&&body.classList.contains('md-search--active')));if(active)return;if(toggle)toggle.checked=false;document.querySelectorAll('.md-header .md-search.md-search--active').forEach(function(el){el.classList.remove('md-search--active');});document.documentElement.classList.remove('md-search--active');if(document.body)document.body.classList.remove('md-search--active');document.querySelectorAll('.md-header .md-search__output,.md-header .md-search__overlay,.md-header .mk-search-history,.md-header .mk-search-suggest').forEach(function(el){try{el.style.display='none';el.style.opacity='0';el.style.pointerEvents='none';el.setAttribute('aria-hidden','true');}catch(_){}});document.querySelectorAll('.md-search__inner.mk-search-history-open,.md-search.mk-search-history-open,.md-search__inner.mk-search-result-open,.md-search.mk-search-result-open').forEach(function(el){try{el.classList.remove('mk-search-history-open');el.classList.remove('mk-search-result-open');}catch(_){}});var bd=document.getElementById('mk-mobile-search-backdrop');if(bd){bd.style.display='none';bd.style.opacity='0';bd.style.backdropFilter='none';bd.style.webkitBackdropFilter='none';}
+try{if(window.__mkFindNoBlurCleanupV8)window.__mkFindNoBlurCleanupV8();}catch(_){}}catch(_){}}
+try{[0,40,120,280,700,1200,1800].forEach(function(ms){setTimeout(__mkFindResidueCleanupV8,ms);});document.addEventListener('DOMContentSwitch',function(){[0,40,120,280,700,1200].forEach(function(ms){setTimeout(__mkFindResidueCleanupV8,ms);});});window.addEventListener('pageshow',function(){[0,40,120,280,700,1200].forEach(function(ms){setTimeout(__mkFindResidueCleanupV8,ms);});},{passive:true});}catch(_){}})();
