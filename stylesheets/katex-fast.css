@@ -1,6 +1,1 @@
-/* Build-time KaTeX rendering helpers */
-.md-typeset .arithmatex-prerendered{white-space:normal;}
-.md-typeset .arithmatex-display{display:block;overflow-x:auto;overflow-y:hidden;padding:.35rem 0;-webkit-overflow-scrolling:touch;}
-.md-typeset .arithmatex-display .katex-display{margin:.35rem 0;}
-.md-typeset .arithmatex-inline .katex{white-space:nowrap;}
-.md-typeset h1 .arithmatex-inline .katex{white-space:normal;}
+.md-typeset .arithmatex-prerendered{white-space:normal}.md-typeset .arithmatex-display{display:block;overflow-x:auto;overflow-y:hidden;padding:.35rem 0;-webkit-overflow-scrolling:touch}.md-typeset .arithmatex-display .katex-display{margin:.35rem 0}.md-typeset .arithmatex-inline .katex{white-space:nowrap}.md-typeset h1 .arithmatex-inline .katex{white-space:normal}
