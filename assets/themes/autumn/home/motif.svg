@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+<defs><linearGradient id="copper" x1="-73" y1="-45" x2="75" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#c68f51"/><stop offset="1" stop-color="#8f542a"/></linearGradient></defs>
+<g transform="translate(238 137) rotate(28) scale(0.63)"><path d="M0 105C-13 78-70 68-77 23C-84-24-41-64 0-114C27-75 82-47 79 7C76 62 21 77 0 105Z" fill="url(#copper)"/><path d="M0 122C7 59-9-45 0-108M1 69L-54 39M-1 40L54 6M-2 11L-58-21M-2-16L44-48M-3-48L-27-65" stroke="#f5d299" stroke-width="1.6" stroke-linecap="round"/><path d="M0 105C-13 78-70 68-77 23C-84-24-41-64 0-114" stroke="#8f471f" stroke-width="1.2"/></g>
+<g transform="translate(167 212) rotate(-43) scale(0.32)"><path d="M0 105C-13 78-70 68-77 23C-84-24-41-64 0-114C27-75 82-47 79 7C76 62 21 77 0 105Z" fill="url(#copper)"/><path d="M0 122C7 59-9-45 0-108M1 69L-54 39M-1 40L54 6M-2 11L-58-21M-2-16L44-48M-3-48L-27-65" stroke="#f5d299" stroke-width="1.6" stroke-linecap="round"/><path d="M0 105C-13 78-70 68-77 23C-84-24-41-64 0-114" stroke="#8f471f" stroke-width="1.2"/></g>
+<path d="M187 37C133 108 311 142 291 233" stroke="#a66b35" stroke-dasharray="2 6"/>
+<path d="M286 44L301 36M287 48L303 46M286 52L298 57" stroke="#a66b35" stroke-linecap="round"/>
+</svg>
+
