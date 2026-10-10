@@ -1,0 +1,19 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% The closed ball: distance at most r, so the rim belongs to it (solid boundary).
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\fill[blue!15] (0,0) circle (1.6);
+	\draw[blue!70!black, very thick] (0,0) circle (1.6);
+	\fill[blue!70!black] (0,0) circle (1.8pt);
+	\node[blue!70!black, below left] at (0,0) {$\boldsymbol{x}_0$};
+	\draw[-{Latex[length=2mm]}, blue!70!black] (0,0) -- (40:1.6);
+	\node[blue!70!black] at (40:0.9) [above left] {$r$};
+	\fill[green!50!black] (1.6,0) circle (1.8pt);
+	\node[green!40!black, anchor=west] at (1.75,0) {rim: $d=r$, included};
+	\node[anchor=north] at (0,-1.8) {$\overline{\boldsymbol{B}}(\boldsymbol{x}_0,r)=\{\boldsymbol{x}\in\boldsymbol{X} : d(\boldsymbol{x},\boldsymbol{x}_0)\le r\}$};
+\end{tikzpicture}
+\end{document}

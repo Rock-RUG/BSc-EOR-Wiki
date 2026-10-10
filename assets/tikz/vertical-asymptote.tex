@@ -1,16 +1,27 @@
 \documentclass[tikz,border=2pt]{standalone}
-
+\usepackage{amsmath,amssymb}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
 
 \begin{document}
-	
-	\begin{tikzpicture}[scale=0.52]
-		\draw[->] (-2,0) -- (4,0) node[right] {$x$};
-		\draw[->] (0,-2) -- (0,4) node[above] {$y$};
-		\draw[dashed] (1,-2) -- (1,4) ;
-		\draw[thick, domain=-2:0.67, variable=\x, smooth] plot ({\x}, {1/(\x-1)+1});
-		\draw[thick, domain=1.33:4, variable=\x, smooth] plot ({\x}, {1/(\x-1)+1});
-	\end{tikzpicture}
-	
+% f(x) = 1/(x-1) + 1 tends to +infinity as x -> 1+ and to -infinity as x -> 1-: x = 1 is a vertical asymptote.
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{axis}[
+		width=8cm, height=7cm,
+		axis lines=middle, axis line style={-{Latex[length=2mm]}},
+		xmin=-3.2, xmax=5.2, ymin=-2.5, ymax=4.5,
+		xtick=\empty, ytick=\empty,
+		tick label style={font=\small},
+		xlabel={$x$}, ylabel={$y$},
+		xlabel style={below right}, ylabel style={above left},
+		samples=150, clip=false
+		]
+		\addplot[red, dashed, thick] coordinates {(1,-2.5) (1,4.5)};
+		\addplot[blue, thick, domain=-3.2:0.71] {1/(x-1)+1};
+		\addplot[blue, thick, domain=1.29:5] {1/(x-1)+1};
+		\node[red!70!black, anchor=north west] at (axis cs:1.08,-1.9) {$x=1$};
+		\node[blue!70!black, anchor=west] at (axis cs:1.32,4.3) {$y=\frac{1}{x-1}+1$};
+	\end{axis}
+\end{tikzpicture}
 \end{document}

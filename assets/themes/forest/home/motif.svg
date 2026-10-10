@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none">
+<g stroke="#54734d" stroke-linecap="round">
+<path d="M177 255Q206 130 287 39" stroke-width="2"/>
+<path d="M205 199Q173 198 170 172Q196 171 205 199" fill="#648651" fill-opacity=".56"/><path d="M209 192Q230 165 251 172Q244 197 209 192" fill="#648651" fill-opacity=".3"/>
+<path d="M215 178Q183 177 180 151Q206 150 215 178" fill="#648651" fill-opacity=".56"/><path d="M219 171Q240 144 261 151Q254 176 219 171" fill="#648651" fill-opacity=".3"/>
+<path d="M225 157Q193 156 190 130Q216 129 225 157" fill="#648651" fill-opacity=".56"/><path d="M229 150Q250 123 271 130Q264 155 229 150" fill="#648651" fill-opacity=".3"/>
+<path d="M235 136Q203 135 200 109Q226 108 235 136" fill="#648651" fill-opacity=".56"/><path d="M239 129Q260 102 281 109Q274 134 239 129" fill="#648651" fill-opacity=".3"/>
+<path d="M245 115Q213 114 210 88Q236 87 245 115" fill="#648651" fill-opacity=".56"/><path d="M249 108Q270 81 291 88Q284 113 249 108" fill="#648651" fill-opacity=".3"/>
+<path d="M255 94Q223 93 220 67Q246 66 255 94" fill="#648651" fill-opacity=".56"/><path d="M259 87Q280 60 301 67Q294 92 259 87" fill="#648651" fill-opacity=".3"/>
+<path d="M265 73Q233 72 230 46Q256 45 265 73" fill="#648651" fill-opacity=".56"/><path d="M269 66Q290 39 311 46Q304 71 269 66" fill="#648651" fill-opacity=".3"/>
+<path d="M113 227Q158 203 161 169Q124 169 113 227ZM126 211L151 182" fill="#648651" fill-opacity=".18"/>
+</g>
+</svg>
+

@@ -1,0 +1,18 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+
+\begin{document}
+% Illustrative instance: items 15, 30, 20, 35 with capacity 50. Total weight 100 gives the
+% bound ceil(100/50) = 2, and the packing {15,35}, {30,20} attains it.
+\begin{tikzpicture}[every node/.style={font=\small}, y=0.05cm]
+	\foreach \x/\n in {0/1, 2.2/2} {
+		\draw[thick] (\x,0) rectangle ({\x+1.4},50);
+		\node[anchor=south] at ({\x+0.7},52) {container \n};
+	}
+	\fill[blue!25] (0.05,0.5) rectangle (1.35,15); \node at (0.7,7.5) {$w=15$};
+	\fill[green!25] (0.05,15.5) rectangle (1.35,50); \node at (0.7,33) {$w=35$};
+	\fill[orange!30] (2.25,0.5) rectangle (3.55,30); \node at (2.9,15) {$w=30$};
+	\fill[red!20] (2.25,30.5) rectangle (3.55,50); \node at (2.9,40) {$w=20$};
+	\end{tikzpicture}
+\end{document}

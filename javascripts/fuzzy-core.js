@@ -1,453 +1,85 @@
-// docs/javascripts/fuzzy-core.js
-// Shared fuzzy spell-correction core for Find + Course Search.
-// - Candidate retrieval via trigram inverted index
-// - Final scoring via OSA Damerau–Levenshtein (early-exit)
-// - Supports space mistakes:
-//   - missing space: "boumdedzet" -> "bounded set" (split + spell)
-//   - extra space: "difg rentiak" -> "differential" (join + spell)
-// Safety:
-// - Never touch math/symbol/digit tokens (R^n, Z_2, L^p, σ, ℝ, etc.)
-
-(function () {
-  const VERSION = "mk-fuzzy-core-v2";
-
-  // -------------------- helpers --------------------
-  function normWS(s) {
-    return String(s || "").replace(/\s+/g, " ").trim();
-  }
-
-  function stripDiacritics(s) {
-    try {
-      return String(s || "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    } catch (_) {
-      return String(s || "");
-    }
-  }
-
-  function normAlphaText(s) {
-    // keep spaces; collapse everything else to spaces; keep only a-z
-    const t = stripDiacritics(s).toLowerCase();
-    return t.replace(/[^a-z\s]+/g, " ").replace(/\s+/g, " ").trim();
-  }
-
-  function hasDigitsOrNonAsciiOrMathy(s) {
-    const x = String(s || "").trim();
-    if (!x) return true;
-    if (/\d/.test(x)) return true;              // digits
-    if (/[^\x00-\x7F]/.test(x)) return true;    // non-ascii (σ, ℝ)
-    // symbols used in math/search syntax
-    if (/[\\^_{}[\]()<>=:+*/|]/.test(x)) return true;
-    return false;
-  }
-
-  function splitWords(phrase) {
-    const t = normAlphaText(phrase);
-    return t ? t.split(" ").filter(Boolean) : [];
-  }
-
-  function maxDistByLen(len) {
-    if (len <= 4) return 1;
-    if (len <= 7) return 2;
-    if (len <= 11) return 2;
-    return 2;
-  }
-
-  // OSA Damerau–Levenshtein with early-exit
-  function osaDL(a, b, maxDist) {
-    a = String(a || "");
-    b = String(b || "");
-    const al = a.length, bl = b.length;
-    if (!al) return bl;
-    if (!bl) return al;
-    if (Math.abs(al - bl) > maxDist) return maxDist + 1;
-
-    let prevPrev = new Array(bl + 1);
-    let prev = new Array(bl + 1);
-    let curr = new Array(bl + 1);
-
-    for (let j = 0; j <= bl; j++) prev[j] = j;
-
-    for (let i = 1; i <= al; i++) {
-      curr[0] = i;
-      let rowMin = curr[0];
-      const ai = a.charCodeAt(i - 1);
-
-      for (let j = 1; j <= bl; j++) {
-        const cost = ai === b.charCodeAt(j - 1) ? 0 : 1;
-
-        let v = prev[j] + 1; // del
-        const ins = curr[j - 1] + 1;
-        if (ins < v) v = ins;
-        const sub = prev[j - 1] + cost;
-        if (sub < v) v = sub;
-
-        if (
-          i > 1 && j > 1 &&
-          a.charCodeAt(i - 1) === b.charCodeAt(j - 2) &&
-          a.charCodeAt(i - 2) === b.charCodeAt(j - 1)
-        ) {
-          const trans = prevPrev[j - 2] + 1;
-          if (trans < v) v = trans;
-        }
-
-        curr[j] = v;
-        if (v < rowMin) rowMin = v;
-      }
-
-      if (rowMin > maxDist) return maxDist + 1;
-
-      // rotate
-      const tmp = prevPrev;
-      prevPrev = prev;
-      prev = curr;
-      curr = tmp;
-    }
-
-    return prev[bl];
-  }
-
-  function trigrams(word) {
-    const w = "^^" + word + "$";
-    const out = [];
-    for (let i = 0; i <= w.length - 3; i++) out.push(w.slice(i, i + 3));
-    return out;
-  }
-
-  // -------------------- scope cache --------------------
-  const _scopes = new Map();        // scopeKey -> scope
-  const _scopePromises = new Map(); // scopeKey -> Promise<scope>
-
-  function buildScope(scopeKey, pageDocs, opts) {
-    const o = opts || {};
-    const stop = new Set(
-      (o.stopwords || [
-        "the","and","or","to","of","in","on","for","with","a","an","is","are",
-        "from","by","as","at","be","this","that","it"
-      ]).map(x => String(x).toLowerCase())
-    );
-
-    const freq = new Map();
-    const weight = new Map();
-
-    function addWords(text, w) {
-      const ws = splitWords(text);
-      for (const x of ws) {
-        if (x.length < 3) continue;
-        if (stop.has(x)) continue;
-        freq.set(x, (freq.get(x) || 0) + 1);
-        weight.set(x, (weight.get(x) || 0) + (w || 1));
-      }
-    }
-
-    const docs = Array.isArray(pageDocs) ? pageDocs : [];
-    for (const d of docs) {
-      addWords(d && d.title, 7);
-
-      const aliases = Array.isArray(d && d.aliases) ? d.aliases : [];
-      for (const a of aliases) addWords(a, 6);
-
-      const tags = Array.isArray(d && d.tags) ? d.tags : [];
-      for (const t of tags) addWords(String(t).replace(/[-_]/g, " "), 4);
-
-      addWords(String(d && d.location).replace(/[-_/]/g, " "), 2);
-
-      if (o.includeBody && d && d.text) {
-        // body is noisy: slice to cap cost
-        addWords(String(d.text).slice(0, 8000), 1);
-      }
-    }
-
-    const minFreq = Number.isFinite(o.minFreq) ? o.minFreq : 2;
-    const maxVocab = Number.isFinite(o.maxVocab) ? o.maxVocab : 12000;
-
-    let vocab = [];
-    for (const [w, c] of freq.entries()) {
-      if (c < minFreq) continue;
-      vocab.push(w);
-    }
-
-    vocab.sort((a, b) => (weight.get(b) || 0) - (weight.get(a) || 0));
-    vocab = vocab.slice(0, maxVocab);
-
-    const wordSet = new Set(vocab);
-    const tri = new Map();
-    const meta = new Array(vocab.length);
-
-    for (let i = 0; i < vocab.length; i++) {
-      const w = vocab[i];
-      const uniq = new Set(trigrams(w));
-      meta[i] = { w, triCount: uniq.size, weight: weight.get(w) || 0 };
-      for (const g of uniq) {
-        let arr = tri.get(g);
-        if (!arr) { arr = []; tri.set(g, arr); }
-        arr.push(i);
-      }
-    }
-
-    const scope = { scopeKey, version: VERSION, vocab, wordSet, tri, meta };
-    _scopes.set(scopeKey, scope);
-    return scope;
-  }
-
-  async function ensureScope(scopeKey, opts) {
-    if (_scopes.has(scopeKey)) return _scopes.get(scopeKey);
-    if (_scopePromises.has(scopeKey)) return _scopePromises.get(scopeKey);
-
-    const p = (async () => {
-      const o = opts || {};
-      if (Array.isArray(o.pageDocs)) {
-        return buildScope(scopeKey, o.pageDocs, o);
-      }
-
-      // fallback: fetch mkdocs search index
-      const rootUrl = o.rootUrl;
-      if (!rootUrl) throw new Error("mk-fuzzy-core: rootUrl/pageDocs required");
-
-      const url = new URL("search/search_index.json", rootUrl).toString();
-      const res = await fetch(url, { cache: "no-cache" });
-      if (!res.ok) throw new Error("mk-fuzzy-core: cannot load index");
-      const j = await res.json();
-      const docs = j && Array.isArray(j.docs) ? j.docs : [];
-
-      // aggregate section docs -> pages (minimal)
-      const pageMap = new Map();
-      function safePath(loc) {
-        const s0 = String(loc || "");
-        return (s0.split("#")[0] || s0).replace(/^\/+/, "");
-      }
-      function asList(x) {
-        if (!x) return [];
-        if (Array.isArray(x)) return x.map(String).filter(Boolean);
-        if (typeof x === "string") return [x];
-        return [];
-      }
-      function getTagsFromDoc(d) {
-        const out = [];
-        out.push(...asList(d && d.tags));
-        out.push(...asList(d && d.tag));
-        out.push(...asList(d && d.meta && d.meta.tags));
-        out.push(...asList(d && d.meta && d.meta.tag));
-        out.push(...asList(d && d.meta && d.meta["tags"]));
-        return out.map(s => String(s).trim()).filter(Boolean);
-      }
-      function getAliasesFromDoc(d) {
-        const out = [];
-        out.push(...asList(d && d.aliases));
-        out.push(...asList(d && d.alias));
-        out.push(...asList(d && d.meta && d.meta.aliases));
-        out.push(...asList(d && d.meta && d.meta.alias));
-        out.push(...asList(d && d.meta && d.meta["aliases"]));
-        return out.map(s => String(s).trim()).filter(Boolean);
-      }
-      for (const d of docs) {
-        const loc = safePath(d && d.location);
-        if (!loc) continue;
-        const key = loc;
-        let e = pageMap.get(key);
-        if (!e) {
-          e = { location: key, title: "", text: "", tags: new Set(), aliases: new Set() };
-          pageMap.set(key, e);
-        }
-        if (!e.title && d.title) e.title = String(d.title);
-        for (const tg of getTagsFromDoc(d)) e.tags.add(tg);
-        for (const al of getAliasesFromDoc(d)) e.aliases.add(al);
-        if (d.text) e.text += " " + String(d.text);
-      }
-      const pages = Array.from(pageMap.values()).map(e => ({
-        location: e.location,
-        title: e.title || "",
-        text: e.text || "",
-        tags: Array.from(e.tags),
-        aliases: Array.from(e.aliases)
-      }));
-
-      return buildScope(scopeKey, pages, o);
-    })();
-
-    _scopePromises.set(scopeKey, p);
-    try {
-      const s = await p;
-      return s;
-    } finally {
-      _scopePromises.delete(scopeKey);
-    }
-  }
-
-  function exists(scope, w) {
-    return !!(scope && scope.wordSet && scope.wordSet.has(w));
-  }
-
-  function suggestWord(scope, rawWord) {
-    const w0 = normAlphaText(rawWord);
-    if (!w0 || w0.length < 3) return null;
-    if (!/^[a-z]+$/.test(w0)) return null;
-    if (exists(scope, w0)) return null;
-
-    const qTris = Array.from(new Set(trigrams(w0)));
-    const qTriCount = qTris.length || 1;
-
-    const candCount = new Map();
-    for (const g of qTris) {
-      const arr = scope.tri.get(g);
-      if (!arr) continue;
-      for (const idx of arr) candCount.set(idx, (candCount.get(idx) || 0) + 1);
-    }
-    if (!candCount.size) return null;
-
-    const tmp = [];
-    for (const [idx, ov] of candCount.entries()) {
-      const m = scope.meta[idx];
-      const denom = Math.max(qTriCount, m.triCount || 1);
-      const ratio = ov / denom;
-      tmp.push({ idx, ratio, weight: m.weight || 0 });
-    }
-
-    tmp.sort((a, b) => (b.ratio - a.ratio) || (b.weight - a.weight));
-    const topK = tmp.slice(0, 60);
-
-    const maxD = maxDistByLen(w0.length);
-    let best = null;
-
-    for (const c of topK) {
-      const minRatio = w0.length <= 5 ? 0.34 : 0.24;
-      if (c.ratio < minRatio) continue;
-
-      const cand = scope.meta[c.idx].w;
-      const d = osaDL(w0, cand, maxD);
-      if (d > maxD) continue;
-
-      const score = d * 1000 - Math.round(c.ratio * 100) - (c.weight || 0);
-      if (!best || score < best.score) best = { word: cand, score };
-    }
-
-    return best ? best.word : null;
-  }
-
-  function trySplitIntoTwo(scope, raw) {
-    const w0 = normAlphaText(raw).replace(/\s+/g, "");
-    if (!w0 || w0.length < 6) return null;
-
-    let best = null;
-
-    for (let i = 3; i <= w0.length - 3; i++) {
-      const left = w0.slice(0, i);
-      const right = w0.slice(i);
-
-      const sl0 = exists(scope, left) ? left : suggestWord(scope, left);
-      let sr0 = exists(scope, right) ? right : suggestWord(scope, right);
-      if (!sl0 || !sr0) continue;
-
-      // Prefer singular form if it exists and is close (e.g., "sets" -> "set")
-      let sr = sr0;
-      try {
-        if (sr0.length > 3 && sr0.endsWith("s")) {
-          const s1 = sr0.slice(0, -1);
-          if (exists(scope, s1)) {
-            const dr0 = osaDL(right, sr0, maxDistByLen(right.length));
-            const dr1 = osaDL(right, s1, maxDistByLen(right.length));
-            // prefer singular if it's not much worse (<= +1 edit)
-            if (dr1 <= dr0 + 1) sr = s1;
-          }
-        }
-      } catch (_) {}
-
-      const dl = osaDL(left, sl0, maxDistByLen(left.length));
-      const dr = osaDL(right, sr, maxDistByLen(right.length));
-      const total = dl + dr;
-
-      if (!best || total < best.total) best = { phrase: sl0 + " " + sr, total };
-    }
-
-    return best;
-  }
-
-  function suggestPhraseSync(scope, rawPhrase) {
-    const raw = normWS(rawPhrase);
-    if (!raw) return null;
-    if (hasDigitsOrNonAsciiOrMathy(raw)) return null;
-
-    const parts = raw.split(/\s+/).filter(Boolean);
-    if (!parts.length) return null;
-
-    // 1) single token
-    if (parts.length === 1) {
-      const w0 = normAlphaText(parts[0]).replace(/\s+/g, "");
-      if (!w0 || w0.length < 3) return null;
-      if (exists(scope, w0)) return null;
-
-      const wSug = suggestWord(scope, w0);
-      const splitRes = trySplitIntoTwo(scope, w0); // { phrase, total } | null
-
-      if (splitRes && !wSug) {
-        return { suggested: splitRes.phrase, changes: [{ from: raw, to: splitRes.phrase, kind: "split" }] };
-      }
-
-      if (wSug && !splitRes) {
-        return { suggested: wSug, changes: [{ from: raw, to: wSug, kind: "spell" }] };
-      }
-
-      if (wSug && splitRes) {
-        const dw = osaDL(w0, wSug, maxDistByLen(w0.length));
-        // Choose the cheaper transformation; prefer split on ties (more "Google-like" hits)
-        if (splitRes.total <= dw) {
-          return { suggested: splitRes.phrase, changes: [{ from: raw, to: splitRes.phrase, kind: "split" }] };
-        }
-        return { suggested: wSug, changes: [{ from: raw, to: wSug, kind: "spell" }] };
-      }
-
-      return null;
-    }
-
-    // 2) multi parts: per-word
-    const normParts = parts.map(p => normAlphaText(p).replace(/\s+/g, ""));
-    const missing = normParts.some(w => w.length >= 3 && !exists(scope, w));
-
-    if (!missing) return null;
-
-    const corrected = normParts.slice();
-    const changes = [];
-    for (let i = 0; i < normParts.length; i++) {
-      const w = normParts[i];
-      if (w.length < 3) continue;
-      if (exists(scope, w)) continue;
-      const sug = suggestWord(scope, w);
-      if (sug && sug !== w) {
-        corrected[i] = sug;
-        changes.push({ from: parts[i], to: sug, kind: "spell" });
-      }
-    }
-
-    if (changes.length) {
-      // if now all exist -> accept
-      let ok = true;
-      for (const w of corrected) {
-        if (w.length < 3) continue;
-        if (!exists(scope, w)) { ok = false; break; }
-      }
-      if (ok) return { suggested: corrected.join(" "), changes };
-    }
-
-    // 3) join+spell: "difg rentiak" -> "difgrentiak" -> "differential"
-    const joined = normParts.join("");
-    if (joined.length >= 3 && !exists(scope, joined)) {
-      const sugJ = suggestWord(scope, joined);
-      if (sugJ) return { suggested: sugJ, changes: [{ from: raw, to: sugJ, kind: "join+spell" }] };
-    }
-
-    return null;
-  }
-
-  async function suggestPhrase(scopeKey, phrase, opts) {
-    const scope = await ensureScope(scopeKey, opts);
-    return suggestPhraseSync(scope, phrase);
-  }
-
-  // -------------------- API --------------------
-  window.__mkFuzzyCore = window.__mkFuzzyCore || {
-    VERSION,
-    ensureScope,
-    suggestPhrase,
-  };
-})();
+(function(){const VERSION="mk-fuzzy-core-v3";function __mkFetchSearchIndex(url,init){const shared=window.__mkFetchJsonShared;if(typeof shared==="function")return shared(url,init);return fetch(url,init).then(function(r){return r&&r.ok?r.json():null;});}
+function normWS(s){return String(s||"").replace(/\s+/g," ").trim();}
+function stripDiacritics(s){try{return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"");}catch(_){return String(s||"");}}
+function normAlphaText(s){const t=stripDiacritics(s).toLowerCase();return t.replace(/[^a-z\s]+/g," ").replace(/\s+/g," ").trim();}
+function hasDigitsOrNonAsciiOrMathy(s){const x=String(s||"").trim();if(!x)return true;if(/\d/.test(x))return true;if(/[^\x00-\x7F]/.test(x))return true;if(/[\\^_{}[\]()<>=:+*/|]/.test(x))return true;return false;}
+function splitWords(phrase){const t=normAlphaText(phrase);return t?t.split(" ").filter(Boolean):[];}
+const STOPWORDS=new Set(["the","and","or","to","of","in","on","for","with","a","an","is","are","from","by","as","at","be","this","that","it","its","vs","via","per","into","over",]);const IRREGULAR={matrices:"matrix",indices:"index",vertices:"vertex",axes:"axis",bases:"basis",hypotheses:"hypothesis",analyses:"analysis",criteria:"criterion",maxima:"maximum",minima:"minimum",suprema:"supremum",infima:"infimum",extrema:"extremum",formulae:"formula",lemmata:"lemma",radii:"radius",foci:"focus",loci:"locus",phenomena:"phenomenon",moduli:"modulus",simplices:"simplex",theses:"thesis",};function stemOf(w){if(IRREGULAR[w])return IRREGULAR[w];if(w.length>4&&w.endsWith("ies"))return w.slice(0,-3)+"y";if(w.length>3&&w.endsWith("s")&&!/(ss|us|is|as)$/.test(w))return w.slice(0,-1);return w;}
+function maxDistByLen(len){if(len<=5)return 1;if(len<=11)return 2;return 3;}
+const KEY_ROWS=["qwertyuiop","asdfghjkl","zxcvbnm"];const ADJACENT=(()=>{const out=new Map();for(let r=0;r<KEY_ROWS.length;r++){const row=KEY_ROWS[r];for(let i=0;i<row.length;i++){const set=new Set();if(i>0)set.add(row[i-1]);if(i+1<row.length)set.add(row[i+1]);for(const dr of[-1,1]){const other=KEY_ROWS[r+dr];if(!other)continue;for(const j of[i-1,i,i+1])if(other[j])set.add(other[j]);}
+out.set(row[i],set);}}
+return out;})();const SOUND_ALIKE=new Map([["s","zc"],["z","s"],["c","ksq"],["k","cq"],["q","kc"],["i","ye"],["y","ie"],["e","ia"],["a","e"],["o","u"],["u","o"],["f","v"],["v","f"],["g","j"],["j","g"],]);function plausibleSub(a,b){if(a===b)return true;const adj=ADJACENT.get(a);if(adj&&adj.has(b))return true;const snd=SOUND_ALIKE.get(a);return!!(snd&&snd.includes(b));}
+function osaDL(a,b,maxDist){a=String(a||"");b=String(b||"");const al=a.length,bl=b.length;if(!al)return bl;if(!bl)return al;if(Math.abs(al-bl)>maxDist)return maxDist+1;let prevPrev=new Array(bl+1);let prev=new Array(bl+1);let curr=new Array(bl+1);for(let j=0;j<=bl;j++)prev[j]=j;for(let i=1;i<=al;i++){curr[0]=i;let rowMin=curr[0];const ai=a.charCodeAt(i-1);for(let j=1;j<=bl;j++){const cost=ai===b.charCodeAt(j-1)?0:1;let v=prev[j]+1;const ins=curr[j-1]+1;if(ins<v)v=ins;const sub=prev[j-1]+cost;if(sub<v)v=sub;if(i>1&&j>1&&a.charCodeAt(i-1)===b.charCodeAt(j-2)&&a.charCodeAt(i-2)===b.charCodeAt(j-1)){const trans=prevPrev[j-2]+1;if(trans<v)v=trans;}
+curr[j]=v;if(v<rowMin)rowMin=v;}
+if(rowMin>maxDist)return maxDist+1;const tmp=prevPrev;prevPrev=prev;prev=curr;curr=tmp;}
+return prev[bl];}
+function plausibility(q,w){let i=0,j=0,ops=0,plausible=0;while(i<q.length&&j<w.length){if(q[i]===w[j]){i++;j++;continue;}
+ops++;if(i+1<q.length&&j+1<w.length&&q[i]===w[j+1]&&q[i+1]===w[j]){plausible++;i+=2;j+=2;continue;}
+if(q[i+1]===w[j]&&(q[i]===q[i+1]||q[i]===w[j-1])){plausible++;i++;continue;}
+if(w[j+1]===q[i]&&(w[j]===w[j+1]||w[j]===q[i-1])){plausible++;j++;continue;}
+if(plausibleSub(q[i],w[j])){plausible++;i++;j++;continue;}
+if(q.length>w.length)i++;else if(w.length>q.length)j++;else{i++;j++;}}
+ops+=(q.length-i)+(w.length-j);return ops?plausible/ops:1;}
+function phoneticKey(word){let s=String(word||"").toLowerCase();if(s.length<3)return"";s=s.replace(/^(kn|gn|pn|wr|ps)/,m=>m[1]).replace(/^wh/,"w").replace(/^x/,"s").replace(/mb$/,"m");s=s.replace(/x/g,"ks").replace(/sch/g,"sk").replace(/tch/g,"X").replace(/(ch|sh)/g,"X").replace(/ph/g,"f").replace(/th/g,"0").replace(/ck/g,"k").replace(/q/g,"k").replace(/c(?=[eiy])/g,"s").replace(/c/g,"k").replace(/dg(?=[eiy])/g,"j").replace(/g(?=[eiy])/g,"j").replace(/z/g,"s").replace(/v/g,"f").replace(/w(?![aeiou])/g,"").replace(/y(?![aeiou])/g,"").replace(/h(?![aeiou])/g,"");const first=/[aeiou]/.test(s[0])?"a":s[0];const rest=s.slice(1).replace(/[aeiouhwy]/g,"");return(first+rest).replace(/(.)\1+/g,"$1");}
+function trigrams(word){const w="^^"+word+"$";const out=[];for(let i=0;i<=w.length-3;i++)out.push(w.slice(i,i+3));return out;}
+function deletes(word,depth,out){out=out||new Set();if(depth<=0||word.length<=2)return out;for(let i=0;i<word.length;i++){const d=word.slice(0,i)+word.slice(i+1);if(!out.has(d)){out.add(d);if(depth>1)deletes(d,depth-1,out);}}
+return out;}
+const _scopes=new Map();const _scopePromises=new Map();function*buildScopeSteps(scopeKey,pageDocs,opts){const o=opts||{};const stop=new Set((o.stopwords||Array.from(STOPWORDS)).map(x=>String(x).toLowerCase()));const freq=new Map();const weight=new Map();const structured=new Set();const docsOf=new Map();const shortWords=new Set();function addWords(text,w,docIndex,isStructured){const ws=splitWords(text);for(const x of ws){if(x.length<2)continue;if(docIndex>=0){const s=stemOf(x);let set=docsOf.get(s);if(!set){set=new Set();docsOf.set(s,set);}
+set.add(docIndex);}
+if(x.length<3||stop.has(x)){shortWords.add(x);continue;}
+freq.set(x,(freq.get(x)||0)+1);weight.set(x,(weight.get(x)||0)+(w||1));if(isStructured)structured.add(x);}}
+const docs=Array.isArray(pageDocs)?pageDocs:[];for(let i=0;i<docs.length;i++){const d=docs[i];addWords(d&&d.title,7,i,true);const aliases=Array.isArray(d&&d.aliases)?d.aliases:[];for(const a of aliases)addWords(a,6,i,true);const tags=Array.isArray(d&&d.tags)?d.tags:[];for(const t of tags)addWords(String(t).replace(/[-_]/g," "),4,i,true);addWords(String((d&&d.location)||"").replace(/[-_/]/g," ").replace(/\.html?$/i,""),2,i,true);if(o.includeBody&&d&&d.text){addWords(String(d.text).slice(0,8000),1,i,false);}
+yield;}
+const minFreq=Number.isFinite(o.minFreq)?o.minFreq:2;const maxVocab=Number.isFinite(o.maxVocab)?o.maxVocab:12000;let vocab=[];for(const[w,c]of freq.entries()){if(c<minFreq&&!structured.has(w))continue;vocab.push(w);}
+vocab.sort((a,b)=>(weight.get(b)||0)-(weight.get(a)||0)||(a<b?-1:a>b?1:0));vocab=vocab.slice(0,maxVocab);const wordSet=new Set(vocab);const index=new Map(vocab.map((w,i)=>[w,i]));const tri=new Map();const del=new Map();const phon=new Map();const meta=new Array(vocab.length);for(let i=0;i<vocab.length;i++){const w=vocab[i];const uniq=new Set(trigrams(w));meta[i]={w,triCount:uniq.size,weight:weight.get(w)||0,structured:structured.has(w),key:phoneticKey(w)};for(const g of uniq){let arr=tri.get(g);if(!arr){arr=[];tri.set(g,arr);}
+arr.push(i);}
+const depth=meta[i].structured||w.length<=7?2:1;for(const d of deletes(w,depth)){let arr=del.get(d);if(!arr){arr=[];del.set(d,arr);}
+arr.push(i);}
+if(meta[i].key){let arr=phon.get(meta[i].key);if(!arr){arr=[];phon.set(meta[i].key,arr);}
+arr.push(i);}
+if((i&31)===31)yield;}
+yield;const sorted=vocab.slice().sort();const scope={scopeKey,version:VERSION,vocab,wordSet,index,tri,del,phon,meta,sorted,docsOf,shortWords,stop,docCount:docs.length,hasBody:!!o.includeBody};_scopes.set(scopeKey,scope);return scope;}
+function buildScope(scopeKey,pageDocs,opts){const steps=buildScopeSteps(scopeKey,pageDocs,opts);for(;;){const step=steps.next();if(step.done)return step.value;}}
+function nowMs(){try{return performance.now();}catch(_){return Date.now();}}
+function yieldToPage(){try{if(typeof scheduler!=="undefined"&&scheduler&&typeof scheduler.yield==="function")return scheduler.yield();}catch(_){}
+if(typeof MessageChannel==="function"){return new Promise(resolve=>{const channel=new MessageChannel();channel.port1.onmessage=()=>{channel.port1.close();resolve();};channel.port2.postMessage(0);});}
+return Promise.resolve();}
+async function runSliced(steps,budgetMs){const budget=budgetMs>0?budgetMs:8;let started=nowMs();for(;;){const step=steps.next();if(step.done)return step.value;if(nowMs()-started>=budget){await yieldToPage();started=nowMs();}}}
+function buildScopeAsync(scopeKey,pageDocs,opts){return runSliced(buildScopeSteps(scopeKey,pageDocs,opts),8);}
+async function ensureScope(scopeKey,opts){if(_scopes.has(scopeKey))return _scopes.get(scopeKey);if(_scopePromises.has(scopeKey))return _scopePromises.get(scopeKey);const p=(async()=>{const o=opts||{};if(Array.isArray(o.pageDocs)){return buildScopeAsync(scopeKey,o.pageDocs,o);}
+const rootUrl=o.rootUrl;if(!rootUrl)throw new Error("mk-fuzzy-core: rootUrl/pageDocs required");const url=new URL("search/search_index.json",rootUrl).toString();const j=await __mkFetchSearchIndex(url,{cache:"no-cache"});if(!j)throw new Error("mk-fuzzy-core: cannot load index");const docs=j&&Array.isArray(j.docs)?j.docs:[];const pageMap=new Map();function safePath(loc){const s0=String(loc||"");return(s0.split("#")[0]||s0).replace(/^\/+/,"");}
+function asList(x){if(!x)return[];if(Array.isArray(x))return x.map(String).filter(Boolean);if(typeof x==="string")return[x];return[];}
+function getTagsFromDoc(d){const out=[];out.push(...asList(d&&d.tags));out.push(...asList(d&&d.tag));out.push(...asList(d&&d.meta&&d.meta.tags));out.push(...asList(d&&d.meta&&d.meta.tag));out.push(...asList(d&&d.meta&&d.meta["tags"]));return out.map(s=>String(s).trim()).filter(Boolean);}
+function getAliasesFromDoc(d){const out=[];out.push(...asList(d&&d.aliases));out.push(...asList(d&&d.alias));out.push(...asList(d&&d.meta&&d.meta.aliases));out.push(...asList(d&&d.meta&&d.meta.alias));out.push(...asList(d&&d.meta&&d.meta["aliases"]));return out.map(s=>String(s).trim()).filter(Boolean);}
+for(const d of docs){const loc=safePath(d&&d.location);if(!loc)continue;const key=loc;let e=pageMap.get(key);if(!e){e={location:key,title:"",text:"",tags:new Set(),aliases:new Set()};pageMap.set(key,e);}
+if(!e.title&&d.title)e.title=String(d.title);for(const tg of getTagsFromDoc(d))e.tags.add(tg);for(const al of getAliasesFromDoc(d))e.aliases.add(al);if(d.text)e.text+=" "+String(d.text);}
+const pages=Array.from(pageMap.values()).map(e=>({location:e.location,title:e.title||"",text:e.text||"",tags:Array.from(e.tags),aliases:Array.from(e.aliases)}));return buildScopeAsync(scopeKey,pages,o);})();_scopePromises.set(scopeKey,p);try{const s=await p;return s;}finally{_scopePromises.delete(scopeKey);}}
+function exists(scope,w){return!!(scope&&((scope.wordSet&&scope.wordSet.has(w))||(scope.shortWords&&scope.shortWords.has(w))));}
+function known(scope,w){return exists(scope,w)||(IRREGULAR[w]&&exists(scope,IRREGULAR[w]))||scope.stop.has(w);}
+function hasPrefix(scope,w){const arr=scope.sorted;let lo=0,hi=arr.length;while(lo<hi){const mid=(lo+hi)>>1;if(arr[mid]<w)lo=mid+1;else hi=mid;}
+return lo<arr.length&&arr[lo].startsWith(w)&&arr[lo]!==w;}
+function wordCandidates(scope,rawWord,limit){const w0=normAlphaText(rawWord).replace(/\s+/g,"");if(!w0||w0.length<3||!/^[a-z]+$/.test(w0))return[];const out=[];if(IRREGULAR[w0]&&exists(scope,IRREGULAR[w0]))out.push({word:IRREGULAR[w0],dist:0,score:-5000});if(exists(scope,w0))return out.length?out:[{word:w0,dist:0,score:-10000}];const cand=new Map();const note=(idx,field,value)=>{let c=cand.get(idx);if(!c){c={ratio:0,phon:false};cand.set(idx,c);}if(field==="ratio")c.ratio=Math.max(c.ratio,value);else c[field]=value;};const depth=w0.length<=4?1:2;const own=deletes(w0,depth);own.add(w0);for(const d of own){const arr=scope.del.get(d);if(arr)for(const idx of arr)note(idx,"del",true);const exact=scope.index.get(d);if(exact!=null)note(exact,"del",true);}
+const qTris=Array.from(new Set(trigrams(w0)));const qTriCount=qTris.length||1;const triCount=new Map();for(const g of qTris){const arr=scope.tri.get(g);if(!arr)continue;for(const idx of arr)triCount.set(idx,(triCount.get(idx)||0)+1);}
+const triList=[];for(const[idx,ov]of triCount.entries()){const m=scope.meta[idx];const ratio=ov/Math.max(qTriCount,m.triCount||1);if(ratio>=(w0.length<=5?0.3:0.22))triList.push({idx,ratio});}
+triList.sort((a,b)=>b.ratio-a.ratio);for(const c of triList.slice(0,80))note(c.idx,"ratio",c.ratio);const key=phoneticKey(w0);if(key&&w0.length>=4){const arr=scope.phon.get(key);if(arr)for(const idx of arr)note(idx,"phon",true);}
+if(!cand.size)return out;const maxD=maxDistByLen(w0.length);for(const[idx,c]of cand.entries()){const m=scope.meta[idx],w=m.w;if(Math.abs(w.length-w0.length)>maxD+1)continue;const allow=c.phon?maxD+1:maxD;let d=osaDL(w0,w,allow);if(d>allow){if(!c.phon||key.length<3||w0.length<6||Math.abs(w.length-w0.length)>2)continue;d=2.5;}
+const first=w[0]===w0[0]?1:0;const plaus=plausibility(w0,w);const prominence=Math.min(150,25*Math.log2((m.weight||0)+1));const score=d*1000-Math.round(plaus*160)-first*150-(c.phon?250:0)-Math.round(c.ratio*60)-prominence;out.push({word:w,dist:d,score,phon:!!c.phon});}
+out.sort((a,b)=>a.score-b.score||(a.word<b.word?-1:1));const best=out.length?out[0].score:0;return out.filter(c=>c.score<=best+1400).slice(0,Math.max(1,limit||5));}
+function suggestWord(scope,rawWord){const list=wordCandidates(scope,rawWord,1);return list.length&&list[0].dist>0?list[0].word:null;}
+function support(scope,words){let acc=null;for(const w of words){if(scope.stop.has(w)||w.length<2)continue;const set=scope.docsOf.get(stemOf(w));if(!set)return 0;if(acc===null){acc=new Set(set);continue;}
+const next=new Set();for(const d of acc)if(set.has(d))next.add(d);acc=next;if(!acc.size)return 0;}
+return acc?acc.size:0;}
+function tokenOptions(scope,token,isLast){const opts=[];if(known(scope,token)){opts.push({words:[token],cost:0,kind:""});if(IRREGULAR[token]&&exists(scope,IRREGULAR[token])&&!exists(scope,token))opts.push({words:[IRREGULAR[token]],cost:0.1,kind:"spell"});}else if(isLast&&token.length>=3&&hasPrefix(scope,token)){opts.push({words:[token],cost:0.5,kind:""});}
+for(const c of wordCandidates(scope,token,4)){if(c.dist===0&&c.word===token)continue;opts.push({words:[c.word],cost:c.dist+Math.max(0,(c.score+10000)/100000),kind:"spell",phon:c.phon});}
+if(token.length>=6&&!known(scope,token)){let best=null;for(let i=3;i<=token.length-3;i++){const left=token.slice(0,i),right=token.slice(i);const l=exists(scope,left)?{word:left,dist:0}:(wordCandidates(scope,left,1)[0]||null);const r=exists(scope,right)?{word:right,dist:0}:(wordCandidates(scope,right,1)[0]||null);if(!l||!r)continue;const total=l.dist+r.dist;if(total>1)continue;const sup=support(scope,[l.word,r.word]);const cost=total+0.6+(sup?0:1.5);if(!best||cost<best.cost)best={words:[l.word,r.word],cost,kind:"split"};}
+if(best)opts.push(best);}
+if(!opts.length)opts.push({words:[token],cost:3,kind:""});return opts;}
+function suggestPhraseSync(scope,rawPhrase){const raw=normWS(rawPhrase);if(!raw)return null;if(hasDigitsOrNonAsciiOrMathy(raw))return null;const tokens=splitWords(raw);if(!tokens.length)return null;const content=tokens.filter(t=>!scope.stop.has(t));const allKnown=tokens.every(t=>exists(scope,t)||scope.stop.has(t));if(allKnown&&(!content.length||!scope.hasBody||support(scope,tokens)>0))return null;const last=tokens[tokens.length-1];if(!allKnown&&tokens.slice(0,-1).every(t=>exists(scope,t)||scope.stop.has(t))&&last.length>=3&&!exists(scope,last)&&hasPrefix(scope,last))return null;let beam=[{words:[],cost:0,changes:[]}];const BEAM=12;for(let i=0;i<tokens.length;i++){const t=tokens[i],next=[];const options=tokenOptions(scope,t,i===tokens.length-1);if(i+1<tokens.length){const joined=t+tokens[i+1];const j=exists(scope,joined)?{word:joined,dist:0}:(joined.length>=6?wordCandidates(scope,joined,1)[0]:null);if(j&&j.dist<=1&&(!known(scope,t)||!known(scope,tokens[i+1])||!support(scope,[t,tokens[i+1]]))){options.push({words:[j.word],cost:j.dist+0.4,kind:j.dist?"join+spell":"join",span:2});}}
+for(const s of beam)for(const o of options){const changed=o.span===2?t+" "+tokens[i+1]:t;const to=o.words.join(" ");next.push({words:s.words.concat(o.words),cost:s.cost+o.cost,changes:changed===to?s.changes:s.changes.concat([{from:changed,to,kind:o.kind||"spell"}]),skip:o.span===2?1:0});}
+const carry=next.filter(s=>s.skip);beam=next.filter(s=>!s.skip).sort((a,b)=>a.cost-b.cost).slice(0,BEAM);if(carry.length){if(i+1<tokens.length){const merged=carry.map(s=>({words:s.words,cost:s.cost,changes:s.changes}));i++;const t2=tokens[i],next2=[];const options2=tokenOptions(scope,t2,i===tokens.length-1);for(const s of beam)for(const o of options2){if(o.span)continue;const to=o.words.join(" ");next2.push({words:s.words.concat(o.words),cost:s.cost+o.cost,changes:t2===to?s.changes:s.changes.concat([{from:t2,to,kind:o.kind||"spell"}])});}
+beam=next2.concat(merged).sort((a,b)=>a.cost-b.cost).slice(0,BEAM);}}}
+const ranked=[];const seen=new Set();for(const s of beam){const phrase=s.words.join(" ");if(seen.has(phrase))continue;seen.add(phrase);if(phrase===tokens.join(" "))continue;if(!s.words.every(w=>known(scope,w)))continue;const sup=support(scope,s.words);ranked.push({phrase,cost:s.cost,support:sup,changes:s.changes});}
+if(!ranked.length)return null;ranked.sort((a,b)=>((b.support>0)-(a.support>0))||(a.cost-b.cost)||(b.support-a.support));const best=ranked[0];if(!best.support&&content.length>1&&scope.hasBody)return null;if(best.cost>3*Math.max(1,content.length))return null;const alternatives=ranked.slice(1,4).filter(r=>r.support>0&&r.cost<=best.cost+1).map(r=>r.phrase);const confidence=best.cost<=1.2&&(ranked.length===1||ranked[1].cost>best.cost+0.5)?"high":best.cost<=2.2?"medium":"low";return{suggested:best.phrase,changes:best.changes,alternatives,confidence,support:best.support};}
+async function suggestPhrase(scopeKey,phrase,opts){const scope=await ensureScope(scopeKey,opts);return suggestPhraseSync(scope,phrase);}
+const SYMBOL_WORDS={"α":"alpha","β":"beta","γ":"gamma","δ":"delta","ε":"epsilon","ϵ":"epsilon","ζ":"zeta","η":"eta","θ":"theta","ϑ":"theta","ι":"iota","κ":"kappa","λ":"lambda","μ":"mu","µ":"mu","ν":"nu","ξ":"xi","ο":"omicron","π":"pi","ρ":"rho","σ":"sigma","ς":"sigma","τ":"tau","υ":"upsilon","φ":"phi","ϕ":"phi","χ":"chi","ψ":"psi","ω":"omega","Γ":"gamma","Δ":"delta","Θ":"theta","Λ":"lambda","Ξ":"xi","Π":"pi","Σ":"sigma","Φ":"phi","Ψ":"psi","Ω":"omega","∞":"infinity","∑":"sum","∏":"product","∫":"integral","√":"square root","∂":"partial","∇":"nabla gradient","∈":"element of","∉":"not element of","⊂":"subset","⊆":"subset","∪":"union","∩":"intersection","∅":"empty set","≤":"less than or equal","≥":"greater than or equal","≠":"not equal","≈":"approximately equal","≡":"equivalent","∀":"for all","∃":"there exists","ℝ":"real numbers","ℕ":"natural numbers","ℤ":"integers","ℚ":"rational numbers","ℂ":"complex numbers","→":"to","↦":"maps to",};const SYMBOL_RE=new RegExp("["+Object.keys(SYMBOL_WORDS).join("")+"]","g");function symbolsToWords(text){const s=String(text==null?"":text);if(!s)return s;return s.replace(SYMBOL_RE,function(ch){return" "+SYMBOL_WORDS[ch]+" ";});}
+window.__mkSymbolsToWords=window.__mkSymbolsToWords||symbolsToWords;window.__mkFuzzyCore=window.__mkFuzzyCore||{VERSION,ensureScope,suggestPhrase,symbolsToWords,_internals:{buildScope,buildScopeAsync,runSliced,suggestPhraseSync,wordCandidates,tokenOptions,support,phoneticKey,osaDL,plausibility,suggestWord},};})();

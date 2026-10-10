@@ -1,0 +1,16 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\begin{document}
+% Testing the sign of Q(x) = x^T A x only on the subspace Bx = 0: form the bordered matrix
+% H = [[0, B],[B^T, A]] and read the signs of its last n - m leading principal minors.
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\matrix (H) [matrix of math nodes, nodes={minimum size=1.0cm, anchor=center}, left delimiter=(, right delimiter=), column sep=1pt, row sep=1pt] at (0,0) {
+		|[fill=gray!20]| 0 & |[fill=red!15]| B \\
+		|[fill=red!15]| B^{\top} & |[fill=blue!15]| A \\
+	};
+	\node[anchor=east] at ([xshift=-12pt]H.west) {$H=$};
+\end{tikzpicture}
+\end{document}

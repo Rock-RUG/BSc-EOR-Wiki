@@ -1,0 +1,19 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\begin{document}
+% A ∩ B: the elements that belong to both A and B (the overlap, shaded).
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{scope}
+		\clip (0,0) circle (1.3);
+		\fill[blue!35] (1.6,0) circle (1.3);
+	\end{scope}
+	\draw[thick, blue!70!black] (0,0) circle (1.3);
+	\draw[thick, red!70!black] (1.6,0) circle (1.3);
+	\node[blue!70!black] at (-1.0,1.3) {$A$};
+	\node[red!70!black] at (2.6,1.3) {$B$};
+	\node at (0.8,0) {$A\cap B$};
+	\node at (0.8,-1.9) {$A\cap B=\{x : x\in A \text{ and } x\in B\}$};
+\end{tikzpicture}
+\end{document}

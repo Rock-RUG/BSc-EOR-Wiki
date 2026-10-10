@@ -1,0 +1,23 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% R^3: a point is an ordered triple (x1, x2, x3), its three coordinates measured along the axes.
+\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}, >={Latex[length=2.2mm]}]
+	\draw[->] (0,0) -- (3.6,0) node[right] {$x_1$};
+	\draw[->] (0,0) -- (0,3.0) node[above] {$x_3$};
+	\draw[->] (0,0) -- (-1.9,-1.6) node[below left] {$x_2$};
+	\coordinate (P) at (2.4,1.8);
+	\coordinate (Pxy) at (2.4,-0.5);
+	% projections: x1 = 3, x2 = 1.5 (drawn along the oblique axis), x3 = 2.3
+	\draw[dashed, gray] (3,0) -- (Pxy) -- (-0.75,-0.63);
+	\draw[dashed, gray] (Pxy) -- (P) -- (0,2.3);
+	\fill[red] (P) circle (2.2pt) node[above right] {$\boldsymbol{x}=(x_1,x_2,x_3)$};
+	\node[below] at (3,0) {$x_1$};
+	\node[left] at (0,2.3) {$x_3$};
+	\node[above left, inner sep=2pt] at (-0.75,-0.63) {$x_2$};
+	\node[anchor=north] at (0.9,-1.95) {$\mathbb{R}^n=\{(x_1,\dots,x_n): x_i\in\mathbb{R}\}$; here $n=3$};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,23 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+
+\begin{document}
+% A Cauchy sequence in the plane: the points huddle together — from some index N on, every two
+% of them are closer than ε (all later points fit in one small ball), whether or not a limit exists.
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\draw[gray!50] (-3.2,-2.2) rectangle (3.6,2.6);
+	\node[gray, anchor=north west] at (-3.2,2.6) {$(\boldsymbol{X},d)$};
+	% spiral of points converging to (1,0.3)
+	\foreach \i in {1,...,14} {
+		\pgfmathsetmacro{\r}{2.2/\i}
+		\pgfmathsetmacro{\a}{140*\i}
+		\fill[blue!70!black] ({1+\r*cos(\a)},{0.3+\r*sin(\a)}) circle (1.5pt);
+	}
+	\node[blue!70!black, anchor=west] at ({1+2.2*cos(140)},{0.3+2.2*sin(140)}) {\ $\boldsymbol{x}_1$};
+	\node[blue!70!black, anchor=south] at ({1+1.1*cos(280)},{0.3+1.1*sin(280)}) {$\boldsymbol{x}_2$};
+	\node[blue!70!black, anchor=east] at ({1+0.733*cos(420)},{0.3+0.733*sin(420)}) {$\boldsymbol{x}_3$};
+	\draw[red, thick, dashed] (1,0.3) circle (0.5);
+	\node[red, anchor=west] at (1.55,0.75) {$d(\boldsymbol{x}_i,\boldsymbol{x}_j)<\varepsilon$ for all $i,j\ge N$};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,27 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+% The half-life h is the time by which the survival probability has dropped to 1/2; for the
+% exponential law S(t) = e^{-lambda t} it is h = ln 2 / lambda, and every further h halves
+% the survivors again.
+\begin{tikzpicture}
+	\begin{axis}[
+		axis lines=left, xmin=0, xmax=4.4, ymin=0, ymax=1.15,
+		xtick={0.693,1.386,2.079}, xticklabels={$h$,$2h$,$3h$}, ytick={0.125,0.25,0.5,1}, yticklabels={$\tfrac18$,$\tfrac14$,$\tfrac12$,$1$},
+		xlabel={$t$}, ylabel={$S_X(t)=\mathbb{P}(X>t)$}, ylabel style={rotate=-90, anchor=south, at={(axis description cs:0,1.02)}},
+		samples=140, smooth, width=8.6cm, height=5.8cm, clip=false
+		]
+		\addplot[blue, very thick, domain=0:4.3] {exp(-x)};
+		\draw[red, dashed] (axis cs:0,0.5) -- (axis cs:0.693,0.5) -- (axis cs:0.693,0);
+		\draw[red, dashed] (axis cs:0,0.25) -- (axis cs:1.386,0.25) -- (axis cs:1.386,0);
+		\draw[red, dashed] (axis cs:0,0.125) -- (axis cs:2.079,0.125) -- (axis cs:2.079,0);
+		\fill[red] (axis cs:0.693,0.5) circle (2pt);
+		\fill[red] (axis cs:1.386,0.25) circle (2pt);
+		\fill[red] (axis cs:2.079,0.125) circle (2pt);
+		
+	\end{axis}
+\end{tikzpicture}
+\end{document}

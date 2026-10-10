@@ -1,0 +1,18 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+
+\begin{document}
+% An interior point has a whole ball inside E; the interior int(E) is the set of such points
+% (the shaded region without its edge).
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\fill[blue!20] (0,0) ellipse (2.2 and 1.5);
+	\draw[blue!70!black, thick] (0,0) ellipse (2.2 and 1.5);
+	\node[blue!70!black] at (-1.2,0.9) {$\boldsymbol{E}$};
+	\fill[green!50!black] (0.5,-0.2) circle (1.8pt) node[above right, inner sep=1.5pt, green!40!black] {$\boldsymbol{x}_0$};
+	\draw[green!50!black, thick] (0.5,-0.2) circle (0.6);
+	\fill[red] (2.2,0) circle (1.6pt);
+	\draw[red] (2.2,0) circle (0.45);
+	\node[red, anchor=west] at (2.75,0) {edge point};
+\end{tikzpicture}
+\end{document}

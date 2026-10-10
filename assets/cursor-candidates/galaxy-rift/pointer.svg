@@ -1,0 +1,45 @@
+<svg width="32" height="32" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cursorFill" x1="38" y1="28" x2="222" y2="226" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#5528ff"/>
+        <stop offset=".55" stop-color="#c43cff"/>
+        <stop offset="1" stop-color="#ff3eb5"/>
+      </linearGradient>
+      <linearGradient id="outlineFill" x1="42" y1="30" x2="220" y2="226" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ece2ff"/>
+        <stop offset="1" stop-color="#8fdcff"/>
+      </linearGradient>
+      <linearGradient id="badgeFill" x1="104" y1="18" x2="224" y2="130" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#713bff"/>
+        <stop offset="1" stop-color="#ff46bf"/>
+      </linearGradient>
+      <filter id="cursorGlow" x="-35%" y="-35%" width="170%" height="180%">
+        <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#a855f7" flood-opacity=".72"/>
+      </filter>
+      <filter id="accentGlow" x="-60%" y="-60%" width="220%" height="220%">
+        <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#a855f7" flood-opacity=".9"/>
+      </filter>
+    </defs><g filter="url(#cursorGlow)">
+<path d="M72.7113 37.7047L58.4991 24.8108L58.5 44.0004L58.5055 164L58.5061 176.678L70.2338 171.863L115.08 153.451L115.282 153.368L115.48 153.274L159.629 132.431L171.135 126.999L161.711 118.449L72.7113 37.7047Z" fill="url(#cursorFill)" stroke="url(#outlineFill)" stroke-width="17"/>
+<g filter="url(#filter0_d_3519_115)">
+<circle cx="118" cy="162" r="70.5" fill="url(#badgeFill)" stroke="url(#outlineFill)" stroke-width="17"/>
+<path d="M104.6 140C92.6336 140 83 149.634 83 161.6C83 173.566 92.6336 183.2 104.6 183.2H113.24V174.56H104.6C97.4288 174.56 91.64 168.814 91.64 161.6C91.64 154.429 97.4288 148.64 104.6 148.64H113.24V140H104.6ZM121.88 140V148.64H130.52C137.691 148.64 143.48 154.429 143.48 161.6C143.48 168.814 137.691 174.56 130.52 174.56H121.88V183.2H130.52C142.486 183.2 152.12 173.566 152.12 161.6C152.12 149.634 142.486 140 130.52 140H121.88ZM104.6 157.28V165.92H130.52V157.28H104.6Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_d_3519_115" x="33.88" y="83" width="168.24" height="168.24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="5.12"/>
+<feGaussianBlur stdDeviation="2.56"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3519_115"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3519_115" result="shape"/>
+</filter>
+</defs>
+</g>
+      <g fill="none" stroke="#7ff7ff" stroke-width="5" opacity=".9" filter="url(#accentGlow)">
+        <ellipse cx="185" cy="194" rx="44" ry="18" transform="rotate(-24 185 194)"/>
+      </g>
+      <polygon points="220,39 222.93892626146237,47.954915028125264 232.363734711837,47.982779073125684 224.75528258147577,53.545084971874736 227.64120827980216,62.517220926874316 220,57 212.35879172019784,62.517220926874316 215.24471741852423,53.545084971874736 207.636265288163,47.982779073125684 217.06107373853763,47.954915028125264" fill="#ffffff" opacity="1"/>
+      <polygon points="198,70 199.76335575687742,75.57294901687516 205.60845213036123,75.52786404500043 200.85316954888546,78.92705098312484 202.7022820183398,84.47213595499957 198,81 193.2977179816602,84.47213595499957 195.14683045111454,78.92705098312484 190.39154786963877,75.52786404500043 196.23664424312258,75.57294901687516" fill="#7ff7ff" opacity="1"/>
+      <polygon points="224,167 225.76335575687742,171.57294901687516 230.65739561406608,171.83688103937536 226.85316954888546,174.92705098312484 228.11449676604732,179.66311896062464 224,177 219.88550323395268,179.66311896062464 221.14683045111454,174.92705098312484 217.34260438593392,171.83688103937536 222.23664424312258,171.57294901687516" fill="#ff8de1" opacity="1"/></svg>
