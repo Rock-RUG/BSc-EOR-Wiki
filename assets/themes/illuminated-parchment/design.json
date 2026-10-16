@@ -1,0 +1,37 @@
+{
+  "id": "illuminated-parchment",
+  "name": "Illuminated Parchment",
+  "basePrice": 520,
+  "headerScrim": "rgba(244,235,221,.60)",
+  "palette": {
+    "ink": "#442E23",
+    "muted": "#816648",
+    "paper": "#F4E8CC",
+    "light": "#FFF8E8",
+    "lapis": "#294F76",
+    "rubric": "#A14132",
+    "bronze": "#AD803E"
+  },
+  "interfaceTheme": {
+    "themeBase": "default",
+    "accent": "#79432F",
+    "pageBg": "#F4EBDD",
+    "cardBg": "#FFF8E9",
+    "cardBgHover": "#F3E4C8",
+    "cardBorder": "#C6AE83",
+    "menuBg": "#3C2D25",
+    "menuHover": "#594237",
+    "menuAccent": "#F5DFAD",
+    "menuBorder": "#7D6146",
+    "headerOverlay": "linear-gradient(90deg, rgba(43,31,24,.95), rgba(65,46,32,.80), rgba(50,39,30,.64))",
+    "headerBlur": "0px",
+    "backgroundBlur": "0px"
+  },
+  "rationale": "A cartographer's working manuscript: warm vellum, deliberate sepia keylines, bronze measuring tools and restrained lapis and red rubrication. Functional silhouettes are constructed as quills, rolled leaves, dividers and illuminated diagrams, rather than placed on repeated badges. Quiet broad paper fields protect reading contrast.",
+  "masteryStories": {
+    "unknown": "A tightly closed scroll: the knowledge has not yet been opened.",
+    "partial": "A single unrolling page and an active quill: learning has begun.",
+    "clear": "An open codex with two intelligible leaves: the idea can be read and explained.",
+    "mastered": "A radiant cartographic rose on an open manuscript stand: knowledge can now guide others."
+  }
+}

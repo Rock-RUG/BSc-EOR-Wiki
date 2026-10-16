@@ -1,0 +1,21 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% The line l(t) = A + t v: the parameter t measures how many copies of v one walks from A.
+\begin{tikzpicture}[every node/.style={font=\small}, >={Latex[length=2mm]}]
+	\draw[->] (-1.2,0) -- (6.2,0) node[below right] {$x_1$};
+	\draw[->] (0,-0.8) -- (0,3.6) node[above left] {$x_2$};
+	\draw[blue, thick] (-1.0,-0.4) -- (6.0,3.1);
+	\node[blue, anchor=west] at (6.0,3.25) {$\ell$};
+	\draw[->, gray, thick] (0,0) -- (1,0.6);
+	\node[gray, font=\small] at (0.25,0.5) {$A$};
+	\draw[->, red, very thick] (1,0.6) -- (2.6,1.4) node[midway, below right, font=\small] {$v$};
+	\foreach \t/\x/\y/\p in {-1/-0.6/-0.2/below, 0/1/0.6/below, 1/2.6/1.4/below, 2/4.2/2.2/below} {
+		\fill[blue] (\x,\y) circle (2pt);
+		\node[blue, \p=4pt, font=\small] at (\x,\y) {$\ell(\t)$};
+	}
+\end{tikzpicture}
+\end{document}

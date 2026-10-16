@@ -1,0 +1,294 @@
+[
+  {
+    "id": "bibata-modern-amber",
+    "name": "Bibata Modern Amber",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-modern-amber/default.svg",
+    "pointer": "bibata-modern-amber/pointer.svg"
+  },
+  {
+    "id": "bibata-modern-classic",
+    "name": "Bibata Modern Classic",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-modern-classic/default.svg",
+    "pointer": "bibata-modern-classic/pointer.svg"
+  },
+  {
+    "id": "bibata-modern-ice",
+    "name": "Bibata Modern Ice",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-modern-ice/default.svg",
+    "pointer": "bibata-modern-ice/pointer.svg"
+  },
+  {
+    "id": "bibata-original-amber",
+    "name": "Bibata Original Amber",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-original-amber/default.svg",
+    "pointer": "bibata-original-amber/pointer.svg"
+  },
+  {
+    "id": "bibata-original-classic",
+    "name": "Bibata Original Classic",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-original-classic/default.svg",
+    "pointer": "bibata-original-classic/pointer.svg"
+  },
+  {
+    "id": "bibata-original-ice",
+    "name": "Bibata Original Ice",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-original-ice/default.svg",
+    "pointer": "bibata-original-ice/pointer.svg"
+  },
+  {
+    "id": "bibata-modern-classic-right",
+    "name": "Bibata Modern Classic Right",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-modern-classic-right/default.svg",
+    "pointer": "bibata-modern-classic-right/pointer.svg"
+  },
+  {
+    "id": "bibata-original-classic-right",
+    "name": "Bibata Original Classic Right",
+    "source": "Bibata Cursor",
+    "license": "GPL-3.0",
+    "default": "bibata-original-classic-right/default.svg",
+    "pointer": "bibata-original-classic-right/pointer.svg"
+  },
+  {
+    "id": "breezex-dark",
+    "name": "BreezeX Dark",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-dark/default.svg",
+    "pointer": "breezex-dark/pointer.svg"
+  },
+  {
+    "id": "breezex-light",
+    "name": "BreezeX Light",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-light/default.svg",
+    "pointer": "breezex-light/pointer.svg"
+  },
+  {
+    "id": "breezex-black",
+    "name": "BreezeX Black",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-black/default.svg",
+    "pointer": "breezex-black/pointer.svg"
+  },
+  {
+    "id": "breezex-gruvbox",
+    "name": "BreezeX Gruvbox",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-gruvbox/default.svg",
+    "pointer": "breezex-gruvbox/pointer.svg"
+  },
+  {
+    "id": "breezex-solarized-dark",
+    "name": "BreezeX Solarized Dark",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-solarized-dark/default.svg",
+    "pointer": "breezex-solarized-dark/pointer.svg"
+  },
+  {
+    "id": "breezex-solarized-light",
+    "name": "BreezeX Solarized Light",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-solarized-light/default.svg",
+    "pointer": "breezex-solarized-light/pointer.svg"
+  },
+  {
+    "id": "breezex-dracula",
+    "name": "BreezeX Dracula",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-dracula/default.svg",
+    "pointer": "breezex-dracula/pointer.svg"
+  },
+  {
+    "id": "breezex-hacker",
+    "name": "BreezeX Hacker",
+    "source": "BreezeX Cursor",
+    "license": "GPL-3.0",
+    "default": "breezex-hacker/default.svg",
+    "pointer": "breezex-hacker/pointer.svg"
+  },
+  {
+    "id": "capitaine-dark",
+    "name": "Capitaine Dark",
+    "source": "Capitaine Cursors",
+    "license": "LGPL-3.0",
+    "default": "capitaine-dark/default.svg",
+    "pointer": "capitaine-dark/pointer.svg"
+  },
+  {
+    "id": "capitaine-light",
+    "name": "Capitaine Light",
+    "source": "Capitaine Cursors",
+    "license": "LGPL-3.0",
+    "default": "capitaine-light/default.svg",
+    "pointer": "capitaine-light/pointer.svg"
+  },
+  {
+    "id": "phinger-dark",
+    "name": "Phinger Dark",
+    "source": "Phinger Cursors",
+    "license": "CC-BY-SA-4.0",
+    "default": "phinger-dark/default.svg",
+    "pointer": "phinger-dark/pointer.svg"
+  },
+  {
+    "id": "phinger-light",
+    "name": "Phinger Light",
+    "source": "Phinger Cursors",
+    "license": "CC-BY-SA-4.0",
+    "default": "phinger-light/default.svg",
+    "pointer": "phinger-light/pointer.svg"
+  },
+  {
+    "id": "neon-inferno",
+    "name": "Neon Inferno",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Bold",
+    "description": "A blazing red-orange neon cursor with flame and star accents.",
+    "default": "neon-inferno/default.svg",
+    "pointer": "neon-inferno/pointer.svg"
+  },
+  {
+    "id": "cyber-voltage",
+    "name": "Cyber Voltage",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Bold",
+    "description": "A cyan-lime cyber cursor traced with glowing circuit lines.",
+    "default": "cyber-voltage/default.svg",
+    "pointer": "cyber-voltage/pointer.svg"
+  },
+  {
+    "id": "galaxy-rift",
+    "name": "Galaxy Rift",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Cosmic",
+    "description": "A violet-magenta cosmic cursor with an orbit ring and starlight.",
+    "default": "galaxy-rift/default.svg",
+    "pointer": "galaxy-rift/pointer.svg"
+  },
+  {
+    "id": "toxic-gamer",
+    "name": "Toxic Gamer",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Gaming",
+    "description": "An acid-green gaming cursor with luminous pixel fragments.",
+    "default": "toxic-gamer/default.svg",
+    "pointer": "toxic-gamer/pointer.svg"
+  },
+  {
+    "id": "chrome-racer",
+    "name": "Chrome Racer",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Sport",
+    "description": "A polished chrome cursor with electric-blue speed trails.",
+    "default": "chrome-racer/default.svg",
+    "pointer": "chrome-racer/pointer.svg"
+  },
+  {
+    "id": "shadow-dragon",
+    "name": "Shadow Dragon",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Dark",
+    "description": "A black-violet fantasy cursor framed by horns and a shadow wing.",
+    "default": "shadow-dragon/default.svg",
+    "pointer": "shadow-dragon/pointer.svg"
+  },
+  {
+    "id": "holo-candy",
+    "name": "Holo Candy",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Sweet",
+    "description": "A holographic candy cursor scattered with bright gems and stars.",
+    "default": "holo-candy/default.svg",
+    "pointer": "holo-candy/pointer.svg"
+  },
+  {
+    "id": "sakura-pop",
+    "name": "Sakura Pop",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Pop",
+    "description": "A peach-pink street-pop cursor with floating sakura petals.",
+    "default": "sakura-pop/default.svg",
+    "pointer": "sakura-pop/pointer.svg"
+  },
+  {
+    "id": "crystal-tide",
+    "name": "Crystal Tide",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Fresh",
+    "description": "An aqua-violet cursor decorated with crystals, bubbles and sea light.",
+    "default": "crystal-tide/default.svg",
+    "pointer": "crystal-tide/pointer.svg"
+  },
+  {
+    "id": "moon-butterfly",
+    "name": "Moon Butterfly",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Dreamy",
+    "description": "An indigo moonlit cursor with a luminous butterfly companion.",
+    "default": "moon-butterfly/default.svg",
+    "pointer": "moon-butterfly/pointer.svg"
+  },
+  {
+    "id": "cherry-heartbeat",
+    "name": "Cherry Heartbeat",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Cute",
+    "description": "A cherry-red cursor with a glowing heart and pulse line.",
+    "default": "cherry-heartbeat/default.svg",
+    "pointer": "cherry-heartbeat/pointer.svg"
+  },
+  {
+    "id": "angel-cloud",
+    "name": "Angel Cloud",
+    "source": "Bibata Cursor remix",
+    "license": "GPL-3.0",
+    "collection": "expressive",
+    "vibe": "Soft",
+    "description": "A sky-white celestial cursor with a gold halo and soft cloud.",
+    "default": "angel-cloud/default.svg",
+    "pointer": "angel-cloud/pointer.svg"
+  }
+]

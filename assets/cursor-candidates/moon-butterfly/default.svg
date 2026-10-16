@@ -1,0 +1,30 @@
+<svg width="32" height="32" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cursorFill" x1="38" y1="28" x2="222" y2="226" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#2836b8"/>
+        <stop offset=".55" stop-color="#7444d8"/>
+        <stop offset="1" stop-color="#d45edb"/>
+      </linearGradient>
+      <linearGradient id="outlineFill" x1="42" y1="30" x2="220" y2="226" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#e8f8ff"/>
+        <stop offset="1" stop-color="#91b8ff"/>
+      </linearGradient>
+      <linearGradient id="badgeFill" x1="104" y1="18" x2="224" y2="130" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#334cc9"/>
+        <stop offset="1" stop-color="#d35dd7"/>
+      </linearGradient>
+      <filter id="cursorGlow" x="-35%" y="-35%" width="170%" height="180%">
+        <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#8d75ff" flood-opacity=".72"/>
+      </filter>
+      <filter id="accentGlow" x="-60%" y="-60%" width="220%" height="220%">
+        <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#8d75ff" flood-opacity=".9"/>
+      </filter>
+    </defs><g filter="url(#cursorGlow)">
+<path d="M76.6287 46.6308L62.4993 34.144L62.5 53.0003L62.5058 208L62.5066 229.287L77.1681 213.855L122.261 166.392L188.193 164.895L209.894 164.403L193.629 150.028L76.6287 46.6308Z" fill="url(#cursorFill)" stroke="url(#outlineFill)" stroke-width="17"/>
+</g>
+      <g fill="#ffb6eb" stroke="#f4f2ff" stroke-width="3" filter="url(#accentGlow)">
+        <path d="M204 190 C186 177 181 197 198 207 C181 216 193 232 207 215 Z"/>
+        <path d="M210 190 C228 177 233 197 216 207 C233 216 221 232 207 215 Z"/>
+        <circle cx="207" cy="207" r="5" fill="#fff5ff" stroke="none"/>
+      </g>
+      <path d="M211 43 A22 22 0 1 0 232 72 A18 18 0 1 1 211 43 Z" fill="#fff4bc" filter="url(#accentGlow)"/></svg>

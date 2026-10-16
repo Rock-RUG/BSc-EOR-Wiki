@@ -1,0 +1,16 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% -z is the point reflection of z through the origin: same modulus, argument shifted by pi.
+\begin{tikzpicture}[every node/.style={font=\small}, >={Latex[length=2mm]}]
+	\draw[->] (-3.0,0) -- (3.2,0) node[below right] {$\mathrm{Re}$};
+	\draw[->] (0,-2.2) -- (0,2.4) node[above left] {$\mathrm{Im}$};
+	\draw[->, blue, very thick] (0,0) -- (2.4,1.6) node[above right] {$z=a+b\mathrm{i}$};
+	\draw[->, red, very thick] (0,0) -- (-2.4,-1.6) node[below left] {$-z=-a-b\mathrm{i}$};
+	\draw[red!70!black, thick, ->] (0.6,0) arc (0:213.7:0.6);
+	\node[red!70!black, font=\small] at (120:0.95) {$+\pi$};
+\end{tikzpicture}
+\end{document}

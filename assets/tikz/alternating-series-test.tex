@@ -1,0 +1,29 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% Alternating series test: if a_n decreases to 0, consecutive partial sums bracket the limit S,
+% so |S - s_n| <= a_{n+1} (the length of the next step).
+\begin{tikzpicture}
+	\begin{axis}[
+		axis lines=middle,
+		xmin=0, xmax=9.5,
+		ymin=0, ymax=1.2,
+		xtick={1,...,8}, ytick={0.693}, yticklabels={$S$},
+		xlabel={$n$}, ylabel={$s_n$},
+		xlabel style={below right}, ylabel style={above left},
+		clip=false,
+		width=8.4cm, height=5.2cm
+		]
+		\addplot[gray, dashed, domain=0:9] {0.6931};
+		\addplot[blue, thin, mark=*, mark size=1.7pt] coordinates {
+			(1,1) (2,0.5) (3,0.8333) (4,0.5833) (5,0.7833) (6,0.6167) (7,0.7595) (8,0.6345)
+		};
+		\draw[red, thick, {Latex[length=1.8mm]}-{Latex[length=1.8mm]}] (axis cs:5.35,0.6167) -- (axis cs:5.35,0.7833);
+		\node[red, anchor=south west, font=\small] at (axis cs:5.4,0.8) {$a_6$};
+	\end{axis}
+\end{tikzpicture}
+\end{document}
