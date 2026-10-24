@@ -1,0 +1,28 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing}
+\begin{document}
+% Death at T_x = 2.13: quarterly settlement (m = 4) pays at ceil(4 * 2.13)/4 = 9/4 = 2.25,
+% annual settlement (m = 1) pays at ceil(2.13) = 3.
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]}, x=2.8cm]
+  \draw[->] (-0.1,0) -- (3.35,0) node[right] {time};
+  \foreach \q in {0,0.25,...,3.01} \draw[gray] (\q,0.06) -- (\q,-0.06);
+  \foreach \k in {0,1,2,3} {
+    \draw[thick] (\k,0.12) -- (\k,-0.12);
+    \node[anchor=north] at (\k,-0.15) {$\k$};
+  }
+  \node[anchor=north] at (2.25,-0.15) {$2.25$};
+  % death
+  \node[blue!70!black, font=\small\bfseries] at (2.13,0) {$\times$};
+  \node[blue!70!black, anchor=south east] at (2.1,0.12) {$T_x=2.13$};
+  % payments
+  \draw[->, red, very thick] (2.25,-0.62) -- (2.25,-1.5);
+  \node[red!70!black, anchor=north] at (2.25,-1.55) {$m=4$};
+  \draw[->, red!60, very thick, dashed] (3,-0.62) -- (3,-1.5);
+  \node[red!70!black, anchor=north] at (3,-1.55) {$m=1$};
+  % waiting time
+  \draw[green!50!black, thick, decorate, decoration={brace, amplitude=3pt}]
+    (2.13,0.25) -- (2.25,0.25);
+  \node[green!50!black, anchor=south west] at (2.2,0.38) {wait $<1/4$};
+\end{tikzpicture}
+\end{document}

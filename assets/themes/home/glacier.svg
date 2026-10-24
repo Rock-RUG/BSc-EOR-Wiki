@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" fill="none">
+<defs><linearGradient id="ice" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#eef8fc"/><stop offset="1" stop-color="#dbeef6"/></linearGradient></defs>
+<rect width="480" height="480" fill="url(#ice)"/>
+<path d="M0 120L70 60L120 100L190 30L250 90L310 40L380 100L430 60L480 110V160H0Z" fill="#f4fbff"/><path d="M190 30L170 110M310 40L330 120M70 60L80 130" stroke="#b9dbe9" stroke-width="2" opacity=".7"/>
+<path d="M0 200C120 180 360 220 480 200M0 300C140 280 340 320 480 296M0 400C120 380 360 420 480 396" stroke="#c4e2ee" stroke-width="2" opacity=".7"/>
+<g stroke="#a3cfe2" stroke-width="1.4" opacity=".6"><path d="M60 180L80 230L70 270M400 190L380 250L396 300M140 350L160 410M340 340L320 420"/></g>
+<ellipse cx="240" cy="246" rx="90" ry="40" fill="#bfe3f2" opacity=".7"/>
+</svg>

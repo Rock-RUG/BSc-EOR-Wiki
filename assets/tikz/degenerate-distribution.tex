@@ -1,0 +1,35 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc}
+
+\begin{document}
+% A degenerate random variable is a constant in disguise: all probability sits at c, so the
+% pmf is a single spike and the cdf a single step from 0 to 1.
+\begin{tikzpicture}
+	\begin{axis}[
+		name=p1, axis lines=left, xmin=-0.5, xmax=4.5, ymin=0, ymax=1.25,
+		xtick={2}, xticklabels={$c$}, ytick={0,1},
+		xlabel={$x$},
+		width=5.4cm, height=4.6cm, clip=false, title={pmf $\mathbb{P}(X=x)$}, title style={font=\small}
+		]
+		\addplot[ycomb, blue, very thick, mark=*, mark size=2.2pt] coordinates {(2,1)};
+		\node[blue, anchor=west, font=\small] at (axis cs:2.2,1) {$\mathbb{P}(X=c)=1$};
+	\end{axis}
+	\begin{axis}[
+		name=p2, at={(p1.outer east)}, anchor=outer west, xshift=4mm,
+		axis lines=left, xmin=-0.5, xmax=4.5, ymin=0, ymax=1.25,
+		xtick={2}, xticklabels={$c$}, ytick={0,1},
+		xlabel={$x$},
+		width=5.4cm, height=4.6cm, clip=false, title={cdf $F_X(x)$}, title style={font=\small}
+		]
+		\draw[blue, very thick] (axis cs:-0.4,0) -- (axis cs:2,0);
+		\draw[blue, very thick] (axis cs:2,1) -- (axis cs:4.4,1);
+		\draw[blue, dashed] (axis cs:2,0) -- (axis cs:2,1);
+		\draw[blue, fill=white, thick] (axis cs:2,0) circle (2pt);
+		\fill[blue] (axis cs:2,1) circle (2pt);
+	\end{axis}
+	
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,1328 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="Worked mock-exam problem with marks per step. Find the area between two parabolas written as functions of y, then evaluate the improper integral of ln x on (0, 1] in two ways." name="description"/>
+<link href="https://rock-rug.github.io/BSc-EOR-Wiki/practice/math-i-calculus/area-between-curves-and-integral-of-ln.html" rel="canonical"/>
+<link href="index.html" rel="prev"/>
+<link href="epsilon-delta-continuity-of-one-over-x-squared.html" rel="next"/>
+<link href="../../assets/logo-navbar.svg" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
+<title>Area between two curves and int_0^1ln x\,dx - BSc EOR Wiki</title>
+<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link href="../../stylesheets/fonts-vendor.css?h=6f3b200e55fb" rel="stylesheet"/>
+<link href="../../stylesheets/katex-vendor.css?h=810f682352aa" rel="stylesheet"/>
+<link href="../../stylesheets/katex-fast.css?h=0c60a27e100b" rel="stylesheet"/>
+<link href="../../stylesheets/extra.css?h=0018b9796772" rel="stylesheet"/>
+<link href="../../stylesheets/practice-rail.css?h=2e83ae06d81b" rel="stylesheet"/>
+<link href="../../stylesheets/mastery-widget.css?h=099ee489c236" rel="stylesheet"/>
+<link href="../../stylesheets/course-status.css?h=147775b80dfa" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-surfaces.css?h=c34ef5acfade" rel="stylesheet"/>
+<link href="../../stylesheets/theme-surfaces.css?h=f9940fa42564" rel="stylesheet" media="(forced-colors: active)" data-mk-css-gate="theme"/>
+<link href="../../stylesheets/wiki-community.css?h=bf04506951f8" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-maps.css?h=ca7dd617f0d7" rel="stylesheet" media="not all" data-mk-css-gate="maps"/>
+<link href="../../stylesheets/map-chests.css?h=8b06251d6a45" rel="stylesheet" media="not all" data-mk-css-gate="maps"/>
+<link href="../../stylesheets/wiki-map-styles.css?h=4b7e455ab139" rel="stylesheet" media="not all" data-mk-css-gate="maps account"/>
+<link href="../../stylesheets/study-session.css?h=fa94a18b0cab" rel="stylesheet" media="not all" data-mk-css-gate="study"/>
+<link href="../../stylesheets/wiki-account.css?h=71416ccd6e57" rel="stylesheet" media="not all" data-mk-css-gate="account"/>
+<link href="../../stylesheets/shop-platform.css?h=3a4cc860a224" rel="stylesheet" media="not all" data-mk-css-gate="account"/>
+<link href="../../stylesheets/wiki-profile.css?h=44afa859c37f" rel="stylesheet" media="not all" data-mk-css-gate="account"/>
+<link href="../../stylesheets/wiki-rewards.css?h=e0a5893f6323" rel="stylesheet" media="not all" data-mk-css-gate="account"/>
+<link href="../../stylesheets/wiki-arena.css?h=eaf0b085cd98" rel="stylesheet" media="not all" data-mk-css-gate="account"/>
+<link href="../../stylesheets/wiki-mastery-manager.css?h=2f3de385f632" rel="stylesheet" media="not all" data-mk-css-gate="manager"/>
+<link href="../../stylesheets/wiki-guides.css?h=56a1c89af607" rel="stylesheet"/>
+<link href="../../stylesheets/wiki-explain.css?h=74c905f81ff8" rel="stylesheet"/>
+<link href="../../stylesheets/theme-complete.css?h=41ce7719c14b" rel="stylesheet" media="not all"/>
+<link href="../../stylesheets/theme-complete-profile.css?h=663d54863211" rel="stylesheet" media="not all"/>
+<link href="../../stylesheets/theme-writing-materials.css?h=b6831fb5f77e" rel="stylesheet" media="not all" data-mk-css-gate="theme"/>
+<link href="../../stylesheets/search-history.css?h=e8eaf62a2851" rel="stylesheet"/>
+<link href="../../stylesheets/theme-search-motion.css?h=f1aca18760d0" rel="stylesheet" media="not all" data-mk-css-gate="theme"/>
+<link href="../../stylesheets/wiki-boxes.css?h=d0fdf80e5f31" rel="stylesheet"/>
+<link href="../../stylesheets/site-motion.css?h=482cc791006f" rel="stylesheet" media="not all" data-mk-css-gate="motion"/>
+<link href="../../stylesheets/wiki-interactions.css?h=11bf5da18994" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script data-style-url="../../stylesheets/theme-first-paint.css?h=ee904a6ceb17" src="../../javascripts/theme-first-paint.js?h=bf35251eb142"></script>
+<style id="mk-mobile-fixed-chrome-early">
+@media (max-width: 900px), (pointer: coarse){
+  html.mk-mobile-fixed-chrome{--mk-mobile-header-h:54px;--mk-mobile-tabs-h:48px;--mk-mobile-chrome-h:102px;scroll-padding-top:calc(var(--mk-mobile-chrome-h) + 12px)}
+  html.mk-mobile-fixed-chrome .md-header{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:10040!important;transform:none!important;-webkit-transform:none!important;will-change:auto!important}
+  html.mk-mobile-fixed-chrome .md-tabs{position:fixed!important;top:var(--mk-mobile-header-h,54px)!important;left:0!important;right:0!important;z-index:10039!important}
+  html.mk-mobile-fixed-chrome .md-container{padding-top:var(--mk-mobile-chrome-h,102px)!important}
+  html.mk-mobile-fixed-chrome .md-main{margin-top:0!important}
+  
+  html.mk-mobile-fixed-chrome .md-top{top:calc(var(--mk-mobile-chrome-h,102px) + 12px)!important;z-index:10038!important}
+  
+  html.mk-mobile-fixed-chrome .md-top{left:auto!important;right:max(12px,env(safe-area-inset-right,0px))!important;transform:none!important;width:40px;height:40px;padding:0!important;font-size:0!important;border-radius:50%!important;display:flex;align-items:center;justify-content:center}
+  html.mk-mobile-fixed-chrome .md-top svg{width:20px;height:20px;margin:0!important;vertical-align:0}
+  
+  html.mk-mobile-fixed-chrome .md-tabs{transition:transform .2s ease,visibility 0s linear 0s}
+  html.mk-mobile-fixed-chrome:not([data-mk-image-interface-theme]) .md-tabs.mk-chrome-away{transform:translate3d(0,calc(-1 * var(--mk-mobile-tabs-h,48px)),0)!important;visibility:hidden;transition:transform .2s ease,visibility 0s linear .2s}
+}
+@media (pointer: coarse) and (orientation: landscape) and (max-height: 500px){
+  html.mk-mobile-fixed-chrome .md-header{transition:transform .2s ease,visibility 0s linear 0s}
+  html.mk-mobile-fixed-chrome .md-header.mk-chrome-away{transform:translate3d(0,-100%,0)!important;visibility:hidden;transition:transform .2s ease,visibility 0s linear .2s}
+  html.mk-mobile-fixed-chrome .md-tabs.mk-chrome-away{transform:translate3d(0,calc(-1 * var(--mk-mobile-chrome-h,102px)),0)!important;visibility:hidden;transition:transform .2s ease,visibility 0s linear .2s}
+}
+@media (prefers-reduced-motion: reduce){
+  html.mk-mobile-fixed-chrome .md-tabs,html.mk-mobile-fixed-chrome .md-header{transition:none!important}
+}
+
+.md-top[hidden]{visibility:hidden}
+</style>
+<script>
+(function(){try{
+  var mm=window.matchMedia;if(!mm||!mm("(pointer: coarse)").matches)return;
+  if(mm("(min-width: 768px)").matches&&mm("(min-height: 700px)").matches)return;
+  document.documentElement.classList.add("mk-mobile-fixed-chrome");
+}catch(_){}})();
+
+(function(){try{
+  var root=document.documentElement,last=0,acc=0,raf=0,away=false;
+  if(!window.requestAnimationFrame)return;
+  function y(){return window.pageYOffset||root.scrollTop||0;}
+  function bars(){return document.querySelectorAll(".md-header,.md-tabs");}
+  function set(on){if(on===away)return;away=on;var b=bars();for(var i=0;i<b.length;i++)b[i].classList.toggle("mk-chrome-away",on);}
+  function held(){
+    if(!root.classList.contains("mk-mobile-fixed-chrome")||root.classList.contains("mk-app-booting"))return true;
+    var d=document.getElementById("__drawer"),s=document.getElementById("__search");
+    if((d&&d.checked)||(s&&s.checked))return true;
+    if(document.querySelector(".mk-rt-panel.mk-rt-open,.md-tab-dropdown-panel.open"))return true;
+    var a=document.activeElement;return !!(a&&a!==document.body&&a.closest&&a.closest(".md-header,.md-tabs"));
+  }
+  function tick(){raf=0;var cur=y(),dy=cur-last;last=cur;
+    if(cur<160||held()){acc=0;set(false);return;}
+    if(dy&&(dy>0)!==(acc>0))acc=0;acc+=dy;
+    if(acc>32)set(true);else if(acc<-8)set(false);}
+  window.addEventListener("scroll",function(){if(!raf)raf=requestAnimationFrame(tick);},{passive:true});
+  function show(){acc=0;set(false);}
+  document.addEventListener("focusin",function(e){var t=e.target;if(away&&t&&t.closest&&t.closest(".md-header,.md-tabs"))show();},true);
+  document.addEventListener("change",function(e){var t=e.target;if(t&&(t.id==="__drawer"||t.id==="__search")&&t.checked)show();},true);
+  window.addEventListener("pageshow",function(){last=y();show();});
+  document.addEventListener("DOMContentSwitch",show);
+}catch(_){}})();
+
+(function(){try{
+  var saved=typeof __md_get==="function"?__md_get("__palette"):null;
+  if(saved&&saved.color&&saved.color.scheme==="slate")document.documentElement.setAttribute("data-mk-boot-scheme","slate");
+}catch(_){}})();
+</script>
+<script id="mk-complete-css-gate">
+(function(){
+  var root=document.documentElement,on={main:false,profile:false};
+  function links(kind){return document.querySelectorAll('link[rel~="stylesheet"][href*="stylesheets/theme-complete'+(kind==="profile"?"-profile":"")+'.css"]');}
+  function set(kind,active){on[kind]=on[kind]||!!active;var media=on[kind]?"all":"not all",list=links(kind);for(var i=0;i<list.length;i++){if(list[i].media!==media)list[i].media=media;}}
+  function sync(){var profile=root.getAttribute("data-mk-public-profile-theme-edition")==="complete";set("main",profile||root.getAttribute("data-mk-theme-edition")==="complete");set("profile",profile);}
+  window.MkCompleteThemeCss={activate:function(kind){set("main",true);if(kind==="profile")set("profile",true);},sync:sync};
+  sync();
+  try{new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:["data-mk-theme-edition","data-mk-public-profile-theme-edition"]});}catch(_){}
+})();
+</script>
+<script id="mk-deferred-css-gate">
+(function(){
+  var root=document.documentElement,on=Object.create(null);
+  function activate(group){
+    group=String(group||"");if(!group||on[group])return;on[group]=true;
+    var list=document.querySelectorAll('link[rel~="stylesheet"][data-mk-css-gate~="'+group+'"]');
+    for(var i=0;i<list.length;i++){if(list[i].media!=="all")list[i].media="all";}
+  }
+  function sync(){if(!on.theme&&(root.hasAttribute("data-mk-interface-theme")||root.hasAttribute("data-mk-image-interface-theme")))activate("theme");}
+  window.MkDeferredCss={activate:activate,active:function(group){return !!on[group];}};
+  sync();
+  try{new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:["data-mk-interface-theme","data-mk-image-interface-theme"]});}catch(_){}
+})();
+</script>
+<style id="mk-theme-switching-css">html.mk-theme-switching *,html.mk-theme-switching *::before,html.mk-theme-switching *::after{transition:none!important}</style>
+<script id="mk-theme-switching-gate">
+(function(){
+  var root=document.documentElement,timer=0;
+  function done(){timer=0;root.classList.remove("mk-theme-switching");}
+  function hold(){
+    if(!root.classList.contains("mk-theme-switching"))root.classList.add("mk-theme-switching");
+    clearTimeout(timer);
+    try{requestAnimationFrame(function(){requestAnimationFrame(function(){clearTimeout(timer);timer=setTimeout(done,60);});});}catch(_){}
+    timer=setTimeout(done,600);
+  }
+  window.MkThemeSwitching={hold:hold};
+  document.addEventListener("change",function(e){var t=e&&e.target;if(t&&t.name==="__palette")hold();},true);
+})();
+</script>
+<meta content="website" property="og:type"/>
+<meta content="BSc EOR Wiki" property="og:site_name"/>
+<meta content="Area between two curves and $\int_0^1\ln x\,\mathrm{d}x$ - BSc EOR Wiki" property="og:title"/>
+<meta content="Worked mock-exam problem with marks per step. Find the area between two parabolas written as functions of y, then evaluate the improper integral of ln x on (0, 1] in two ways." property="og:description"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/practice/math-i-calculus/area-between-curves-and-integral-of-ln.html" property="og:url"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/assets/logo-navbar.png" property="og:image"/>
+<meta content="BSc EOR Wiki logo" property="og:image:alt"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="Area between two curves and $\int_0^1\ln x\,\mathrm{d}x$ - BSc EOR Wiki" name="twitter:title"/>
+<meta content="Worked mock-exam problem with marks per step. Find the area between two parabolas written as functions of y, then evaluate the improper integral of ln x on (0, 1] in two ways." name="twitter:description"/>
+<meta content="https://rock-rug.github.io/BSc-EOR-Wiki/assets/logo-navbar.png" name="twitter:image"/>
+<meta content="BSc EOR Wiki logo" name="twitter:image:alt"/>
+<script id="mk-search-index-network-cache">
+// Material uses XMLHttpRequest before extra_javascript. Let custom search reuse
+// that one index download/parse without changing the native request lifecycle.
+(function () {
+  if (!window.XMLHttpRequest || window.__mkMaterialSearchIndexPromises) return;
+  var pending = window.__mkMaterialSearchIndexPromises = Object.create(null);
+  var original = XMLHttpRequest.prototype.open, originalSend = XMLHttpRequest.prototype.send;
+  // QA-102: Material requests the ~2 MB index as soon as it boots. Hold that
+  // one send() until search intent (header search hover/focus/tap, Material's
+  // / s f shortcuts, a ?q= or ?h= URL) or until a page script asks for the
+  // index through __mkFetchJsonShared (Finder, course search, random...).
+  // The request object, its listeners and the shared cache stay unchanged.
+  var released = false, held = [];
+  function release(reason) {
+    if (released) return;
+    released = true;
+    window.__mkSearchIndexRelease = String(reason || 'demand');
+    held.splice(0).forEach(function (call) { try { originalSend.apply(call[0], call[1]); } catch (_) {} });
+    unbind();
+  }
+  window.__mkSearchIndexDemand = release;
+  try { var params = new URLSearchParams(location.search); if (params.get('q') || params.get('fq') || params.get('h')) release('query'); } catch (_) {}
+  var SEARCH = '.md-search, label[for="__search"], #__search, [data-md-component="search"], [data-md-toggle="search"]';
+  function near(event) { var t = event && event.target; try { return !!(t && t.closest && t.closest(SEARCH)); } catch (_) { return false; } }
+  function onPointer(event) { if (near(event)) release('intent'); }
+  function onKey(event) {
+    if (near(event)) { release('intent'); return; }
+    var t = event && event.target, key = String(event && event.key || '');
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName || ''))) return;
+    if (key === '/' || key === 's' || key === 'f' || key === 'S' || key === 'F') release('shortcut');
+  }
+  function onChange(event) { var t = event && event.target; if (t && t.id === '__search' && t.checked) release('intent'); }
+  var EVENTS = [['pointerover', onPointer], ['pointerdown', onPointer], ['touchstart', onPointer], ['focusin', onPointer], ['keydown', onKey], ['change', onChange]];
+  function unbind() { try { EVENTS.forEach(function (pair) { document.removeEventListener(pair[0], pair[1], true); }); } catch (_) {} }
+  try { if (!released) EVENTS.forEach(function (pair) { document.addEventListener(pair[0], pair[1], { capture: true, passive: true }); }); } catch (_) {}
+  if (originalSend) XMLHttpRequest.prototype.send = function () {
+    if (this.__mkHoldSearchIndex && !released) { held.push([this, arguments]); return; }
+    return originalSend.apply(this, arguments);
+  };
+  XMLHttpRequest.prototype.open = function (method, input) {
+    var result = original.apply(this, arguments), url;
+    try { url = new URL(input, document.baseURI); } catch (_) { return result; }
+    if (String(method).toUpperCase() !== 'GET' || url.origin !== location.origin || !/\/search\/search_index\.json$/.test(url.pathname)) return result;
+    var xhr = this, key = url.href;
+    xhr.__mkHoldSearchIndex = true;
+    var task = new Promise(function (resolve, reject) {
+      xhr.addEventListener('load', function () {
+        if (xhr.status < 200 || xhr.status >= 300) { reject(new Error('Search index unavailable')); return; }
+        try {
+          if (xhr.responseType === 'blob') xhr.response.text().then(JSON.parse).then(resolve, reject);
+          else resolve(xhr.responseType === 'json' ? xhr.response : JSON.parse(xhr.responseText));
+        } catch (error) { reject(error); }
+      }, { once: true });
+      ['error', 'abort', 'timeout'].forEach(function (type) {
+        xhr.addEventListener(type, function () { reject(new Error('Search index unavailable')); }, { once: true });
+      });
+    });
+    pending[key] = task;
+    task.catch(function () { if (pending[key] === task) delete pending[key]; });
+    return result;
+  };
+})();
+</script>
+<link as="font" crossorigin="anonymous" href="../../stylesheets/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="anonymous" href="../../stylesheets/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2"/>
+<!-- Start sidebar metadata early when its feature is enabled. A static preload
+     would still download it in Lite mode, where the sorter has no consumer. -->
+<script id="mk-sidebar-meta-prefetch-v1">
+(function(){
+  var enabled=true;
+  try{var p=JSON.parse(localStorage.getItem("mk_startup_features_v1")||"{}");if(p&&p.sidebarSort===false)enabled=false;}catch(_){}
+  try{var f=window.__mkForcedStartupPrefs;if(f&&typeof f.sidebarSort==="boolean")enabled=f.sidebarSort;}catch(_){}
+  
+  
+  if(!enabled)return;
+  
+  try{var u="../../assets/sidebar/sidebar-meta.json";window.__mkSidebarMetaPromise=fetch(u,{cache:"default",priority:"high"}).then(function(r){return r&&r.ok?r.json():null;}).catch(function(){return null;});}catch(_){}
+  
+  try{var link=document.createElement('link');link.rel='preload';link.as='script';link.href="../../javascripts/sidebar-core.js?h=b509fc533e24";document.head.appendChild(link);}catch(_){}
+  
+  try{var link=document.createElement('link');link.rel='preload';link.as='script';link.href="../../javascripts/sidebar.js?h=b509fc533e24";document.head.appendChild(link);}catch(_){}
+  
+})();
+</script>
+<!-- Default opaque status-bar tint so iOS always has a colour to use before the
+     theme-color sync (ui-guard.js) runs; updated live per active interface theme. -->
+<meta content="#3f51b5" name="theme-color"/>
+<script id="mk-startup-prefs-early-v1">
+(function(){
+  // Material removes q when its header search closes. Preserve the explicit
+  // Learning Path handoff before the deferred Finder scripts read the URL.
+  function preserveLpFindToken(){
+    try{
+      var url=new URL(location.href),params=url.searchParams;
+      if(!/\/find(?:\.html|\/(?:index\.html)?)?$/i.test(url.pathname)||params.get("lp_token"))return;
+      var direct=String(params.get("lp_direct")||params.get("fb_direct")||"").trim().toLowerCase();
+      var src=String(params.get("src")||"").trim().toLowerCase();
+      var q=String(params.get("fq")||params.get("q")||"").trim();
+      if(!q||(direct!=="1"&&direct!=="true"&&src!=="lp_direct"&&src!=="learning_path"))return;
+      params.set("lp_token",q);
+      history.replaceState(history.state,"",url.toString());
+    }catch(_){}
+  }
+  // Material's search.share reads ?q= on load and OPENS the header search with
+  // that text (toggle checked + input focused). On the Finder the query is a
+  // Finder handoff, not a header search: Material opened the overlay (and the
+  // mobile keyboard), the Finder closed it again, and on a slow phone network
+  // the two fought until the header was left half-open and the page blurred.
+  // Move the Finder query to fq before Material's bundle runs; the Finder
+  // scripts read fq (and still accept q from older links).
+  function moveFinderQueryOffMaterialParam(){
+    try{
+      var url=new URL(location.href),params=url.searchParams;
+      if(!/\/find(?:\.html|\/(?:index\.html)?)?$/i.test(url.pathname)||!params.has("q"))return;
+      var q=String(params.get("q")||"").trim();
+      if(q&&!params.get("fq"))params.set("fq",q);
+      params.delete("q");
+      history.replaceState(history.state,"",url.toString());
+    }catch(_){}
+  }
+  preserveLpFindToken();
+  moveFinderQueryOffMaterialParam();
+  document.addEventListener("DOMContentSwitch",function(){preserveLpFindToken();moveFinderQueryOffMaterialParam();},true);
+  var KEY="mk_startup_features_v1";
+  var DEFAULTS={account:true,learningPath:true,mastery:true,aiQuiz:true,sidebarSort:true};
+  function kebab(k){return String(k||"").replace(/[A-Z]/g,function(m){return "-"+m.toLowerCase();});}
+  function prefs(){try{var o=JSON.parse(localStorage.getItem(KEY)||"{}")||{};return Object.assign({},DEFAULTS,o&&typeof o==="object"&&!Array.isArray(o)?o:{});}catch(_){return Object.assign({},DEFAULTS);}}
+  function enabled(k,p){p=p||prefs();if(k==="aiQuiz"&&p.mastery===false)return false;return p[k]!==false;}
+  function clearTheme(r){try{["data-mk-theme-mode","data-mk-interface-theme","data-mk-image-interface-theme","data-mk-img-hdr-clip","data-mk-public-profile-theme","data-mk-public-profile-theme-item","data-mk-header-skin","data-mk-search-box-effect","data-mk-page-effect","data-mk-dropdown-skin","data-mk-page-pattern","data-mk-profile-frame","data-mk-profile-background","data-mk-header-font","data-mk-body-font","data-mk-comment-effect","data-mk-finder-effect","data-mk-finder-builder-panel","data-mk-finder-builder-buttons","data-mk-finder-builder-tokens","data-mk-sidepanel-surface","data-mk-sidepanel-cards","data-mk-sidepanel-links","data-mk-ranking-effect","data-mk-map-effect","data-mk-map-animation", "data-mk-map-style","data-mk-mastery-effect-mastered","data-mk-mastery-effect-clear","data-mk-mastery-button-style","data-mk-mastery-background","data-mk-mastery-border","data-mk-connections-panel","data-mk-connections-sections","data-mk-connections-links","data-mk-nameplate-style","data-mk-reaction-effect","data-mk-reading-progress","data-mk-bookmark-effect","data-mk-quiz-celebration","data-mk-concept-card-skin","data-mk-sidebar-skin","data-mk-notification-skin","data-mk-sound-pack","data-mk-bgm-track"].forEach(function(a){r.removeAttribute(a);});["--mk-image-theme-header-image","--mk-image-theme-bg-image","--mk-image-theme-header-position","--mk-image-theme-bg-position","--mk-image-theme-header-blur","--mk-image-theme-bg-blur","--mk-image-theme-header-overlay","--mk-image-theme-bg-opacity","--mk-image-theme-seam-height","--mk-image-theme-seam-opacity","--mk-image-theme-seam-blur","--mk-image-theme-seam-saturate","--mk-image-theme-menu-bg","--mk-image-theme-menu-hover","--mk-image-theme-menu-border","--mk-image-theme-menu-accent","--mk-image-theme-header-stack-height","--mk-image-theme-header-self-height","--mk-image-theme-tabs-offset","--mk-active-page-bg","--mk-theme-sidebar-bg","--mk-theme-sticky-floor","--mk-theme-sidebar-card-bg","--mk-theme-sidebar-card-bg-hover","--mk-theme-sidebar-border","--mk-image-card-bg","--mk-image-card-bg-hover","--mk-image-card-border","--msb-sidebar-page-bg","--msb-sidebar-page-background","--msb-card-bg","--msb-card-bg-hover","--msb-card-border","--msb-card-border-strong","--md-primary-fg-color","--md-accent-fg-color"].forEach(function(n){r.style.removeProperty(n);});}catch(_){}}
+  function apply(){var p=prefs(),r=document.documentElement;["account","learningPath","mastery","aiQuiz","sidebarSort"].forEach(function(k){var on=enabled(k,p),slug=kebab(k);r.classList.toggle("mk-startup-"+slug+"-off",!on);r.classList.toggle("mk-startup-"+slug+"-on",on);try{r.setAttribute("data-mk-startup-"+slug,on?"on":"off");}catch(_){}});if(!enabled("account",p))clearTheme(r);window.__mkStartupFeatureEnabled=function(k){return enabled(k,prefs());};}
+  apply();
+})();
+</script>
+<script id="mk-unified-first-paint-gate-v12-fast-release">
+(function(){
+  var root=document.documentElement;
+  var id=0,timer=0,hard=0,start=0,lastReason="",forceTopThisBoot=false,userInteracted=false,lastScrollSig="",stableScrollFrames=0,topTimers=[];
+  var revealFrame=0,revealFallback=0,revealCleanup=0,coverTimer=0;
+  // Keep native restoration enabled for the history entry when it is first
+  // created, not only after returning to it. BFCache retains this script state.
+  function nativeScrollRestoration(){try{if('scrollRestoration' in history)history.scrollRestoration='auto';}catch(_){}}
+  function freshDocumentNavigation(){try{var p=window.performance,e=p&&p.getEntriesByType&&p.getEntriesByType('navigation')[0];if(e&&e.type)return e.type==='navigate';if(p&&p.navigation)return p.navigation.type===0;}catch(_){}return false;}
+  var scrollResetPath=String(location.pathname||""),preserveScroll=!!location.hash||!freshDocumentNavigation(),scrollPageAway=false;
+  nativeScrollRestoration();
+  function ensureCover(){try{var d=document.getElementById("mk-first-paint-cover");if(!d){d=document.createElement("div");d.id="mk-first-paint-cover";d.setAttribute("aria-hidden","true");(document.body||document.documentElement).appendChild(d);}return d;}catch(_){return null;}}
+  function removeCoverSoon(n){try{clearTimeout(coverTimer);coverTimer=setTimeout(function(){if(n!==id||reveal.completed!==n)return;coverTimer=0;var d=document.getElementById("mk-first-paint-cover");if(d&&d.parentNode)d.parentNode.removeChild(d);},90);}catch(_){}}
+  function cancelRevealWork(){clearTimeout(revealFallback);clearTimeout(revealCleanup);clearTimeout(coverTimer);revealFallback=revealCleanup=coverTimer=0;try{if(revealFrame&&window.cancelAnimationFrame)window.cancelAnimationFrame(revealFrame);}catch(_){}revealFrame=0;}
+  function now(){return (window.performance&&performance.now)?performance.now():Date.now();}
+  function cancelTopTimers(){try{topTimers.forEach(function(t){clearTimeout(t);});topTimers=[];}catch(_){}}
+  function preserveReadingPosition(){scrollResetPath=String(location.pathname||"");preserveScroll=true;forceTopThisBoot=false;cancelTopTimers();nativeScrollRestoration();}
+  function shouldForceTop(reason){try{var p=String(location.pathname||"");if(p!==scrollResetPath){scrollResetPath=p;preserveScroll=false;userInteracted=false;}if(scrollPageAway||preserveScroll||location.hash)return false;var r=String(reason||"");return r!=="popstate"&&r!=="pageshow";}catch(_){return false;}}
+  function scrollTopValue(){try{var se=document.scrollingElement||document.documentElement;return Math.max(window.pageYOffset||0,document.documentElement.scrollTop||0,document.body?document.body.scrollTop||0:0,se?se.scrollTop||0:0);}catch(_){return window.pageYOffset||0;}}
+  // Writing a scroll offset forces a synchronous style + layout even when the
+  // page is already at the top. Each navigation resets once; later timers
+  // re-assert the top only after a scroll event (restoration, anchor, clamping)
+  // has actually moved the page.
+  var topDirty=true;try{window.addEventListener("scroll",function(){topDirty=true;},{passive:true});}catch(_){}
+  function forceTopNow(){if(!forceTopThisBoot||userInteracted||scrollPageAway||preserveScroll||location.hash||scrollResetPath!==String(location.pathname||""))return;if(!topDirty)return;try{var se=document.scrollingElement||document.documentElement;if(se)se.scrollTop=0;document.documentElement.scrollTop=0;if(document.body)document.body.scrollTop=0;window.scrollTo(0,0);topDirty=false;}catch(_){}}
+  function armTopFix(){cancelTopTimers();if(!forceTopThisBoot)return;var n=id;[0,8,16,32,64,120,220].forEach(function(ms){topTimers.push(setTimeout(function(){if(n===id)forceTopNow();},ms));});}
+  function viewportSig(){try{var vv=window.visualViewport;var y=Math.round(scrollTopValue());var oy=vv?Math.round(vv.offsetTop||0):0;var h=vv?Math.round(vv.height||0):Math.round(window.innerHeight||0);var w=vv?Math.round(vv.width||0):Math.round(window.innerWidth||0);return y+":"+oy+":"+h+":"+w;}catch(_){return String(Math.round(scrollTopValue()));}}
+  function viewportStable(ms){try{if(!forceTopThisBoot)return true;forceTopNow();var y=scrollTopValue();var sig=viewportSig();if(sig===lastScrollSig)stableScrollFrames+=1;else{lastScrollSig=sig;stableScrollFrames=0;}if(y>1&&ms<360)return false;return stableScrollFrames>=2||ms>180;}catch(_){return true;}}
+  function cleanPath(){try{return location.pathname.replace(/^\/+/,"").replace(/\/index\.html$/i,"/").replace(/\/+$/,"");}catch(_){return "";}}
+  function isFind(){try{var p=cleanPath().toLowerCase();return p==="find"||p==="find.html"||p.endsWith("/find")||p.endsWith("/find.html")||p.endsWith("/find/index.html");}catch(_){return false;}}
+  function isRankingsRoute(){try{var p=cleanPath().toLowerCase();return p==="trending"||p==="trending.html"||p.endsWith("/trending")||p.endsWith("/trending.html");}catch(_){return false;}}
+  // Route classes let route CSS apply from the first paint; the route scripts
+  // add their body classes about a second later.
+  function markKind(){try{root.classList.toggle("mk-find-page",isFind());root.classList.toggle("mk-rankings-page",isRankingsRoute());}catch(_){} }
+  function concept(){try{return /(?:^|\/)Year-\d+\/[^/]+\/(?!index\.html$)[^/]+\.html$/i.test(String(location.pathname||""));}catch(_){return false;}}
+  // Read the mounted shell as well as listening for its event: navigation may
+  // finish before this gate starts, or remain mounted across history restores.
+  function tabsReady(){try{if(!document.querySelector(".md-tabs__list"))return true;var nav=document.getElementById("mk-random-tabs-shadow");return !!(nav&&nav.getAttribute("data-mk-nav-ready")==="1");}catch(_){return false;}}
+  // The hard reveal can fire before random-tabs.js has built the site tabs; the
+  // native Material tabs (with internal pages) then flashed for up to a few
+  // seconds (QA-011). Keep them invisible, height intact, until the custom
+  // tabs are ready or 3 s pass.
+  function holdNativeTabs(){try{if(tabsReady())return;root.classList.add("mk-native-tabs-wait");var done=function(){root.classList.remove("mk-native-tabs-wait");window.removeEventListener("mk:random-tabs-ready",done);};window.addEventListener("mk:random-tabs-ready",done);setTimeout(done,3000);}catch(_){}}
+  function shellReady(){try{return !!document.querySelector(".md-container,.md-main,.md-content");}catch(_){return false;}}
+  function isDesktopSidebar(){try{return !!(window.matchMedia&&window.matchMedia("(min-width: 960px)").matches);}catch(_){return false;}}
+  function shouldGateDesktopSidebar(ms){try{if(!concept())return false;if(!window.matchMedia||!window.matchMedia("(min-width: 76.1876em)").matches)return false;var s=document.querySelector(".md-sidebar--primary");if(s)return true;return ms<720;}catch(_){return false;}}
+  function motionReady(ms){try{var h=document.querySelector(".md-header");if(!h)return true;var w=document.getElementById("mk-site-motion-toggle");return !!(w&&w.classList.contains("is-ready"))||ms>220;}catch(_){return true;}}
+  function startupOn(k){try{return !window.__mkStartupFeatureEnabled||window.__mkStartupFeatureEnabled(k)!==false;}catch(_){return true;}}
+  function sidebarReady(ms){try{if(!shouldGateDesktopSidebar(ms)||!startupOn("sidebarSort"))return true;return root.classList.contains("mk-sidebar-sort-ready")&&root.classList.contains("mk-sidebar-sort-centered");}catch(_){return false;}}
+  function masteryReady(c,ms){if(!c||!startupOn("mastery"))return true;try{var a=document.querySelector("article.md-content__inner"),p=a&&a.getAttribute("data-mw-first-paint-rel"),w=document.getElementById("mw-mastery"),t=document.getElementById("mw-practice-tools"),q=t&&t.getAttribute("data-mw-practice-rel");return !!((t&&t.getAttribute("data-mw-practice-shell")==="1"&&q&&cleanPath().endsWith(q)&&t.querySelector("summary")&&t.querySelector('[data-mw-practice-action="settings"]'))||(w&&(w.dataset.mwShell!=="1"||w.dataset.mwReadinessReady==="1"))||(p&&a.getAttribute("data-mw-first-paint-state")==="collapsed"&&cleanPath().endsWith(p.replace(/\/+$/, "")))||window.__mkMasteryWidgetReadyRel===location.pathname);}catch(_){return false;}}
+  function lpReady(c,ms){if(!c||!startupOn("learningPath"))return true;try{var p=document.getElementById(isDesktopSidebar()?"lp-side-panel":"lp-mobile-sheet");return !!(p&&(p.dataset.lpFirstPaintContent==="1"||p.dataset.lpEarlyShell!=="1"))||window.__mkLearningPathReadyRel===location.pathname;}catch(_){return false;}}
+  function visibleToolsReady(){try{var explain=document.getElementById("wiki-explain-root");var reading=!root.hasAttribute("data-mk-reading-progress")||!startupOn("account")||window.__mkExamMode||document.getElementById("mk-shop-reading-progress");return !!(explain&&reading&&(!concept()||window.__mkTitleFitReadyRel===location.pathname));}catch(_){return false;}}
+  function findReady(ms){if(!isFind())return true;try{var fb=document.getElementById("find-builder");var form=document.getElementById("search-form");return !!(fb&&form&&(root.classList.contains("mk-find-ready")||window.__fbReadyV1||window.__fbReadyDispatchedV1))||ms>430;}catch(_){return ms>430;}}
+  function isHeaderSearchActive(){try{var ae=document.activeElement,t=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search'),s=document.querySelector('.md-header .md-search'),b=document.body;return !!((t&&t.checked)||(ae&&ae.closest&&ae.closest('.md-header .md-search'))||(s&&s.classList&&s.classList.contains('md-search--active'))||(s&&s.getAttribute&&s.getAttribute('data-mk-search-force-active')==='1')||root.classList.contains('md-search--active')||root.classList.contains('mk-hsf-open')||(b&&b.classList&&b.classList.contains('md-search--active')));}catch(_){return false;}}
+  function clearFindFx(){try{var r=document.getElementById("search-results");if(r)r.classList.remove("fb-preblur");var fb=document.getElementById("find-builder");if(fb)fb.classList.remove("fb-dream-active","fb-undo-bump","fb-redo-bump");document.querySelectorAll("#search-results .csr-cols,#search-results .csr-list,#search-results .csr-foot,#find-builder .fb-board,#find-builder .fb-hint").forEach(function(el){el.style.filter="";el.style.opacity="";el.style.transform="";el.classList.remove("fb-hint--pending","fb-hint--reveal");});}catch(_){} }
+  function clearFindSearchResidue(){if(!isFind())return;clearFindFx();var active=isHeaderSearchActive();root.classList.toggle("mk-header-search-open",!!active);if(active)return;try{var toggle=document.querySelector('input.md-toggle[data-md-toggle="search"], input#__search, #__search');if(toggle)toggle.checked=false;document.querySelectorAll('.md-header .md-search.md-search--active').forEach(function(el){el.classList.remove('md-search--active');});root.classList.remove('md-search--active');if(document.body)document.body.classList.remove('md-search--active');document.querySelectorAll('.md-header .md-search__output,.md-header .md-search__overlay,.md-header .mk-search-history,.md-header .mk-search-suggest').forEach(function(el){try{el.style.display='none';el.style.pointerEvents='none';el.style.opacity='0';el.setAttribute('aria-hidden','true');}catch(_){}});var bd=document.getElementById('mk-mobile-search-backdrop');if(bd){bd.dataset.mkFindHidden='1';bd.style.display='none';bd.style.opacity='0';bd.style.backdropFilter='none';bd.style.webkitBackdropFilter='none';}}catch(_){} }
+  function blank(reason){markKind();ensureCover();lastReason=reason||"";forceTopThisBoot=shouldForceTop(lastReason);lastScrollSig="";stableScrollFrames=0;clearFindSearchResidue();topDirty=true;forceTopNow();armTopFix();root.classList.remove("mk-app-ready","mk-first-paint-release","mk-tabs-ready","mk-sidebar-sort-centered");root.classList.add("mk-app-booting","mk-nav-pending","mk-startup-no-motion","mk-tabs-boot","mk-sidebar-sort-boot","mk-scroll-stabilizing");if(reason==="find"||isFind())root.classList.add("mk-find-booting","mk-find-entering");}
+  function revealCommit(n){if(n!==id||reveal.completed===n)return;reveal.completed=n;reveal.queued=0;cancelRevealWork();clearTimeout(timer);clearTimeout(hard);clearFindSearchResidue();forceTopNow();markKind();root.classList.add("mk-app-ready","mk-first-paint-release","mk-tabs-ready");holdNativeTabs();removeCoverSoon(n);root.classList.remove("mk-app-booting","mk-nav-pending","mk-tabs-boot","mk-sidebar-sort-boot","mk-find-booting","mk-find-entering","mk-scroll-stabilizing");forceTopNow();[0,60].forEach(function(ms){topTimers.push(setTimeout(function(){if(n===id)forceTopNow();},ms));});revealCleanup=setTimeout(function(){if(n===id){revealCleanup=0;root.classList.remove("mk-startup-no-motion","mk-first-paint-release");cancelTopTimers();}},90);}
+  /* Each navigation commits once. Late component readiness signals and the
+     competing timer must not restart document-wide animation suppression after
+     cleanup. A HIDDEN tab never paints, so requestAnimationFrame
+     never fires in it and the reveal never ran: #mk-first-paint-cover is an
+     opaque full-screen layer at z-index 2147483647, so a page opened in a
+     background tab stayed blank until it was focused - and then had to reveal
+     AND run the whole deferred script burst at once. Commit straight away when
+     there is no paint to wait for, and keep a timer fallback for tabs that are
+     visible but rAF-throttled. */
+  function reveal(n){if(n!==id||reveal.completed===n)return;clearTimeout(timer);clearTimeout(hard);if(document.hidden){revealCommit(n);return;}if(reveal.queued===n)return;reveal.queued=n;clearFindSearchResidue();forceTopNow();revealFrame=requestAnimationFrame(function(){if(n!==id||reveal.completed===n)return;forceTopNow();revealFrame=requestAnimationFrame(function(){if(n!==id)return;revealFrame=0;revealCommit(n);});});revealFallback=setTimeout(function(){if(n!==id)return;revealFallback=0;revealCommit(n);},400);}
+  function probe(n){if(n!==id||reveal.completed===n||reveal.queued===n)return;markKind();clearFindSearchResidue();var ms=now()-start,c=concept();if(ms>=18&&shellReady()&&tabsReady()&&sidebarReady(ms)&&masteryReady(c,ms)&&lpReady(c,ms)&&motionReady(ms)&&findReady(ms)&&visibleToolsReady()&&viewportStable(ms))return reveal(n);clearTimeout(timer);timer=setTimeout(function(){probe(n);},16);}
+  function currentDocKey(){try{return location.pathname+location.search;}catch(_){return "";}}var docKey=currentDocKey();
+  function boot(reason){markKind();id++;start=now();clearTimeout(timer);clearTimeout(hard);cancelRevealWork();reveal.queued=reveal.completed=0;blank(reason);var n=id;timer=setTimeout(function(){probe(n);},0);hard=setTimeout(function(){hardRevealWhenSafe(n);},10000);}
+  function hardRevealWhenSafe(n){if(n!==id||reveal.completed===n||reveal.queued===n)return;var ms=now()-start;if(shouldGateDesktopSidebar(ms)&&!sidebarReady(ms)&&ms<1200){clearTimeout(hard);hard=setTimeout(function(){hardRevealWhenSafe(n);},50);return;}reveal(n);}
+  function releaseForInteraction(e){try{if(e&&e.isTrusted===false)return;userInteracted=true;preserveReadingPosition();if(root.classList.contains("mk-app-booting")&&(!visibleToolsReady()||!lpReady(concept(),0)||!masteryReady(concept(),0)))return;if(root.classList.contains("mk-app-booting"))reveal(id);}catch(_){}}
+  // Only header-search navigation needs a new page-paint gate. In-page forms
+  // (Finder tokens, course filters, preparation notes, account settings) keep
+  // their own loading states and must remain visible while handling submit.
+  function searchTarget(t){try{if(t&&t.closest&&t.closest(".mk-page-comments, .mk-comment-form, .mk-comment-composer"))return false;return !!(t&&t.closest&&t.closest(".md-header .md-search, .md-search, label[for='__search'], input#__search, input[data-md-component='search-query']"));}catch(_){return false;}}
+  document.addEventListener("submit",function(e){if(searchTarget(e&&e.target))boot("find");},true);
+  document.addEventListener("keydown",function(e){var t=e&&e.target;if(e&&e.key==="Enter"&&!e.isComposing&&e.keyCode!==229&&searchTarget(t)&&t.matches&&t.matches('input.md-search__input, input[data-md-component="search-query"]'))boot("find");},true);
+  window.addEventListener("find:autofill",function(){boot("find");},true);
+  try{["pushState","replaceState"].forEach(function(k){var orig=history[k];if(!orig||orig.__mkGateWrappedV8)return;var wrapped=function(){var ret=orig.apply(this,arguments);docKey=currentDocKey();setTimeout(function(){markKind();if(isFind())boot("history-find");else probe(id);},0);return ret;};wrapped.__mkGateWrappedV8=true;history[k]=wrapped;});}catch(_){}
+  window.__mkUnifiedFirstPaintStart=boot;window.__mkUnifiedFirstPaintBlank=function(reason){boot(reason||"manual")};window.__mkUnifiedFirstPaintProbe=function(){probe(id)};window.__mkClearFindSearchResidue=clearFindSearchResidue;
+  ["wheel","touchstart","pointerdown"].forEach(function(e){window.addEventListener(e,releaseForInteraction,{passive:true,capture:true});});window.addEventListener("keydown",function(e){if(e&&/^(ArrowDown|ArrowUp|PageDown|PageUp|Home|End| )$/.test(String(e.key||"")))releaseForInteraction(e);},true);
+  ["mk:random-tabs-ready","mk:sidebar-sort-done","mk:sidebar-sort-rendered","mk:sidebar-sort-centered","mk:mastery-widget-ready","mk:learning-path-ready","mk:site-motion-change","mk:motionchange","fb:ready"].forEach(function(e){window.addEventListener(e,function(){probe(id);},true);});
+  window.addEventListener("pagehide",function(){scrollPageAway=true;preserveReadingPosition();},{passive:true});
+  window.addEventListener("hashchange",preserveReadingPosition,{passive:true});
+  boot("initial");document.addEventListener("DOMContentLoaded",function(){probe(id);},{once:true});document.addEventListener("DOMContentSwitch",function(){boot("switch");});window.addEventListener("pageshow",function(e){scrollPageAway=false;if(e&&e.persisted){preserveReadingPosition();boot("pageshow");}else probe(id);},{passive:true});window.addEventListener("popstate",function(){preserveReadingPosition();var k=currentDocKey();if(k===docKey)return;docKey=k;boot("popstate");},{passive:true});document.addEventListener("click",function(e){try{var a=e&&e.target&&e.target.closest&&e.target.closest("a.md-skip[href^='#']");if(!a||e.defaultPrevented)return;var id=decodeURIComponent(String(a.getAttribute("href")||"").slice(1));var t=(id&&document.getElementById(id))||document.querySelector("article.md-content__inner, .md-content, main");if(!t)return;e.preventDefault();if(!t.hasAttribute("tabindex"))t.setAttribute("tabindex","-1");try{t.focus({preventScroll:true});}catch(_){t.focus();}try{t.scrollIntoView({block:"start"});}catch(_){}}catch(_){}},true);[0,60,160,340,700,1200,1800].forEach(function(ms){setTimeout(clearFindSearchResidue,ms);});
+})();
+</script>
+<style id="mk-unified-first-paint-css-v12-fast-release">
+html.mk-app-booting,html.mk-app-booting body{background:var(--md-default-bg-color,#fff)!important;overflow-anchor:none!important;scroll-behavior:auto!important;overscroll-behavior:none!important}
+html.mk-app-booting::before,html.mk-app-booting body::before,#mk-first-paint-cover{content:"";position:fixed!important;top:calc(-1 * env(safe-area-inset-top,0px) - 120px)!important;left:calc(-1 * env(safe-area-inset-left,0px) - 120px)!important;right:calc(-1 * env(safe-area-inset-right,0px) - 120px)!important;bottom:calc(-1 * env(safe-area-inset-bottom,0px) - 80vh)!important;min-height:calc(100dvh + 80vh + env(safe-area-inset-bottom,0px) + 240px)!important;z-index:2147483647!important;background:var(--md-default-bg-color,#fff)!important;pointer-events:none!important;display:block!important;visibility:visible!important;opacity:1!important;transform:translateZ(0)!important;contain:paint!important}
+html.mk-app-booting:is([data-mk-boot-scheme="slate"],[data-mk-color-scheme="slate"]),html.mk-app-booting:is([data-mk-boot-scheme="slate"],[data-mk-color-scheme="slate"])::before{background:#1e2129!important}
+html.mk-app-booting :is(#wiki-explain-root,#wiki-guide-root){visibility:hidden!important}
+html.mk-app-booting .md-header,html.mk-app-booting .md-tabs{visibility:hidden!important;opacity:0!important}
+html.mk-native-tabs-wait .md-tabs__list{visibility:hidden!important}
+html.mk-app-booting .md-container,html.mk-app-booting .md-main,html.mk-app-booting .md-content,html.mk-app-booting .md-sidebar,html.mk-app-booting .md-footer,html.mk-app-booting .md-dialog,html.mk-app-booting .md-search{visibility:hidden!important;opacity:0!important;transition:none!important;animation:none!important;overflow-anchor:none!important}
+html.mk-app-ready #mk-first-paint-cover,html:not(.mk-app-booting) #mk-first-paint-cover{display:none!important;opacity:0!important;visibility:hidden!important}
+html.mk-startup-no-motion *,html.mk-startup-no-motion *:before,html.mk-startup-no-motion *:after,html.mk-first-paint-release *,html.mk-first-paint-release *:before,html.mk-first-paint-release *:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+#find-builder.fb-dream-active .fb-board,#search-results.fb-preblur,#search-results.fb-preblur .csr-cols,#search-results.fb-preblur .csr-list,#search-results.fb-preblur .csr-foot,html.mk-find-page #find-builder .fb-board,html.mk-find-page #search-results .csr-cols,html.mk-find-page #search-results .csr-list,html.mk-find-page #search-results .csr-foot,html.mk-find-page .fb-hint--pending{filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;opacity:1!important;transform:none!important;transition:none!important;animation:none!important}
+/* QA-030: the Finder drops both sidebars (body.trending-page, extra.css) once find-builder.js runs; apply it from the first frame so content does not jump from the nav column to the left edge. */
+html.mk-find-page .md-sidebar--primary,html.mk-find-page .md-sidebar--secondary{display:none!important}html.mk-find-page .md-content{grid-column:1/-1!important}
+html.mk-find-page:not(.mk-header-search-open) #mk-mobile-search-backdrop{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important;pointer-events:none!important}
+html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .md-search__overlay,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .md-search__output,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .mk-search-history,html.mk-find-page:not(.mk-header-search-open):not(.md-search--active):not(.mk-hsf-open) .md-header .mk-search-suggest{display:none!important;opacity:0!important;visibility:hidden!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;pointer-events:none!important}
+html.rk-preload .md-header,html.rk-loading .md-header,html:not(.rk-ready) .md-header,html.rk-preload .md-tabs,html.rk-loading .md-tabs,html:not(.rk-ready) .md-tabs,html.rk-preload .md-container,html.rk-loading .md-container,html:not(.rk-ready) .md-container,html.rk-preload .md-main,html.rk-loading .md-main,html.rk-preload .md-content,html.rk-loading .md-content{opacity:1!important;visibility:visible!important;pointer-events:auto!important;animation:none!important;transition:none!important}
+.md-tabs__list{justify-content:flex-start}.md-tabs__list>.md-tabs__item.random-right-start{margin-left:auto}.md-tab-dropdown-panel{position:fixed;z-index:9999;display:none}.md-tab-dropdown-panel.open{display:block}.md-tabs__link.md-tab-dropdown,.md-tabs__link-btn.md-tab-dropdown-btn{display:inline-flex;align-items:center}.md-tabs__link-btn.md-tab-dropdown-btn{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0}.md-tab-dropdown-btn .rd-icon{display:inline-flex;align-items:center;justify-content:center;color:currentColor}
+html body article.md-content__inner h1 .arithmatex-inline,html body article.md-content__inner h1 .arithmatex-prerendered,html body article.md-content__inner h1 mjx-container,html body article.md-content__inner h1 .MathJax,html body article.md-content__inner h1 .katex{margin-left:0!important;margin-right:0!important}
+html body article.md-content__inner h1 .katex:not(:first-child),html body article.md-content__inner h1 mjx-container:not(:first-child),html body article.md-content__inner h1 .MathJax:not(:first-child){margin-left:0!important}
+</style>
+<script id="mk-ios-drawer-vv-gap-v1">
+(function(){
+  var frame=0;
+  var drawer=null;
+  var overlay=null;
+  var lastGap=-1;
+
+  function findDrawer(){
+    try{
+      if(drawer&&drawer.isConnected)return drawer;
+      var next=document.querySelector('input.md-toggle[data-md-toggle="drawer"], input#__drawer, #__drawer');
+      if(next===drawer)return drawer;
+      if(drawer)drawer.removeEventListener('change',onDrawerChange);
+      drawer=next||null;
+      if(drawer)drawer.addEventListener('change',onDrawerChange,{passive:true});
+      return drawer;
+    }catch(_){return null;}
+  }
+
+  function drawerOpen(){
+    var input=findDrawer();
+    return !!(input&&input.checked);
+  }
+
+  function findOverlay(){
+    try{
+      if(overlay&&overlay.isConnected)return overlay;
+      var next=document.querySelector('.md-overlay');
+      if(next!==overlay){overlay=next||null;lastGap=-1;}
+      return overlay;
+    }catch(_){return null;}
+  }
+
+  function syncNow(){
+    frame=0;
+    if(!drawerOpen())return;
+    try{
+      var vv = window.visualViewport;
+      var gap = 0;
+      if (vv) {
+        gap = Math.max(0, Math.round((window.innerHeight || 0) - (vv.height || 0) - (vv.offsetTop || 0)));
+      }
+      var target=findOverlay();
+      if(!target||gap===lastGap)return;
+      lastGap=gap;
+      target.style.setProperty('--mk-ios-vv-bottom-gap',gap+'px');
+    }catch(_){}
+  }
+
+  function schedule(){
+    if(!drawerOpen()||frame)return;
+    frame=window.requestAnimationFrame(syncNow);
+  }
+
+  function onDrawerChange(){
+    if(drawer&&drawer.checked)syncNow();
+  }
+
+  function refresh(){
+    findDrawer();
+    findOverlay();
+    schedule();
+  }
+
+  refresh();
+  window.addEventListener('resize', schedule, {passive:true});
+  window.addEventListener('orientationchange', schedule, {passive:true});
+  window.addEventListener('pageshow', refresh, {passive:true});
+  document.addEventListener('DOMContentLoaded', refresh, {once:true});
+  document.addEventListener('DOMContentSwitch', refresh);
+  try{
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', schedule, {passive:true});
+      window.visualViewport.addEventListener('scroll', schedule, {passive:true});
+    }
+  }catch(_){}
+})();
+</script>
+<style id="mk-ios-drawer-overlay-clip-v1">
+@media (max-width: 76.1875em), (pointer: coarse) {
+  /* iOS Safari drawer fix, conservative version.
+     Do not change the drawer itself. Keep the overlay as the outside-tap
+     closer, but stop it before Safari's dynamic bottom toolbar area.
+     The forgiving :is() list preserves the sibling fallback on Safari versions
+     that do not support :has(); an ordinary comma list would be discarded. */
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--mk-ios-vv-bottom-gap, 0px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay)::before,
+  :is(#__drawer:checked ~ .md-overlay, html:has(#__drawer:checked) .md-overlay)::after {
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+}
+</style>
+</head>
+<body data-md-color-accent="teal" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#area-between-two-curves-and-int_01ln-xmathrmdx">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="BSc EOR Wiki" class="md-header__button md-logo" data-md-component="logo" href="../../index.html" title="BSc EOR Wiki">
+<img alt="logo" src="../../assets/logo-navbar.svg"/>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            BSc EOR Wiki
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Area between two curves and $\int_0^1\ln x\,\mathrm{d}x$
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+</label>
+<input aria-label="Switch to custom theme" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to custom theme">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="teal" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="custom" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog" aria-label="Search the wiki">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<a aria-label="Share" class="md-search__icon md-icon" data-clipboard="" data-clipboard-text="" data-md-component="search-share" href="javascript:void(0)" tabindex="-1" title="Share">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+</a>
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<nav aria-label="Site sections" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../index.html">
+        
+  
+  
+    
+  
+  BSc EOR Wiki
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../about-reference.html">
+        
+  
+  
+    
+  
+  Detailed feature reference
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../bgm-credits.html">
+        
+  
+  
+    
+  
+  Background music credits
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../find.html">
+        
+  
+  
+    
+  
+  Concept Finder
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../trending.html">
+        
+  
+  
+    
+  
+  Rankings
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../Year-1/index.html">
+          
+  
+  
+    
+  
+  Year 1
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../Year-2/index.html">
+          
+  
+  
+    
+  
+  Year 2
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../Year-3/index.html">
+          
+  
+  
+    
+  
+  Year 3
+
+        </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="index.html">
+          
+  
+  
+    
+  
+  Exam practice
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../random.html">
+        
+  
+  
+    
+  
+  Random
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Courses and concepts" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="BSc EOR Wiki" class="md-nav__button md-logo" data-md-component="logo" href="../../index.html" title="BSc EOR Wiki">
+<img alt="logo" src="../../assets/logo-navbar.svg"/>
+</a>
+    BSc EOR Wiki
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../index.html">
+<span class="md-ellipsis">
+    
+  
+    BSc EOR Wiki
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../about-reference.html">
+<span class="md-ellipsis">
+    
+  
+    Detailed feature reference
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../bgm-credits.html">
+<span class="md-ellipsis">
+    
+  
+    Background music credits
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../find.html">
+<span class="md-ellipsis">
+    
+  
+    Concept Finder
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../trending.html">
+<span class="md-ellipsis">
+    
+  
+    Rankings
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../Year-1/index.html">
+<span class="md-ellipsis">
+    
+  
+    Year 1
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../Year-2/index.html">
+<span class="md-ellipsis">
+    
+  
+    Year 2
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+<a class="md-nav__link" href="../../Year-3/index.html">
+<span class="md-ellipsis">
+    
+  
+    Year 3
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Exam practice
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Exam practice
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_9_1" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="index.html">
+<span class="md-ellipsis">
+    
+  
+    Math I: Calculus
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_9_1" id="__nav_9_1_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_9_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_9_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Math I: Calculus
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Area between two curves and $\int_0^1\ln x\,\mathrm{d}x$
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="area-between-curves-and-integral-of-ln.html">
+<span class="md-ellipsis">
+    
+  
+    Area between two curves and $\int_0^1\ln x\,\mathrm{d}x$
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#problem">
+<span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-you-need">
+<span class="md-ellipsis">
+      
+        What you need
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#plan">
+<span class="md-ellipsis">
+      
+        Plan
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#step-by-step-solution">
+<span class="md-ellipsis">
+      
+        Step-by-step solution
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#where-marks-are-lost">
+<span class="md-ellipsis">
+      
+        Where marks are lost
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#try-next">
+<span class="md-ellipsis">
+      
+        Try next
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="epsilon-delta-continuity-of-one-over-x-squared.html">
+<span class="md-ellipsis">
+    
+  
+    Continuity of $1/x^2$ from the $\varepsilon$–$\delta$ definition
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="ftc-chain-rule-and-a-scaled-improper-integral.html">
+<span class="md-ellipsis">
+    
+  
+    FTC with a variable limit and a scaled improper integral
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="global-extrema-of-x-plus-one-over-x.html">
+<span class="md-ellipsis">
+    
+  
+    Global extrema of $x+1/x$ on a closed interval
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="inverse-of-x-plus-x-cubed.html">
+<span class="md-ellipsis">
+    
+  
+    The inverse of $x+x^3$
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="limit-via-asymptotic-equivalence.html">
+<span class="md-ellipsis">
+    
+  
+    A limit via asymptotic equivalence
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="sequence-limit-squeeze-and-bounds.html">
+<span class="md-ellipsis">
+    
+  
+    Limit of a sequence from the definition, squeeze and bounds
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="series-term-test-p-series-and-geometric.html">
+<span class="md-ellipsis">
+    
+  
+    Convergence of three series and $\sum\sin n$
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="set-identity-and-induction.html">
+<span class="md-ellipsis">
+    
+  
+    A set identity and a divisibility proof by induction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="stationary-points-convexity-and-alternating-series.html">
+<span class="md-ellipsis">
+    
+  
+    Stationary points, convexity and an alternating series
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="three-local-extrema-with-a-parameter.html">
+<span class="md-ellipsis">
+    
+  
+    A function with three local extrema
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="x-squared-sine-continuity-and-differentiability.html">
+<span class="md-ellipsis">
+    
+  
+    Continuity and differentiability of $x^2\sin(A/x)$
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../random.html">
+<span class="md-ellipsis">
+    
+  
+    Random
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<aside aria-label="Problem connections" id="pr-side-panel"><div class="pr-head"><div class="pr-title">Problem connections</div></div><details class="pr-acc pr-need" open=""><summary aria-label="Toggle What you need section" class="pr-sum"><span class="pr-sum-left">What you need</span><span class="pr-sum-right"><span aria-hidden="true" class="pr-sum-chevron"><svg fill="none" focusable="false" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></span></summary><div class="pr-body"><ul class="pr-list">
+<li><a href="../../Year-1/1a-Math-I-Calculus/definite-integral.html">Definite integral</a> and the <a href="../../Year-1/1a-Math-I-Calculus/fundamental-theorem-of-calculus-part-2.html">fundamental theorem of calculus, part 2</a>. </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/improper-integral.html">Improper integral</a>: an integral with an unbounded integrand or interval is a limit of ordinary integrals. </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/integration-by-parts.html">Integration by parts</a>. </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/integration-by-substitution-type-2.html">Integration by substitution, type 2</a>: substitute <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mi>φ</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">x=\varphi(t)\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">φ</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/lhopitals-rule.html">L'Hôpital's rule</a>, for <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mi>ln</mi><mo>⁡</mo><mi>ε</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon\ln\varepsilon\to0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>R</mi></mrow></msup><mo>→</mo><mn>0</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">R\mathrm{e}^{-R}\to0\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> </li>
+</ul></div></details><details class="pr-acc pr-next" open=""><summary aria-label="Toggle Try next section" class="pr-sum"><span class="pr-sum-left">Try next</span><span class="pr-sum-right"><span aria-hidden="true" class="pr-sum-chevron"><svg fill="none" focusable="false" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span></span></summary><div class="pr-body"><ul class="pr-list">
+<li><a href="limit-via-asymptotic-equivalence.html">A limit via asymptotic equivalence</a> </li>
+<li><a href="series-term-test-p-series-and-geometric.html">Convergence of three series and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true" scriptlevel="0"><mo>∑</mo><mi>sin</mi><mo>⁡</mo><mi>n</mi></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle \sum\sin n</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.6em;vertical-align:-0.55em;"></span><span class="mop op-symbol large-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span></span></span></span></span></a> </li>
+</ul><p><span class="search-aliases" data-nosnippet="">
+Symbols: epsilon, infinity, integral, phi, sum
+</span></p></div></details></aside>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<nav aria-label="Navigation" class="md-path">
+<ol class="md-path__list">
+<li class="md-path__item">
+<a class="md-path__link" href="../../index.html">
+<span class="md-ellipsis">
+    BSc EOR Wiki
+  </span>
+</a>
+</li>
+<li class="md-path__item">
+<a class="md-path__link" href="index.html">
+<span class="md-ellipsis">
+    Exam practice
+  </span>
+</a>
+</li>
+<li class="md-path__item">
+<a class="md-path__link" href="index.html">
+<span class="md-ellipsis">
+    Math I: Calculus
+  </span>
+</a>
+</li>
+</ol>
+</nav>
+<article class="md-content__inner md-typeset">
+<nav class="md-tags" aria-label="Concept tags">
+<span class="md-tag">curriculum-current</span>
+</nav>
+<h1 id="area-between-two-curves-and-int_01ln-xmathrmdx">Area between two curves and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\int_0^1\ln x\,\mathrm{d}x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span></span></span></span></span><a class="headerlink" href="#area-between-two-curves-and-int_01ln-xmathrmdx" title="Permanent link">¶</a></h1>
+<p><em>Math I: Calculus · Mock exam, Question 5(b)–(c) · 14 points · Lectures 11–12</em></p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">¶</a></h2>
+<ul>
+<li>(b) Find the area enclosed by <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mi>y</mi><mo>=</mo><mi>x</mi><mo>+</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2y^2-y=x+2</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><mi>x</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">y^2=x\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> [6 points] </li>
+<li>(c) Evaluate <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\int_0^1\ln x\,\mathrm{d}x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span></span></span></span></span> in two different ways. [8 points] </li>
+</ul>
+<div class="pr-inline pr-need"><h2 id="what-you-need">What you need<a class="headerlink" href="#what-you-need" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../../Year-1/1a-Math-I-Calculus/definite-integral.html">Definite integral</a> and the <a href="../../Year-1/1a-Math-I-Calculus/fundamental-theorem-of-calculus-part-2.html">fundamental theorem of calculus, part 2</a>. </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/improper-integral.html">Improper integral</a>: an integral with an unbounded integrand or interval is a limit of ordinary integrals. </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/integration-by-parts.html">Integration by parts</a>. </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/integration-by-substitution-type-2.html">Integration by substitution, type 2</a>: substitute <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mi>φ</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">x=\varphi(t)\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">φ</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> </li>
+<li><a href="../../Year-1/1a-Math-I-Calculus/lhopitals-rule.html">L'Hôpital's rule</a>, for <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mi>ln</mi><mo>⁡</mo><mi>ε</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon\ln\varepsilon\to0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>R</mi></mrow></msup><mo>→</mo><mn>0</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">R\mathrm{e}^{-R}\to0\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> </li>
+</ul>
+</div><h2 id="plan">Plan<a class="headerlink" href="#plan" title="Permanent link">¶</a></h2>
+<p>In (b) both curves are easy to write as <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> in terms of <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext>,</mtext></mrow><annotation encoding="application/x-tex">y\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord text"><span class="mord">,</span></span></span></span></span></span> so integrate in <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mtext>:</mtext></mrow><annotation encoding="application/x-tex">y\text{:}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord text"><span class="mord">:</span></span></span></span></span></span> area <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mo>∫</mo><mo stretchy="false">(</mo><mtext>right</mtext><mo>−</mo><mtext>left</mtext><mo stretchy="false">)</mo><mtext> </mtext><mi mathvariant="normal">d</mi><mi>y</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">=\int(\text{right}-\text{left})\,\mathrm{d}y\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1111em;vertical-align:-0.3061em;"></span><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="mopen">(</span><span class="mord text"><span class="mord">right</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">left</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> In (c), <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ln</mi><mo>⁡</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">\ln x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span></span></span></span></span> is unbounded near <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">0\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mord text"><span class="mord">,</span></span></span></span></span></span> so this is an improper integral: write it as a limit before integrating. The two methods are integration by parts, and the substitution <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mtext>,</mtext></mrow><annotation encoding="application/x-tex">x=\mathrm{e}^{-t}\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.988em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mord text"><span class="mord">,</span></span></span></span></span></span> which turns it into an integral over <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo><mtext>.</mtext></mrow><annotation encoding="application/x-tex">[0,\infty)\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∞</span><span class="mclose">)</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span></p>
+<h2 id="step-by-step-solution">Step-by-step solution<a class="headerlink" href="#step-by-step-solution" title="Permanent link">¶</a></h2>
+<p>Try each step yourself before you open it.</p>
+<details class="note">
+<summary>(b) Step 1 · Write both curves as functions of y (1 point)</summary>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>2</mn><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mi>y</mi><mo>−</mo><mn>2</mn><mo separator="true">,</mo><mspace width="1em"></mspace><mi>x</mi><mo>=</mo><msup><mi>y</mi><mn>2</mn></msup><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">x=2y^2-y-2,\quad x=y^2.</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0585em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0585em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">.</span></span></span></span></span></div>
+</details>
+<details class="note">
+<summary>(b) Step 2 · Find the intersections (2 points)</summary>
+<p><span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><mn>2</mn><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mi>y</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">y^2=2y^2-y-2</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> gives <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mi>y</mi><mo>−</mo><mn>2</mn><mo>=</mo><mn>0</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">y^2-y-2=0\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mord text"><span class="mord">,</span></span></span></span></span></span> that is <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>y</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">(y-2)(y+1)=0\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> The curves meet at <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y=-1</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>2</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">y=2\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span></p>
+</details>
+<details class="note">
+<summary>(b) Step 3 · Which curve is on the right? (1 point)</summary>
+<p>For <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn><mo>&lt;</mo><mi>y</mi><mo>&lt;</mo><mn>2</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">-1&lt;y&lt;2\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord text"><span class="mord">,</span></span></span></span></span></span></p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mo stretchy="false">(</mo><mn>2</mn><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mi>y</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mo stretchy="false">(</mo><mi>y</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>&gt;</mo><mn>0</mn><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">y^2-(2y^2-y-2)=-(y-2)(y+1)&gt;0,</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.0585em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mpunct">,</span></span></span></span></span></div>
+<p>so <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msup><mi>y</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">x=y^2</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span> is the right boundary and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>2</mn><msup><mi>y</mi><mn>2</mn></msup><mo>−</mo><mi>y</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">x=2y^2-y-2</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> the left one.</p>
+</details>
+<details class="note">
+<summary>(b) Step 4 · Set up and evaluate (2 points)</summary>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable columnalign="right left" columnspacing="0em" rowspacing="0.25em"><mtr><mtd><mstyle displaystyle="true" scriptlevel="0"><mtext>Area</mtext></mstyle></mtd><mtd><mstyle displaystyle="true" scriptlevel="0"><mrow><mrow></mrow><mo>=</mo><msubsup><mo>∫</mo><mrow><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mrow><mo fence="true">(</mo><mo>−</mo><msup><mi>y</mi><mn>2</mn></msup><mo>+</mo><mi>y</mi><mo>+</mo><mn>2</mn><mo fence="true">)</mo></mrow><mtext> </mtext><mi mathvariant="normal">d</mi><mi>y</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle displaystyle="true" scriptlevel="0"><mrow></mrow></mstyle></mtd><mtd><mstyle displaystyle="true" scriptlevel="0"><mrow><mrow></mrow><mo>=</mo><msubsup><mrow><mo fence="true">[</mo><mo>−</mo><mfrac><msup><mi>y</mi><mn>3</mn></msup><mn>3</mn></mfrac><mo>+</mo><mfrac><msup><mi>y</mi><mn>2</mn></msup><mn>2</mn></mfrac><mo>+</mo><mn>2</mn><mi>y</mi><mo fence="true">]</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle displaystyle="true" scriptlevel="0"><mrow></mrow></mstyle></mtd><mtd><mstyle displaystyle="true" scriptlevel="0"><mrow><mrow></mrow><mo>=</mo><mfrac><mn>10</mn><mn>3</mn></mfrac><mo>−</mo><mrow><mo fence="true">(</mo><mo>−</mo><mfrac><mn>7</mn><mn>6</mn></mfrac><mo fence="true">)</mo></mrow><mo>=</mo><mfrac><mn>9</mn><mn>2</mn></mfrac><mi mathvariant="normal">.</mi></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+\text{Area}&amp;=\int_{-1}^{2}\left(-y^2+y+2\right)\,\mathrm{d}y\\
+&amp;=\left[-\frac{y^3}{3}+\frac{y^2}{2}+2y\right]_{-1}^{2}\\
+&amp;=\frac{10}{3}-\left(-\frac{7}{6}\right)=\frac{9}{2}.
+\end{aligned}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:8.2875em;vertical-align:-3.8937em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:4.3937em;"><span style="top:-6.5249em;"><span class="pstrut" style="height:3.6951em;"></span><span class="mord"><span class="mord text"><span class="mord">Area</span></span></span></span><span style="top:-3.5595em;"><span class="pstrut" style="height:3.6951em;"></span><span class="mord"></span></span><span style="top:-0.7514em;"><span class="pstrut" style="height:3.6951em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.8937em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:4.3937em;"><span style="top:-6.5249em;"><span class="pstrut" style="height:3.6951em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9703em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">−</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">2</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span><span style="top:-3.5595em;"><span class="pstrut" style="height:3.6951em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="minner"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6951em;"><span style="top:-1.7003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.944em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.0581em;"><span></span></span></span></span></span></span></span></span><span style="top:-0.7514em;"><span class="pstrut" style="height:3.6951em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">10</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">7</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">9</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord">.</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.8937em;"><span></span></span></span></span></span></span></span></span></span></span></span></div>
+<p><em>Concept:</em> <a href="../../Year-1/1a-Math-I-Calculus/fundamental-theorem-of-calculus-part-2.html">Fundamental theorem of calculus, part 2</a></p>
+</details>
+<details class="note">
+<summary>(c) Method 1, Step 1 · Write the improper integral as a limit (1 point)</summary>
+<p><span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ln</mi><mo>⁡</mo><mi>x</mi><mo>→</mo><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\ln x\to-\infty</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">∞</span></span></span></span></span> as <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup><mtext>,</mtext></mrow><annotation encoding="application/x-tex">x\to0^+\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9658em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span><span class="mord text"><span class="mord">,</span></span></span></span></span></span> so</p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi><mo>=</mo><munder><mrow><mi>lim</mi><mo>⁡</mo></mrow><mrow><mi>ε</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup></mrow></munder><msubsup><mo>∫</mo><mi>ε</mi><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\int_0^1\ln x\,\mathrm{d}x=\lim_{\varepsilon\to0^+}\int_{\varepsilon}^{1}\ln x\,\mathrm{d}x.</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:2.476em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.476em;vertical-align:-0.9119em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-2.3421em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span><span class="mrel mtight">→</span><span class="mord mtight"><span class="mord mtight">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7027em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">lim</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7579em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span></span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mord">.</span></span></span></span></span></div>
+<p><em>Concept:</em> <a href="../../Year-1/1a-Math-I-Calculus/improper-integral.html">Improper integral</a></p>
+</details>
+<details class="note">
+<summary>(c) Method 1, Step 2 · Integrate by parts (1 point)</summary>
+<p>With <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>ln</mi><mo>⁡</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">u=\ln x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mo lspace="0em" mathvariant="normal" rspace="0em">′</mo></msup><mo>=</mo><mn>1</mn><mtext>,</mtext></mrow><annotation encoding="application/x-tex">v'=1\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mord text"><span class="mord">,</span></span></span></span></span></span></p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mi>ε</mi><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi><mo>=</mo><mo fence="false" maxsize="1.2em" minsize="1.2em" stretchy="true">[</mo><mi>x</mi><mi>ln</mi><mo>⁡</mo><mi>x</mi><msubsup><mo fence="false" maxsize="1.2em" minsize="1.2em" stretchy="true">]</mo><mi>ε</mi><mn>1</mn></msubsup><mo>−</mo><msubsup><mo>∫</mo><mi>ε</mi><mn>1</mn></msubsup><mn>1</mn><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi><mo>=</mo><mo>−</mo><mi>ε</mi><mi>ln</mi><mo>⁡</mo><mi>ε</mi><mo>−</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\int_{\varepsilon}^{1}\ln x\,\mathrm{d}x =\big[x\ln x\big]_{\varepsilon}^{1}-\int_{\varepsilon}^{1}1\,\mathrm{d}x =-\varepsilon\ln\varepsilon-(1-\varepsilon).</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:2.476em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span></span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.4537em;vertical-align:-0.3997em;"></span><span class="mord"><span class="delimsizing size1">[</span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mord"><span class="mord"><span class="delimsizing size1">]</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.054em;"><span style="top:-2.3003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span></span></span></span><span style="top:-3.3029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.476em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span></span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ε</span><span class="mclose">)</span><span class="mord">.</span></span></span></span></span></div>
+</details>
+<details class="note">
+<summary>(c) Method 1, Step 3 · Take the limit (2 points)</summary>
+<p><span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mi>ln</mi><mo>⁡</mo><mi>ε</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon\ln\varepsilon\to0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> as <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">\varepsilon\to0^+\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7713em;"></span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> One way: by L'Hôpital's rule,</p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mrow><mi>lim</mi><mo>⁡</mo></mrow><mrow><mi>ε</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup></mrow></munder><mfrac><mrow><mi>ln</mi><mo>⁡</mo><mi>ε</mi></mrow><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mi>ε</mi></mrow></mfrac><mo>=</mo><munder><mrow><mi>lim</mi><mo>⁡</mo></mrow><mrow><mi>ε</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup></mrow></munder><mfrac><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mi>ε</mi></mrow><mrow><mo>−</mo><mn>1</mn><mi mathvariant="normal">/</mi><msup><mi>ε</mi><mn>2</mn></msup></mrow></mfrac><mo>=</mo><munder><mrow><mi>lim</mi><mo>⁡</mo></mrow><mrow><mi>ε</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup></mrow></munder><mo stretchy="false">(</mo><mo>−</mo><mi>ε</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0.</mn></mrow><annotation encoding="application/x-tex">\lim_{\varepsilon\to0^+}\frac{\ln\varepsilon}{1/\varepsilon} =\lim_{\varepsilon\to0^+}\frac{1/\varepsilon}{-1/\varepsilon^2} =\lim_{\varepsilon\to0^+}(-\varepsilon)=0.</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:2.3074em;vertical-align:-0.936em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-2.3421em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span><span class="mrel mtight">→</span><span class="mord mtight"><span class="mord mtight">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7027em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">lim</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7579em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1/</span><span class="mord mathnormal">ε</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ε</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-2.3421em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span><span class="mrel mtight">→</span><span class="mord mtight"><span class="mord mtight">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7027em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">lim</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7579em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">−</span><span class="mord">1/</span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1/</span><span class="mord mathnormal">ε</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.5079em;vertical-align:-0.7579em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-2.3421em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ε</span><span class="mrel mtight">→</span><span class="mord mtight"><span class="mord mtight">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7027em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">lim</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7579em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord">−</span><span class="mord mathnormal">ε</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.</span></span></span></span></span></div>
+<p>So the integral equals <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>−</mo><mn>1</mn><mo>=</mo><mo>−</mo><mn>1</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">0-1=-1\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span></p>
+</details>
+<details class="note">
+<summary>(c) Method 2, Step 1 · Substitute x = e^(−t) (2 points)</summary>
+<p>Let <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mtext>.</mtext></mrow><annotation encoding="application/x-tex">x=\mathrm{e}^{-t}\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7936em;"></span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> Then <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ln</mi><mo>⁡</mo><mi>x</mi><mo>=</mo><mo>−</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">\ln x=-t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord mathnormal">t</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">d</mi><mi>x</mi><mo>=</mo><mo>−</mo><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mtext> </mtext><mi mathvariant="normal">d</mi><mi>t</mi><mtext>;</mtext></mrow><annotation encoding="application/x-tex">\mathrm{d}x=-\mathrm{e}^{-t}\,\mathrm{d}t\text{;}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.988em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">t</span><span class="mord text"><span class="mord">;</span></span></span></span></span></span> <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x=1</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> corresponds to <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">t=0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">x\to0^+</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7713em;"></span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span></span></span></span></span> to <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>→</mo><mi mathvariant="normal">∞</mi><mtext>.</mtext></mrow><annotation encoding="application/x-tex">t\to\infty\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">∞</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> So</p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi><mo>=</mo><msubsup><mo>∫</mo><mi mathvariant="normal">∞</mi><mn>0</mn></msubsup><mo stretchy="false">(</mo><mo>−</mo><mi>t</mi><mo stretchy="false">)</mo><mrow><mo fence="true">(</mo><mo>−</mo><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mo fence="true">)</mo></mrow><mtext> </mtext><mi mathvariant="normal">d</mi><mi>t</mi><mo>=</mo><mo>−</mo><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant="normal">∞</mi></msubsup><mi>t</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mtext> </mtext><mi mathvariant="normal">d</mi><mi>t</mi><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\int_0^1\ln x\,\mathrm{d}x =\int_{\infty}^{0}(-t)\left(-\mathrm{e}^{-t}\right)\,\mathrm{d}t =-\int_0^{\infty}t\mathrm{e}^{-t}\,\mathrm{d}t.</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:2.476em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.476em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.564em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">−</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">−</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8436em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3262em;vertical-align:-0.9119em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4143em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8436em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">t</span><span class="mord">.</span></span></span></span></span></div>
+<p>The orientation flips because <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> decreases as <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> increases; keep track of the sign.</p>
+<p><em>Concept:</em> <a href="../../Year-1/1a-Math-I-Calculus/integration-by-substitution-type-2.html">Integration by substitution, type 2</a></p>
+</details>
+<details class="note">
+<summary>(c) Method 2, Step 2 · Evaluate the new integral (2 points)</summary>
+<p>On <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mi>R</mi><mo stretchy="false">]</mo><mtext>,</mtext></mrow><annotation encoding="application/x-tex">[0,R]\text{,}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mclose">]</span><span class="mord text"><span class="mord">,</span></span></span></span></span></span> integration by parts gives</p>
+<div class="arithmatex arithmatex-prerendered arithmatex-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mi>R</mi></msubsup><mi>t</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mtext> </mtext><mi mathvariant="normal">d</mi><mi>t</mi><mo>=</mo><mo fence="false" maxsize="1.2em" minsize="1.2em" stretchy="true">[</mo><mo>−</mo><mi>t</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><msubsup><mo fence="false" maxsize="1.2em" minsize="1.2em" stretchy="true">]</mo><mn>0</mn><mi>R</mi></msubsup><mo>+</mo><msubsup><mo>∫</mo><mn>0</mn><mi>R</mi></msubsup><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>t</mi></mrow></msup><mtext> </mtext><mi mathvariant="normal">d</mi><mi>t</mi><mo>=</mo><mo>−</mo><mi>R</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>R</mi></mrow></msup><mo>+</mo><mn>1</mn><mo>−</mo><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>R</mi></mrow></msup><mo>→</mo><mn>1</mn><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">\int_0^R t\mathrm{e}^{-t}\,\mathrm{d}t =\big[-t\mathrm{e}^{-t}\big]_0^R+\int_0^R\mathrm{e}^{-t}\,\mathrm{d}t =-R\mathrm{e}^{-R}+1-\mathrm{e}^{-R}\to1,</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:2.5032em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5912em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8436em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord"><span class="delimsizing size1">[</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.4809em;vertical-align:-0.3997em;"></span><span class="mord mathnormal">t</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8436em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord"><span class="delimsizing size1">]</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0812em;"><span style="top:-2.3003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.3029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.5032em;vertical-align:-0.9119em;"></span><span class="mop"><span class="mop op-symbol large-op" style="margin-right:0.4445em;position:relative;top:-0.0011em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5912em;"><span style="top:-1.7881em;margin-left:-0.4445em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.8129em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9119em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8436em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9747em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8913em;"></span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span></span></span></span></span></div>
+<p>because <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>R</mi></mrow></msup><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">R\mathrm{e}^{-R}\to0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">e</mi><mrow><mo>−</mo><mi>R</mi></mrow></msup><mo>→</mo><mn>0</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">\mathrm{e}^{-R}\to0\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathrm">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0077em;">R</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span> Hence again <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi><mo>=</mo><mo>−</mo><mn>1</mn><mtext>.</mtext></mrow><annotation encoding="application/x-tex">\int_0^1\ln x\,\mathrm{d}x=-1\text{.}</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span><span class="mord text"><span class="mord">.</span></span></span></span></span></span></p>
+</details>
+<h2 id="where-marks-are-lost">Where marks are lost<a class="headerlink" href="#where-marks-are-lost" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>Integrating in <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> in (b).</strong> It can be done, but the region then needs several pieces. Integrating in <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span> needs one. </li>
+<li><strong>Treating <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>ln</mi><mo>⁡</mo><mi>x</mi><mtext> </mtext><mi mathvariant="normal">d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\int_0^1\ln x\,\mathrm{d}x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span></span></span></span></span> as an ordinary integral.</strong> Write the limit; the mark for justifying <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi><mi>ln</mi><mo>⁡</mo><mi>ε</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varepsilon\ln\varepsilon\to0</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">ε</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> depends on it. </li>
+<li><strong>Losing the sign in the substitution.</strong> Swapping the limits and the minus sign from <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\mathrm{d}x</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span></span></span></span></span> must be done together. </li>
+<li><strong>Giving the same method twice.</strong> "Two different ways" means two genuinely different routes. </li>
+</ul>
+<div class="pr-inline pr-next"><h2 id="try-next">Try next<a class="headerlink" href="#try-next" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="limit-via-asymptotic-equivalence.html">A limit via asymptotic equivalence</a> </li>
+<li><a href="series-term-test-p-series-and-geometric.html">Convergence of three series and <span class="arithmatex arithmatex-prerendered arithmatex-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true" scriptlevel="0"><mo>∑</mo><mi>sin</mi><mo>⁡</mo><mi>n</mi></mstyle></mrow><annotation encoding="application/x-tex">\displaystyle \sum\sin n</annotation></semantics></math></span><span aria-hidden="true" class="katex-html"><span class="base"><span class="strut" style="height:1.6em;vertical-align:-0.55em;"></span><span class="mop op-symbol large-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span></span></span></span></span></a> </li>
+</ul>
+<p><span class="search-aliases" data-nosnippet="">
+Symbols: epsilon, infinity, integral, phi, sum
+</span></p>
+</div></article>
+</div>
+<script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+<div class="md-copyright__highlight">Copyright © 2026 BSc EOR Wiki / BSc EOR teaching team. All rights reserved.</div>
+<details class="mk-copyright-details">
+<summary>Full terms of use and licences</summary>
+<div> Materials may be viewed for personal study and internal teaching purposes only.<br/> Original teaching materials, examples, diagrams, website structure, custom code, configuration and deployment workflow may not be copied, redistributed, scraped, adapted or reused without prior written permission.<br/> Third-party software remains governed by its own licences.
+</div>
+</details>
+<div class="mk-copyright-generator">
+      Made with
+      <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">Material for MkDocs</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "toc.follow", "search.suggest", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.footnote.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../javascripts/perf-probe.js?h=ea289ef426e5"></script>
+<script src="../../javascripts/wiki-explain.js?h=6d0e9335c013"></script>
+<script src="../../javascripts/startup-preferences.js?h=b509fc533e24"></script>
+<script src="../../javascripts/style-shortcuts.js?h=903df15b6eba"></script>
+<script src="../../javascripts/ui-guard.js?h=8d2c3d9edaed"></script>
+<script src="../../javascripts/concept-title-fit.js?h=8a4406302178"></script>
+<script src="../../javascripts/rail-scroll.js?h=dab074432cd1"></script>
+<script src="../../javascripts/a11y-landmarks.js?h=f9b5b9aefde5"></script>
+<script src="../../javascripts/fuzzy-core.js?h=4e03f7d79eee"></script>
+<script src="../../javascripts/nl-query-core.js?h=74dc76589bdf"></script>
+<script src="../../javascripts/multilingual-search-core.js?h=2366a7653efd"></script>
+<script src="../../javascripts/search-suggestions.js?h=48bc14c0842b"></script>
+<script src="../../javascripts/search-history.js?h=b9c74637e483"></script>
+<script src="../../javascripts/header-search-stabilizer.js?h=cdd630b06fd3"></script>
+<script src="../../javascripts/concept-hover-preview.js?h=7990de02ac56"></script>
+<script src="../../javascripts/mathjax.js?h=06875c0b69ec"></script>
+<script src="../../javascripts/preload-guard.js?h=5e42effda2c3"></script>
+<script src="../../javascripts/random.js?h=10f974c5fe5c"></script>
+<script src="../../javascripts/random-tabs.js?h=1951714fb79c"></script>
+<script src="../../javascripts/search-enter.js?h=25c7c2d382da"></script>
+<script src="../../javascripts/concept-fold.js?h=6399c42db2c6"></script>
+<script src="../../javascripts/tag-search-links.js?h=84cb5c2dd87f"></script>
+<script src="../../javascripts/logo-lightbox.js?h=ff270d50b51e"></script>
+<script src="../../javascripts/figure-source.js?h=be72e08409c3"></script>
+<script src="../../javascripts/daily-concept.js?h=d13116871745"></script>
+<script src="../../javascripts/wiki-guide-pages.js?h=2b66ba4d72e7"></script>
+<script src="../../javascripts/wiki-guide-account.js?h=00d418148b80"></script>
+<script src="../../javascripts/wiki-guides.js?h=7cd9d96cb254"></script>
+<script src="../../javascripts/wiki-explain-content.js?h=13e73a39e397"></script>
+</body>
+</html>

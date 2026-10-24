@@ -1,0 +1,30 @@
+<svg width="32" height="32" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cursorFill" x1="38" y1="28" x2="222" y2="226" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#5528ff"/>
+        <stop offset=".55" stop-color="#c43cff"/>
+        <stop offset="1" stop-color="#ff3eb5"/>
+      </linearGradient>
+      <linearGradient id="outlineFill" x1="42" y1="30" x2="220" y2="226" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ece2ff"/>
+        <stop offset="1" stop-color="#8fdcff"/>
+      </linearGradient>
+      <linearGradient id="badgeFill" x1="104" y1="18" x2="224" y2="130" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#713bff"/>
+        <stop offset="1" stop-color="#ff46bf"/>
+      </linearGradient>
+      <filter id="cursorGlow" x="-35%" y="-35%" width="170%" height="180%">
+        <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#a855f7" flood-opacity=".72"/>
+      </filter>
+      <filter id="accentGlow" x="-60%" y="-60%" width="220%" height="220%">
+        <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#a855f7" flood-opacity=".9"/>
+      </filter>
+    </defs><g filter="url(#cursorGlow)">
+<path d="M76.6287 46.6308L62.4993 34.144L62.5 53.0003L62.5058 208L62.5066 229.287L77.1681 213.855L122.261 166.392L188.193 164.895L209.894 164.403L193.629 150.028L76.6287 46.6308Z" fill="url(#cursorFill)" stroke="url(#outlineFill)" stroke-width="17"/>
+</g>
+      <g fill="none" stroke="#7ff7ff" stroke-width="5" opacity=".9" filter="url(#accentGlow)">
+        <ellipse cx="185" cy="194" rx="44" ry="18" transform="rotate(-24 185 194)"/>
+      </g>
+      <polygon points="220,39 222.93892626146237,47.954915028125264 232.363734711837,47.982779073125684 224.75528258147577,53.545084971874736 227.64120827980216,62.517220926874316 220,57 212.35879172019784,62.517220926874316 215.24471741852423,53.545084971874736 207.636265288163,47.982779073125684 217.06107373853763,47.954915028125264" fill="#ffffff" opacity="1"/>
+      <polygon points="198,70 199.76335575687742,75.57294901687516 205.60845213036123,75.52786404500043 200.85316954888546,78.92705098312484 202.7022820183398,84.47213595499957 198,81 193.2977179816602,84.47213595499957 195.14683045111454,78.92705098312484 190.39154786963877,75.52786404500043 196.23664424312258,75.57294901687516" fill="#7ff7ff" opacity="1"/>
+      <polygon points="224,167 225.76335575687742,171.57294901687516 230.65739561406608,171.83688103937536 226.85316954888546,174.92705098312484 228.11449676604732,179.66311896062464 224,177 219.88550323395268,179.66311896062464 221.14683045111454,174.92705098312484 217.34260438593392,171.83688103937536 222.23664424312258,171.57294901687516" fill="#ff8de1" opacity="1"/></svg>

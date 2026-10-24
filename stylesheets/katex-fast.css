@@ -1,6 +1,1 @@
-/* Build-time KaTeX rendering helpers */
-.md-typeset .arithmatex-prerendered{white-space:normal;}
-.md-typeset .arithmatex-display{display:block;overflow-x:auto;overflow-y:hidden;padding:.35rem 0;-webkit-overflow-scrolling:touch;}
-.md-typeset .arithmatex-display .katex-display{margin:.35rem 0;}
-.md-typeset .arithmatex-inline .katex{white-space:nowrap;}
-.md-typeset h1 .arithmatex-inline .katex{white-space:normal;}
+.md-typeset .arithmatex-prerendered{white-space:normal}.md-typeset .arithmatex-display{display:block;overflow-x:auto;overflow-y:hidden;padding:.35rem 0;-webkit-overflow-scrolling:touch}.md-typeset .arithmatex-display .katex-display{margin:.35rem 0}.md-typeset .arithmatex-inline .katex{white-space:normal}.md-typeset h1 .arithmatex-inline .katex{white-space:normal}.mk-reflow{position:relative}.mk-reflow>.mk-reflow-narrow{display:none}@media screen and (max-width:44.984375em){.mk-reflow>.mk-reflow-wide{display:none}.mk-reflow>.mk-reflow-narrow{display:block}}.mk-reflow[data-reflow="wide"]>.mk-reflow-wide,.mk-reflow[data-reflow="narrow"]>.mk-reflow-narrow{display:block}.mk-reflow[data-reflow="wide"]>.mk-reflow-narrow,.mk-reflow[data-reflow="narrow"]>.mk-reflow-wide{display:none}.mk-reflow[data-reflow="measure"]>.mk-reflow-wide{display:block;position:absolute;left:0;top:0;width:max-content;visibility:hidden;pointer-events:none}
