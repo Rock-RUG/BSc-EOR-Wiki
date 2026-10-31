@@ -1,0 +1,28 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\begin{document}
+% The course's shortest path (Dijkstra) algorithm from A: permanently label the vertex
+% reachable with the smallest tentative distance d(u) + length, in the order
+% A:0, C:2, B:3, D:8, E:10, F:13.
+\begin{tikzpicture}[every node/.style={font=\small}, v/.style={draw, circle, fill=blue!10, minimum size=7mm, inner sep=0pt}]
+	\node[v] (A) at (0,0) {$A$};
+	\node[v] (B) at (2,1.6) {$B$};
+	\node[v] (C) at (2,-1.6) {$C$};
+	\node[v] (D) at (4.4,0.8) {$D$};
+	\node[v] (E) at (4.4,-1.2) {$E$};
+	\node[v] (F) at (6.4,0) {$F$};
+	\draw[gray!55] (A) -- (B) node[midway, above left, font=\small, gray] {$4$};
+	\draw[gray!55] (C) -- (D) node[midway, above left, font=\small, gray] {$8$};
+	\draw[gray!55] (C) -- (E) node[midway, below, font=\small, gray] {$10$};
+	\draw[gray!55] (D) -- (F) node[midway, above right, font=\small, gray] {$6$};
+	\draw[red, very thick] (A) -- (C) node[midway, below left, font=\small] {$2$};
+	\draw[red, very thick] (C) -- (B) node[midway, right, font=\small] {$1$};
+	\draw[red, very thick] (B) -- (D) node[midway, above, font=\small] {$5$};
+	\draw[red, very thick] (D) -- (E) node[midway, right, font=\small] {$2$};
+	\draw[red, very thick] (E) -- (F) node[midway, below right, font=\small] {$3$};
+	\foreach \n/\d/\p in {A/0/{above left}, B/3/above, C/2/below, D/8/above, E/10/{below right}, F/13/{above right}} {\node[blue!70!black, font=\small, \p=4pt of \n] {$d(\n)=\d$};}
+	\end{tikzpicture}
+\end{document}

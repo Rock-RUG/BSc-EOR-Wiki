@@ -1,0 +1,31 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+% Two-point capacities X = bB, B ~ Bern(p), p = 1/(1+c^2), b = mu(1+c^2) with mean mu = 6.5:
+% c^2 = 0.5: P(0) = 1/3, P(9.75) = 2/3; c^2 = 1: P(0) = P(13) = 1/2; c^2 = 2: P(0) = 2/3, P(19.5) = 1/3.
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]}, x=0.4cm, y=1.5cm]
+  % rows: baseline y-offset, scv label, atom b, probabilities P(0), P(b)
+  \foreach \yo/\lab/\b/\pz/\pb/\tz/\tb in {
+      3.0/{0.5}/9.75/0.3333/0.6667/{1/3}/{2/3},
+      1.5/{1}/13/0.5/0.5/{1/2}/{1/2},
+      0.0/{2}/19.5/0.6667/0.3333/{2/3}/{1/3}} {
+    \draw[gray] (-0.5,\yo) -- (21,\yo);
+    \node[anchor=east] at (-0.8,\yo+0.3) {$C_X^2=\lab$};
+    \draw[red!70!black, very thick] (0,\yo) -- (0,\yo+\pz);
+    \fill[red!70!black] (0,\yo+\pz) circle (2pt);
+    \node[red!70!black, anchor=west] at (0.3,\yo+\pz) {$\tz$};
+    \draw[red!70!black, very thick] (\b,\yo) -- (\b,\yo+\pb);
+    \fill[red!70!black] (\b,\yo+\pb) circle (2pt);
+    \node[red!70!black, anchor=west] at (\b+0.3,\yo+\pb) {$\tb$};
+    \draw[gray] (\b,\yo) -- (\b,\yo-0.07);
+    \node[anchor=north, inner sep=2pt] at (\b,\yo-0.05) {$\b$};
+    \draw[gray] (0,\yo) -- (0,\yo-0.07);
+    \node[anchor=north, inner sep=2pt] at (0,\yo-0.05) {$0$};
+  }
+  % common mean
+  \draw[green!50!black, thick, dashed] (6.5,-0.1) -- (6.5,4.05);
+  \node[green!50!black, anchor=south] at (6.5,4.05) {$\mathbb{E}[X]=6.5$};
+  \node[anchor=west] at (21.2,0) {$x$};
+\end{tikzpicture}
+\end{document}

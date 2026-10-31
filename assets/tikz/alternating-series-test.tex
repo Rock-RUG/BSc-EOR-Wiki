@@ -1,0 +1,30 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% Alternating series test: if a_n decreases to 0, consecutive partial sums bracket the limit S,
+% so |S - s_n| <= a_{n+1} (the length of the next step). Here a_n = 1/(n+1), n >= 0, as on the page:
+% s_n = a_0 - a_1 + ... + (-1)^n a_n, S = ln 2, and the marked step from s_5 to s_6 is a_6 = 1/7.
+\begin{tikzpicture}
+	\begin{axis}[
+		axis lines=left,
+		xmin=-0.6, xmax=8.5,
+		ymin=0, ymax=1.2,
+		xtick={0,...,7}, ytick={0.693}, yticklabels={$S$},
+		xlabel={$n$}, ylabel={$s_n$},
+		xlabel style={below right}, ylabel style={above left},
+		clip=false,
+		width=8.4cm, height=5.2cm
+		]
+		\addplot[gray, dashed, domain=-0.6:8] {0.6931};
+		\addplot[blue, thin, mark=*, mark size=1.7pt] coordinates {
+			(0,1) (1,0.5) (2,0.8333) (3,0.5833) (4,0.7833) (5,0.6167) (6,0.7595) (7,0.6345)
+		};
+		\draw[red, thick, {Latex[length=1.8mm]}-{Latex[length=1.8mm]}] (axis cs:5.5,0.6167) -- (axis cs:5.5,0.7595);
+		\node[red, anchor=south east, font=\small] at (axis cs:5.45,0.765) {$a_6$};
+	\end{axis}
+\end{tikzpicture}
+\end{document}

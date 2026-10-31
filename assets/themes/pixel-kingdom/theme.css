@@ -1,0 +1,23 @@
+/* Pixel Kingdom extras (appended by tools/build_writing_material_themes.cjs).
+   Pixel lettering for headings, navigation and buttons; reading text keeps the
+   body font. Parchment dialog boxes get an oak-and-gold 9-slice frame. */
+@font-face{font-family:"Pixel Kingdom";src:url("../assets/themes/pixel-kingdom/font/pixel-kingdom.woff") format("woff");font-weight:100 900;font-style:normal;font-display:swap;}
+html[data-mk-image-interface-theme="pixel-kingdom"]{--pk-font:"Pixel Kingdom",var(--md-text-font-family,system-ui),system-ui,sans-serif;--pk-frame:url("../assets/themes/pixel-kingdom/frame.svg");--pk-shadow:4px 4px 0 rgba(59,42,26,.26);--pk-text-shadow:2px 2px 0 rgba(36,26,16,.85);}
+/* A purchased header font still wins over the theme's own lettering. */
+html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body :is(.md-typeset :is(h1,h2,h3,h4,h5,h6),.md-header__title,.md-tabs__link,#mk-random-tabs-shadow :is(a.mk-rt-link,button.mk-rt-trigger),button,.md-button,.mk-comment-primary-btn,.mk-comment-small-btn,.mk-local-activity-title,.mk-rt-panel-item){font-family:var(--pk-font)!important;font-weight:400!important;}
+html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body :is(.md-typeset :is(h1,h2,h3,h4,h5,h6),.md-header__title,.md-tabs__link,#mk-random-tabs-shadow :is(a.mk-rt-link,button.mk-rt-trigger),.mk-local-activity-title){letter-spacing:.03em;}
+/* The pixel face runs a little wider than the body font; controls stay untracked. */
+html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body :is(button,.md-button,.mk-comment-primary-btn,.mk-comment-small-btn,.mk-rt-panel-item){letter-spacing:-.02em;}
+html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body .md-typeset :is(h1,h2,h3){line-height:1.25;}
+/* The pixel face is drawn on a 10-unit em, so it needs a touch more size to match. */
+html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body .md-typeset h1{font-size:2.15em;}
+/* Light lettering over the landscape carries a hard pixel drop shadow. */
+html[data-mk-image-interface-theme="pixel-kingdom"] body :is(.md-header__title,.md-header__button,.md-tabs__link){text-shadow:var(--pk-text-shadow)!important;}
+html[data-mk-image-interface-theme="pixel-kingdom"] body #mk-random-tabs-shadow :is(a.mk-rt-link,button.mk-rt-trigger){text-shadow:var(--pk-text-shadow)!important;}
+/* Parchment dialog box: oak outer border, gold inner trim, square corners. */
+html[data-mk-image-interface-theme="pixel-kingdom"] body .md-content__inner:not(:has(>.wiki-home)){border:10px solid transparent!important;border-image:var(--pk-frame) 5 / 10px / 0 round!important;border-radius:0!important;box-shadow:var(--pk-shadow)!important;}
+html[data-mk-image-interface-theme="pixel-kingdom"] body :is(.md-sidebar--primary,#mk-mobile-unified-sidebar-surface) :is(.msb-group-lead,.msb-group-mid,.msb-group-last){border-radius:0!important;}
+html[data-mk-image-interface-theme="pixel-kingdom"] body :is(.md-header,.md-tabs)::before{image-rendering:pixelated;}
+@media(max-width:76.234375em){html[data-mk-image-interface-theme="pixel-kingdom"] body .md-content__inner:not(:has(>.wiki-home)){border-width:8px!important;border-image-width:8px!important;}}
+@media(max-width:44.984375em){html[data-mk-image-interface-theme="pixel-kingdom"] body .md-content__inner:not(:has(>.wiki-home)){border-width:6px!important;border-image-width:6px!important;padding-inline:.55rem!important;}html[data-mk-image-interface-theme="pixel-kingdom"] body #mw-mastery .mw-pill{padding-inline:6px;gap:4px;}html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body .md-typeset h1{font-size:1.5em;overflow-wrap:normal;}html[data-mk-image-interface-theme="pixel-kingdom"]:not([data-mk-header-font]) body :is(button,.md-button,.mk-comment-primary-btn,.mk-comment-small-btn){letter-spacing:-.06em;}}
+@media(forced-colors:active){html[data-mk-image-interface-theme="pixel-kingdom"] body .md-content__inner:not(:has(>.wiki-home)){border-image:none!important;border:1px solid CanvasText!important;}}

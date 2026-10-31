@@ -1,0 +1,41 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% The sample standard deviation s = sqrt(s^2) is back in the units of the data: for the eight
+% observations s is approximately 2.0, and the band xbar +- s covers the "typical" observations.
+% Compute the centre, sample SD and band count from the actual observations.
+\def\sampleValues{2.1,3.4,3.9,4.6,5.0,5.8,6.7,8.5}
+\def\sampleSum{0}\def\sampleCount{0}
+\foreach \x [count=\i] in \sampleValues {
+    \xdef\sampleSum{\fpeval{\sampleSum+\x}}
+    \xdef\sampleCount{\i}
+}
+\edef\sampleMean{\fpeval{\sampleSum/\sampleCount}}
+\def\squareSum{0}
+\foreach \x in \sampleValues {
+    \xdef\squareSum{\fpeval{\squareSum+(\x-\sampleMean)^2}}
+}
+\edef\sampleSd{\fpeval{sqrt(\squareSum/(\sampleCount-1))}}
+\edef\bandLeft{\fpeval{\sampleMean-\sampleSd}}
+\edef\bandRight{\fpeval{\sampleMean+\sampleSd}}
+\def\bandCount{0}
+\foreach \x in \sampleValues {
+    \pgfmathtruncatemacro{\nextCount}{\bandCount+(\x>=\bandLeft && \x<=\bandRight)}
+    \xdef\bandCount{\nextCount}
+}
+\begin{tikzpicture}[every node/.style={font=\small}, >={Latex[length=2mm]}]
+	\fill[red!10] (\bandLeft,-0.15) rectangle (\bandRight,0.75);
+	\draw[->] (1,0) -- (9.6,0) node[right] {$x$};
+	\foreach \x in {2,3,...,9} {\draw (\x,0.08) -- (\x,-0.08); \node[below=2pt, font=\small] at (\x,0) {\x};}
+	\foreach \x in \sampleValues {\fill[blue] (\x,0.3) circle (2.6pt);}
+	\draw[red, dashed, thick] (\sampleMean,-0.2) -- (\sampleMean,1.1);
+	\node[red, anchor=south] at (\sampleMean,1.1) {$\bar x=5.0$};
+	\draw[red, {Latex[length=1.5mm]}-{Latex[length=1.5mm]}, thick] (\bandLeft,0.6) -- (\sampleMean,0.6) node[midway, above, font=\small] {$s\approx2.0$};
+	\draw[red, {Latex[length=1.5mm]}-{Latex[length=1.5mm]}, thick] (\sampleMean,0.6) -- (\bandRight,0.6) node[midway, above, font=\small] {$s\approx2.0$};
+	\node[red!70!black, font=\small, anchor=north] at (5,-0.4) {$[\bar x-s,\bar x+s]$ holds $\bandCount$ of the $\sampleCount$ points};
+	
+\end{tikzpicture}
+\end{document}
