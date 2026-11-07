@@ -1,0 +1,48 @@
+{
+  "id": "xuan-ink",
+  "name": "Xuan & Ink",
+  "price": 500,
+  "completePrice": 1000,
+  "palette": {
+    "paper": "#f8f3e8",
+    "ink": "#242923",
+    "muted": "#716c5d",
+    "jade": "#42695c",
+    "vermilion": "#a43f2f"
+  },
+  "interfaceTheme": {
+    "themeBase": "light",
+    "accent": "#42695c",
+    "ink": "#242923",
+    "muted": "#716c5d",
+    "menuBg": "#242923",
+    "menuHover": "#39443b",
+    "menuBorder": "#716c5d",
+    "menuAccent": "#e6baa1",
+    "pageBg": "#f8f3e8",
+    "cardBg": "#fcf9f1",
+    "cardBgHover": "#f0eadc",
+    "cardBorder": "#b7aa8e",
+    "headerOverlay": "rgba(248,243,232,0.08)",
+    "backgroundOpacity": 1,
+    "headerPosition": "center center",
+    "backgroundPosition": "center top",
+    "headerBlur": "0px",
+    "backgroundBlur": "0px"
+  },
+  "rationale": "A contemporary interpretation of warm fibrous xuan-inspired paper and pressure-shaped ink. Generous blank space carries the mathematical text; an off-centre brush sweep, jade botanical gestures and small vermilion seals provide identity. It is an artistic interpretation, not a claim of historical authenticity. Icons have individual ink geometry and functional silhouettes rather than a shared decorative badge.",
+  "mastery": {
+    "unknown": "Closed scroll: the material has not yet been opened.",
+    "partial": "A rooted stem with one closed bud: the first understanding has formed.",
+    "clear": "An open flower and two leaves: understanding can be articulated.",
+    "mastered": "A branching stem with two flowers and a vermilion seal: understanding transfers and can be used independently."
+  },
+  "contrastPairs": [
+    {"foreground":"#242923","background":"#f8f3e8","purpose":"Body text"},
+    {"foreground":"#716c5d","background":"#f8f3e8","purpose":"Secondary text"},
+    {"foreground":"#42695c","background":"#f8f3e8","purpose":"Links and jade details"},
+    {"foreground":"#a43f2f","background":"#f8f3e8","purpose":"Vermilion marks"},
+    {"foreground":"#f8f3e8","background":"#242923","purpose":"Dark menu text"}
+  ],
+  "rendering": "132 role bodies occupy a 24-unit viewport. A narrow warm-paper edge keeps ink legible when a component has a dark surface. Asset artwork contains no external image, font, script, animation or filter dependencies."
+}

@@ -1,0 +1,27 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+% f(x,y) = x^2 + y^2 over the disc of radius 1.6: the level sets f = k (k = 0.5, 1, 1.5, 2) are
+% circles of radius sqrt(k), drawn on the surface (red) and projected onto the xy-plane (blue).
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{axis}[
+		width=9cm, height=7.4cm,
+		view={-30}{30},
+		xmin=-1.7, xmax=1.7, ymin=-1.7, ymax=1.7, zmin=0, zmax=2.8,
+		xtick={-1,0,1}, ytick={-1,0,1}, ztick={0,1,2},
+		tick label style={font=\small},
+		xlabel={$x$}, ylabel={$y$}, zlabel={$z$},
+		colormap={pale}{color=(blue!4) color=(blue!22)},
+		]
+		% Neither opacity nor shader=interp: through dvisvgm both turn the picture transparent.
+		\addplot3[surf, shader=flat mean, draw=none, domain=0:1.6, y domain=0:360, samples=20, samples y=36] ({x*cos(y)}, {x*sin(y)}, {x^2});
+		\foreach \k in {0.5,1,1.5,2} {
+			\addplot3[red, thick, domain=0:360, samples=60, samples y=1] ({sqrt(\k)*cos(x)}, {sqrt(\k)*sin(x)}, \k);
+			\addplot3[blue, thick, domain=0:360, samples=60, samples y=1] ({sqrt(\k)*cos(x)}, {sqrt(\k)*sin(x)}, 0);
+		}
+	\end{axis}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,15 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\begin{document}
+% The main diagonal runs from the top-left corner down to the right: the entries a_ii.
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\matrix (A) [matrix of math nodes, nodes={minimum size=7mm, anchor=center}, left delimiter=(, right delimiter=), column sep=1pt, row sep=1pt] at (0,0) {
+		|[fill=blue!25]| a_{11} & a_{12} & a_{13} & a_{14} \\
+		a_{21} & |[fill=blue!25]| a_{22} & a_{23} & a_{24} \\
+		a_{31} & a_{32} & |[fill=blue!25]| a_{33} & a_{34} \\
+	};
+\end{tikzpicture}
+\end{document}
