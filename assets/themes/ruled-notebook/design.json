@@ -1,0 +1,46 @@
+{
+  "id": "ruled-notebook",
+  "name": "Ruled Notebook",
+  "basePrice": 480,
+  "completeMultiplier": 2,
+  "palette": {
+    "ivory": "#F6F0DF",
+    "cobalt": "#244A88",
+    "oxblood": "#8B4C4B",
+    "brass": "#AA8650",
+    "graphite": "#3E4448",
+    "ink": "#273444",
+    "muted": "#686356"
+  },
+  "interfaceTheme": {
+    "themeBase": "light",
+    "accent": "#244A88",
+    "menuBg": "#263344",
+    "menuHover": "#36465A",
+    "menuBorder": "#AA8650",
+    "menuAccent": "#F6F0DF",
+    "pageBg": "#F6F0DF",
+    "cardBg": "#FCF9F0",
+    "cardBgHover": "#F1EAD8",
+    "cardBorder": "#BDB6A5",
+    "headerOverlay": "rgba(246,240,223,0.08)",
+    "backgroundOpacity": 0.32,
+    "headerPosition": "center center",
+    "backgroundPosition": "center top",
+    "headerBlur": 0,
+    "backgroundBlur": 0
+  },
+  "rationale": "An original study desk vocabulary: flat ivory stock, hand-ruled cobalt pen, a restrained oxblood margin and small brass stationery details. Icons use individually drafted silhouettes and fine paper keylines, rather than a repeated decorative container. Ruled texture sits well below reading contrast; visual weight belongs to the actual content.",
+  "masterySemantics": {
+    "unknown": "A clean indexed slip: the concept is filed but not yet understood.",
+    "partial": "A large sharpened pencil: active working and unfinished reasoning.",
+    "clear": "An open notebook with a checked worked page: the reasoning is readable and understood.",
+    "mastered": "A bound, ribbon-marked notebook with a checked cover: knowledge has been consolidated."
+  },
+  "contrastRecommendations": {
+    "lightText": "Use graphite #273444 on ivory #F6F0DF; cobalt #244A88 for links and active controls.",
+    "darkText": "Use ivory #F6F0DF on the graphite-blue menu #263344.",
+    "secondary": "Use #686356 for muted prose on ivory. Brass is an ornament, not small body text.",
+    "icons": "Ivory-filled objects and a narrow ivory keyline preserve pen geometry against both light and dark UI surfaces."
+  }
+}

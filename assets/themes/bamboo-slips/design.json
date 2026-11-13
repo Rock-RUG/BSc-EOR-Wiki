@@ -1,0 +1,9 @@
+{
+  "id": "bamboo-slips",
+  "name": "Bamboo Slips",
+  "basePrice": 510,
+  "palette": {"ink":"#302C23","muted":"#75634B","bamboo":"#D9B779","ivory":"#FFF6DE","malachite":"#286458","copper":"#9C5837","silk":"#283A35"},
+  "interfaceTheme": {"themeBase":"default","accent":"#286458","pageBg":"#F6F1E5","cardBg":"#FFFAEF","cardBgHover":"#F4E8CE","cardBorder":"#C4AA7B","menuBg":"#283A35","menuHover":"#354C43","menuAccent":"#F2D698","menuBorder":"#728476","headerOverlay":"rgba(34,49,41,0.60)","headerBlur":"0px","backgroundBlur":"0px"},
+  "rationale":"An imagined scholar's bamboo archive: warm cut slats, carbon-black incisions and dark silk ties. Functional glyphs are constructed from jointed bamboo strokes rather than mounted on a generic badge. Malachite marks action; copper marks attained knowledge. The reading surface remains pale and quiet. This is an artistic interpretation, not a historical reconstruction.",
+  "masterySemantics": {"unknown":"A single uninscribed slip, waiting for the first idea.","partial":"Three staggered slips, with an unfinished inscription and one silk binding.","clear":"An open, double-bound tablet of five aligned slips, with a resolved check incision.","mastered":"A sealed archival roll with folded lower tails and a malachite verification seal."}
+}

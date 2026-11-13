@@ -1,0 +1,30 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% A linear operator maps a space to itself: here the rotation of R^2 by 30 degrees, drawn in
+% one and the same plane.
+\pgfmathsetmacro{\vx}{2.4}
+\pgfmathsetmacro{\vy}{0.4}
+\pgfmathsetmacro{\turn}{30}
+\pgfmathsetmacro{\varg}{atan2(\vy,\vx)}
+\begin{tikzpicture}[every node/.style={font=\small}, >={Latex[length=2mm]}]
+	\draw[->] (-2.6,0) -- (3.2,0) node[below right] {$x_1$};
+	\draw[->] (0,-1.4) -- (0,3.2) node[above left] {$x_2$};
+	\fill[blue!15] (0,0) -- (\vx,\vy) -- (1.6,1.6) -- cycle;
+	\node[blue!70!black] at (1.75,0.6) {$S$};
+	\begin{scope}[rotate=\turn]
+		\fill[red!15] (0,0) -- (\vx,\vy) -- (1.6,1.6) -- cycle;
+		\draw[red!70!black, thick] (0,0) -- (\vx,\vy) -- (1.6,1.6) -- cycle;
+		\node[red!70!black] at (1.5,0.95) {$\boldsymbol{A}(S)$};
+	\end{scope}
+	% Outline of S drawn over the fill of A(S), so the whole triangle S stays visible.
+	\draw[blue!70!black, thick] (0,0) -- (\vx,\vy) -- (1.6,1.6) -- cycle;
+	\draw[->, blue, very thick] (0,0) -- (\vx,\vy) node[right] {$\boldsymbol{v}$};
+	\draw[->, red, very thick] (0,0) -- ({\vx*cos(\turn)-\vy*sin(\turn)},{\vx*sin(\turn)+\vy*cos(\turn)}) node[above right] {$\boldsymbol{A}\boldsymbol{v}$};
+	\draw[green!50!black, thick, ->] (\varg:1.1) arc (\varg:{\varg+\turn}:1.1);
+	\node[green!40!black, font=\small] at ({\varg+\turn/2}:1.4) {$30^\circ$};
+\end{tikzpicture}
+\end{document}
