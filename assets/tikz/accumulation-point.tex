@@ -1,0 +1,28 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% The first 50 terms of a_n = sin n. Four of them (n = 9, 13, 32, 34) lie in the band [0.4, 0.6]
+% around A = 0.5; infinitely many terms fall in every such band, so 0.5 is an accumulation point.
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{axis}[
+		width=10cm, height=5.4cm,
+		axis lines=middle, axis line style={-{Latex[length=2mm]}},
+		xmin=0, xmax=53, ymin=-1.25, ymax=1.35,
+		xtick={10,20,30,40,50}, ytick={-1,-0.5,0.5,1},
+		tick label style={font=\small},
+		xlabel={$n$}, ylabel={$a_n=\sin n$},
+		xlabel style={below right}, ylabel style={above},
+		clip=false
+		]
+		\fill[red!12] (axis cs:0,0.4) rectangle (axis cs:51,0.6);
+		\addplot[red, dashed, thick, domain=0:51] {0.5};
+		\addplot[only marks, mark=*, mark size=1.4pt, blue, samples at={1,...,50}] {sin(deg(x))};
+		\addplot[only marks, mark=*, mark size=1.8pt, red, samples at={9,13,32,34}] {sin(deg(x))};
+		\node[red!70!black, anchor=west, font=\small] at (axis cs:51.3,0.5) {$A=0.5$};
+	\end{axis}
+\end{tikzpicture}
+\end{document}

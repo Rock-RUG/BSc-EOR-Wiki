@@ -1,28 +1,35 @@
 \documentclass[tikz,border=2pt]{standalone}
-
+\usepackage{amsmath,amssymb}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
 
 \begin{document}
-	
-	\begin{tikzpicture}
-		\begin{axis}[
-			xmin=-6,xmax=6,
-			ymin=-6,ymax=6,
-			axis lines=middle,
-			xlabel=$x\text{,}$
-			ylabel=$y\text{,}$
-			]
-			\addplot[thick,domain=0:6, samples=100, color=red]{x+1};
-			\addplot[thick,domain=-6:0, samples=100, color=red]{x*x+0.5};
-			\addplot[thick,domain=-6:6, samples=100, color=brown]{x*x*x};
-			\addplot[thick,domain=0.01:6, samples=100, color=cyan]{1/x};
-			\addplot[thick,domain=-6:-0.01, samples=100, color=cyan]{1/x};
-			\draw [brown, thick, fill=white] (0,0) circle [radius=0.1];
-			\draw [brown, thick, fill=brown] (0,-1) circle [radius=0.1];
-			\draw [red, thick, fill=white] (0,1) circle [radius=0.1];
-			\draw [red, thick, fill=red] (0,0.5) circle [radius=0.1];
-		\end{axis}
-	\end{tikzpicture}
-	
+% Three singularities at x = 0: removable (x^3 with the value -1 at 0, blue), jump (x^2 + 0.5 for
+% x <= 0 and x + 1 for x > 0, red) and infinite (1/x, green).
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{axis}[
+		width=9cm, height=8.4cm,
+		axis lines=middle, axis line style={-{Latex[length=2mm]}},
+		xmin=-3.2, xmax=3.2, ymin=-4.2, ymax=4.2,
+		xtick=\empty, ytick=\empty,
+		tick label style={font=\small},
+		xlabel={$x$}, ylabel={$y$},
+		xlabel style={below right}, ylabel style={above left},
+		samples=150, clip=false
+		]
+		\addplot[green!50!black, thick, domain=0.24:3] {1/x};
+		\addplot[green!50!black, thick, domain=-3:-0.24] {1/x};
+		\addplot[blue, thick, domain=-1.6:1.6] {x^3};
+		\addplot[red, thick, domain=-1.85:0] {x^2+0.5};
+		\addplot[red, thick, domain=0:3] {x+1};
+		\draw[blue, thick, fill=white] (axis cs:0,0) circle (2.2pt);
+		\fill[blue] (axis cs:0,-1) circle (2.2pt);
+		\draw[red, thick, fill=white] (axis cs:0,1) circle (2.2pt);
+		\fill[red] (axis cs:0,0.5) circle (2.2pt);
+		\node[blue!70!black, anchor=south, font=\small] at (axis cs:1.6,4.15) {removable};
+		\node[red!70!black, anchor=west, font=\small] at (axis cs:3.02,4) {jump};
+		\node[green!50!black, anchor=north west, font=\small] at (axis cs:0.27,-3.4) {infinite};
+	\end{axis}
+\end{tikzpicture}
 \end{document}

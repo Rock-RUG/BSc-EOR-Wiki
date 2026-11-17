@@ -1,0 +1,31 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+% Matching Pennies, p = sigma_1(H), q = sigma_2(H). BR_1 jumps from p = 0 to p = 1 at q = 1/2,
+% BR_2 jumps from q = 1 to q = 0 at p = 1/2; the jumps are filled by whole segments (convex values,
+% closed graph), so the graphs must meet, here only at the mixed equilibrium (1/2, 1/2): no corner
+% (pure profile) lies on both.
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]}]
+  \begin{axis}[
+    axis lines=left, xmin=-0.03, xmax=1.18, ymin=-0.03, ymax=1.15,
+    xtick={0,0.5,1}, xticklabels={$0$,$\tfrac12$,$1$},
+    ytick={0,0.5,1}, yticklabels={$0$,$\tfrac12$,$1$},
+    xlabel={$p=\sigma_1(H)$}, ylabel={$q=\sigma_2(H)$},
+    xlabel style={anchor=west, at={(axis description cs:1.0,0.0)}},
+    ylabel style={rotate=-90, anchor=south, at={(axis description cs:0,1.02)}},
+    width=8.4cm, height=6cm, clip=false]
+    % BR_1 (player 1 wants to match)
+    \addplot[blue!70!black, very thick] coordinates {(0,0) (0,0.5) (1,0.5) (1,1)};
+    % BR_2 (player 2 wants to mismatch)
+    \addplot[red!70!black, very thick, dashed] coordinates {(0,1) (0.5,1) (0.5,0) (1,0)};
+    \node[blue!70!black, anchor=south] at (axis cs:0.78,0.51) {$BR_1$};
+    \node[red!70!black, anchor=west] at (axis cs:0.51,0.8) {$BR_2$};
+    % unique equilibrium
+    \fill[green!50!black] (axis cs:0.5,0.5) circle (2.2pt);
+    \node[green!50!black, anchor=north west] at (axis cs:0.52,0.48) {$\sigma^*\in BR(\sigma^*)$};
+  \end{axis}
+\end{tikzpicture}
+\end{document}

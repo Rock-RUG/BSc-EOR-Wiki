@@ -1,0 +1,63 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+% Split-apply-combine: transport emissions 22, 24 | 146, 148 | 30, 31 grouped by country,
+% summed per group (46, 294, 61) and combined into a three-row result.
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]},
+  hd/.style={font=\small\ttfamily},
+  lab/.style={font=\small\ttfamily, fill=white, inner sep=1pt}]
+  \def\h{0.45}
+  \def\wa{1.85}
+  \def\wb{0.75}
+  % colours per group
+  \colorlet{g1}{blue!70!black}\colorlet{g2}{red!70!black}\colorlet{g3}{orange!90!black}
+  \colorlet{f1}{blue!12}\colorlet{f2}{red!12}\colorlet{f3}{orange!15}
+  % ---- input table ----
+  \node[hd] at (0.5*\wa,0) {Country};
+  \node[hd] at (\wa+0.5*\wb,0) {T};
+  \foreach \c/\t/\g [count=\i] in {Belgium/22/1,Belgium/24/1,Germany/146/2,Germany/148/2,Netherlands/30/3,Netherlands/31/3} {
+    \fill[f\g] (0,-\i*\h+0.5*\h) rectangle (\wa+\wb,-\i*\h-0.5*\h);
+    \node[g\g] at (0.5*\wa,-\i*\h) {\c};
+    \node[g\g] at (\wa+0.5*\wb,-\i*\h) {\t};
+  }
+  \draw[gray] (0,-0.5*\h) -- (\wa+\wb,-0.5*\h);
+  \draw[gray] (0,0.5*\h) rectangle (\wa+\wb,-6.5*\h);
+  \node[anchor=north west, gray!30!black] at (0,-6.5*\h-0.05) {\texttt{T} = \texttt{Transport}};
+  % ---- split groups ----
+  \def\sx{4.55}
+  \foreach \c/\a/\b/\g/\y in {Belgium/22/24/1/0.35,Germany/146/148/2/-0.95,Netherlands/30/31/3/-2.25} {
+    \begin{scope}[shift={(\sx,\y)}]
+      \fill[f\g] (0,0) rectangle (1.15,-2*\h);
+      \draw[g\g] (0,0) rectangle (1.15,-2*\h);
+      \node[g\g] at (0.575,-0.5*\h) {\a};
+      \node[g\g] at (0.575,-1.5*\h) {\b};
+      \node[g\g, anchor=south west, inner sep=1pt] at (0,0) {\c};
+    \end{scope}
+  }
+  % arrows split
+  \draw[->, gray!40!black] (\wa+\wb+0.1,-3.5*\h) -- (\sx-0.15,-3.5*\h);
+  \node[lab, anchor=south] at ({(\wa+\wb+\sx)/2},-3.5*\h+0.05) {group\_by()};
+  % ---- apply: sums ----
+  \def\rx{6.9}
+  \foreach \s/\g/\y [count=\i] in {46/1/0.35,294/2/-0.95,61/3/-2.25} {
+    \draw[->, g\g] (\sx+1.25,\y-\h) -- (\rx-0.1,-0.45-\i*\h);
+  }
+  \node[gray!30!black, anchor=south] at ({(\sx+1.15+\rx)/2},0.4) {sum};
+  % ---- combine: result table ----
+  \begin{scope}[shift={(\rx,-0.45)}]
+    \fill[green!20] (0,-0.5*\h) rectangle (\wa+\wb+0.2,-3.5*\h);
+    \node[hd] at (0.5*\wa,0) {Country};
+    \node[hd] at (\wa+0.5*\wb+0.1,0) {T};
+    \foreach \c/\s/\g [count=\i] in {Belgium/46/1,Germany/294/2,Netherlands/61/3} {
+      \node[g\g] at (0.5*\wa,-\i*\h) {\c};
+      \node[green!50!black] at (\wa+0.5*\wb+0.1,-\i*\h) {\s};
+    }
+    \draw[gray] (0,-0.5*\h) -- (\wa+\wb+0.2,-0.5*\h);
+    \draw[gray] (0,0.5*\h) rectangle (\wa+\wb+0.2,-3.5*\h);
+    \node[lab, anchor=north west, text=green!50!black] at (0,-3.5*\h-0.08) {summarise()};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

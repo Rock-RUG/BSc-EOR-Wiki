@@ -1,0 +1,38 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+% Capacity rule (2.1.7): c_k = 12 - e for L_{k-1} <= 24, 12 for 24 < L_{k-1} < 48, 12 + e for L_{k-1} >= 48,
+% drawn for e = 1 (11, 12, 13) and e = 5 (7, 12, 17) against the mean arrival rate lambda = 11.8 per week.
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]}]
+  \begin{axis}[
+    axis lines=left, xmin=0, xmax=74, ymin=5, ymax=19,
+    xtick={0,24,48,72}, ytick={7,12,17},
+    xlabel={queue length $L_{k-1}$}, ylabel={capacity $c_k$},
+    xlabel style={at={(axis description cs:1,0)}, anchor=north east, yshift=-14pt},
+    ylabel style={rotate=-90, at={(axis description cs:0,1)}, anchor=south},
+    width=8.8cm, height=5.8cm, clip=false
+    ]
+    \draw[orange!90!black, thin, dashed] (axis cs:24,5) -- (axis cs:24,18.4);
+    \draw[orange!90!black, thin, dashed] (axis cs:48,5) -- (axis cs:48,18.4);
+    \draw[blue!70!black, thick, dashed] (axis cs:0,11.8) -- (axis cs:72,11.8);
+    \node[blue!70!black, anchor=west] at (axis cs:72.5,11.8) {$\lambda=11.8$};
+    % e = 5
+    \draw[red!70!black, thick, densely dotted] (axis cs:0,7) -- (axis cs:24,7);
+    \draw[red!70!black, thick, densely dotted] (axis cs:24,12) -- (axis cs:48,12);
+    \draw[red!70!black, thick, densely dotted] (axis cs:48,17) -- (axis cs:72,17);
+    % e = 1
+    \draw[red!70!black, very thick] (axis cs:0,11) -- (axis cs:24,11);
+    \draw[red!70!black, very thick] (axis cs:24,12) -- (axis cs:48,12);
+    \draw[red!70!black, very thick] (axis cs:48,13) -- (axis cs:72,13);
+    \node[red!70!black, anchor=north] at (axis cs:12,10.9) {$e=1$: $11$};
+    \node[red!70!black, anchor=south] at (axis cs:60,13.1) {$e=1$: $13$};
+    \node[red!70!black, anchor=south] at (axis cs:12,7.1) {$e=5$: $7$};
+    \node[red!70!black, anchor=south] at (axis cs:60,17.1) {$e=5$: $17$};
+    \node[orange!90!black, anchor=south] at (axis cs:24,18.4) {$24$};
+    \node[orange!90!black, anchor=south] at (axis cs:48,18.4) {$48$};
+  \end{axis}
+\end{tikzpicture}
+\end{document}

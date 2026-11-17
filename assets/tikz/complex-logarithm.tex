@@ -1,0 +1,38 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+% log z = ln|z| + i(arg z + 2 pi k): one nonzero z has infinitely many logarithms, stacked
+% 2 pi i apart; the principal value uses Arg z in (-pi, pi].
+% One model: phase in degrees, radius r, and a common vertical scale for radians.
+\pgfmathsetmacro{\phase}{40}
+\pgfmathsetmacro{\radius}{2}
+\pgfmathsetmacro{\branchgap}{2.3}
+\pgfmathsetmacro{\logx}{ln(\radius)}
+\pgfmathsetmacro{\logy}{\branchgap*\phase/360}
+\begin{tikzpicture}[every node/.style={font=\small}, >={Latex[length=2mm]}]
+	\draw[->] (-1.2,0) -- (2.6,0) node[below right] {$\mathrm{Re}$};
+	\draw[->] (0,-1.0) -- (0,2.4) node[above left] {$\mathrm{Im}$};
+	\draw[->, blue, very thick] (0,0) -- (\phase:\radius) node[above right] {$z=r\mathrm{e}^{\mathrm{i}\varphi}$};
+	\draw[red, thick] (0.6,0) arc (0:\phase:0.6);
+	\node[red, font=\small] at ({\phase/2}:0.85) {$\varphi$};
+	\node[anchor=south] at (0.6,2.5) {$z$-plane};
+	\draw[->, thick] (3.0,0.8) -- (4.0,0.8) node[midway, above] {$\log$};
+	\begin{scope}[xshift=6.2cm]
+		\draw[->] (-1.4,0) -- (2.2,0) node[below right] {$\mathrm{Re}\,w$};
+		\draw[->] (0,-2.4) -- (0,3.2) node[above left] {$\mathrm{Im}\,w$};
+		\draw[gray, dashed] (\logx,-2.3) -- (\logx,3.0);
+		\node[gray, font=\small, below] at (\logx,-2.3) {$\ln r$};
+		\foreach \k in {-1,0,1} {
+			\fill[red] (\logx,{\logy+\k*\branchgap}) circle (2pt);
+		}
+		\node[red, right, font=\small] at ({\logx+0.05},{\logy-\branchgap}) {$\ln r+\mathrm{i}(\varphi-2\pi)$};
+		\node[red, right] at ({\logx+0.05},\logy) {$\ln r+\mathrm{i}\varphi=\operatorname{Log}z$};
+		\node[red, right, font=\small] at ({\logx+0.05},{\logy+\branchgap}) {$\ln r+\mathrm{i}(\varphi+2\pi)$};
+		\draw[{Latex[length=1.5mm]}-{Latex[length=1.5mm]}, gray] ({\logx-0.3},\logy) -- ({\logx-0.3},{\logy+\branchgap}) node[midway, left, font=\small] {$2\pi$};
+		\node[anchor=south] at (0.6,3.3) {$w$-plane};
+	\end{scope}
+\end{tikzpicture}
+\end{document}

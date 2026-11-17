@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rock-rug.github.io/BSc-EOR-Wiki/sitemap.xml

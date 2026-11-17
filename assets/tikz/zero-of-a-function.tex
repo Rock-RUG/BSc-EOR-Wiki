@@ -1,0 +1,28 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+% The zeros of f are the inputs where the graph meets the x-axis: f(x)=x^3-3x+1 has three.
+\begin{tikzpicture}
+	\begin{axis}[
+		axis lines=middle,
+		xmin=-2.6, xmax=2.6,
+		ymin=-2.4, ymax=3.6,
+		xtick={-1.879,0.347,1.532}, xticklabels={,,},
+		ytick=\empty,
+		xlabel={$x$}, ylabel={$y$},
+		xlabel style={below right}, ylabel style={above left},
+		samples=150, smooth, clip=false,
+		width=8cm, height=5.6cm
+		]
+		\addplot[thick, blue, domain=-2.25:2.1] {x^3-3*x+1};
+		\addplot[only marks, mark=*, red] coordinates {(-1.879,0) (0.347,0) (1.532,0)};
+		\node[red, anchor=north west, font=\small] at (axis cs:-1.82,-0.08) {$x_1$};
+		\node[red, anchor=south west, font=\small] at (axis cs:0.4,0.05) {$x_2$};
+		\node[red, anchor=north west, font=\small] at (axis cs:1.6,-0.08) {$x_3$};
+		\node[blue, anchor=west] at (axis cs:2.1,3.2) {$f$};
+	\end{axis}
+\end{tikzpicture}
+\end{document}

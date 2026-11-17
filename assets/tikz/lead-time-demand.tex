@@ -1,0 +1,35 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+% Lighthouse Company: daily demand pmf of D on {0,...,5} (mean 2.275) and the pmf of the
+% lead-time demand X = D_1 + D_2 for lead time l = 2 (2-fold convolution, mean 4.55, support 0..10).
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]}]
+  \begin{axis}[name=p1, axis lines=left, xmin=-0.6, xmax=5.6, ymin=0, ymax=0.3,
+    xtick={0,...,5}, ytick={0,0.1,0.2}, yticklabels={$0$,$0.1$,$0.2$},
+    xlabel={$k$}, ylabel={$\mathbb{P}(D=k)$},
+    ylabel style={rotate=-90, at={(axis description cs:0,1)}, anchor=south west, xshift=-6mm},
+    width=4.6cm, height=4.6cm, clip=false,
+    title={one day: $D$}, title style={yshift=3mm}]
+    \addplot[ycomb, blue!70!black, very thick, mark=*, mark size=1.6pt]
+      coordinates {(0,0.1667) (1,0.2) (2,0.25) (3,0.125) (4,0.0917) (5,0.1667)};
+    \draw[green!50!black, thick, dashed] (axis cs:2.275,0) -- (axis cs:2.275,0.29);
+    \node[green!50!black, anchor=west] at (axis cs:2.275,0.28) {$\mathbb{E}[D]=2.275$};
+  \end{axis}
+  \begin{axis}[name=p2, at={(p1.outer east)}, anchor=outer west, xshift=2mm,
+    axis lines=left, xmin=-0.6, xmax=10.6, ymin=0, ymax=0.3,
+    xtick={0,2,...,10}, ytick={0,0.1,0.2}, yticklabels={$0$,$0.1$,$0.2$},
+    xlabel={$k$}, ylabel={$\mathbb{P}(X=k)$},
+    ylabel style={rotate=-90, at={(axis description cs:0,1)}, anchor=south west, xshift=-6mm},
+    width=6.4cm, height=4.6cm, clip=false,
+    title={lead time $l=2$: $X=D_1+D_2$}, title style={yshift=3mm}]
+    \addplot[ycomb, blue!70!black, very thick, mark=*, mark size=1.6pt]
+      coordinates {(0,0.0278) (1,0.0667) (2,0.1233) (3,0.1417) (4,0.1431) (5,0.1547)
+                   (6,0.1281) (7,0.1062) (8,0.0501) (9,0.0306) (10,0.0278)};
+    \draw[green!50!black, thick, dashed] (axis cs:4.55,0) -- (axis cs:4.55,0.22);
+    \node[green!50!black, anchor=south] at (axis cs:4.55,0.22) {$\mathbb{E}[X]=4.55$};
+  \end{axis}
+\end{tikzpicture}
+\end{document}

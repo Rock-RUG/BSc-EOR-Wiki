@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" fill="none">
+<defs><linearGradient id="lagoon" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d9f1f3"/><stop offset="1" stop-color="#b6e0e2"/></linearGradient></defs>
+<rect width="480" height="480" fill="url(#lagoon)"/>
+<path d="M120 0L80 480H130L170 0ZM300 0L290 480H340L330 0Z" fill="#ffffff" opacity=".18"/>
+<path d="M0 420C80 400 160 430 240 410S400 400 480 420V480H0Z" fill="#e8d8b6"/>
+<g stroke="#f0806a" stroke-width="7" stroke-linecap="round" opacity=".6"><path d="M60 430V370M60 390L40 360M60 400L82 372M420 430V360M420 380L444 350M420 396L400 370"/></g>
+<g fill="#f5b34a" opacity=".55"><circle cx="150" cy="420" r="22"/><circle cx="330" cy="424" r="20"/></g>
+<g stroke="#7fc7a6" stroke-width="5" stroke-linecap="round" opacity=".5"><path d="M200 430C196 410 206 396 200 380M280 430C286 410 276 398 284 384"/></g>
+<g fill="#ffffff" opacity="0.5"><circle cx="256.2" cy="77.3" r="2.5"/><circle cx="152.4" cy="291.2" r="2.2"/><circle cx="447.6" cy="378.5" r="1"/><circle cx="373.6" cy="272.2" r="1.9"/><circle cx="91.7" cy="160.3" r="1.8"/><circle cx="88.4" cy="299.2" r="1.2"/><circle cx="34.1" cy="303.3" r="2.3"/><circle cx="206.5" cy="347.9" r="1.1"/><circle cx="249.7" cy="27.4" r="2.3"/><circle cx="230" cy="312.3" r="2.8"/><circle cx="48.9" cy="220.3" r="1.5"/><circle cx="226.2" cy="206.7" r="2.8"/><circle cx="209.6" cy="112" r="2.4"/><circle cx="370.5" cy="173.6" r="2.3"/><circle cx="295.9" cy="281.7" r="1.9"/><circle cx="106.6" cy="243.8" r="2.8"/><circle cx="448.9" cy="48" r="2.5"/><circle cx="116.9" cy="242.2" r="1.1"/><circle cx="260.2" cy="329.5" r="1.2"/><circle cx="403.5" cy="341.5" r="1.5"/><circle cx="382.8" cy="306.7" r="1.6"/><circle cx="328.7" cy="329.8" r="3"/><circle cx="418.9" cy="213.8" r="2"/><circle cx="335.5" cy="126.2" r="1.6"/></g>
+</svg>

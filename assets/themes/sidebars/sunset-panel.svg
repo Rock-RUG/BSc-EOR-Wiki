@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<path d="M10 0.5H38A9.5 9.5 0 0 1 47.5 10V38A9.5 9.5 0 0 1 38 47.5H10A9.5 9.5 0 0 1 0.5 38V10A9.5 9.5 0 0 1 10 0.5Z" fill="#fcecdf"/>
+<path d="M10 0.5H38A9.5 9.5 0 0 1 47.5 10V38A9.5 9.5 0 0 1 38 47.5H10A9.5 9.5 0 0 1 0.5 38V10A9.5 9.5 0 0 1 10 0.5ZM10 3.4H38A6.6 6.6 0 0 1 44.6 10V38A6.6 6.6 0 0 1 38 44.6H10A6.6 6.6 0 0 1 3.4 38V10A6.6 6.6 0 0 1 10 3.4Z" fill="#9f6a5f" fill-rule="evenodd"/>
+<path d="M10 1.5H38A8.5 8.5 0 0 1 46.5 10V38A8.5 8.5 0 0 1 38 46.5H10A8.5 8.5 0 0 1 1.5 38V10A8.5 8.5 0 0 1 10 1.5Z" fill="none" stroke="#eccab5" stroke-opacity=".8" stroke-width=".6"/>
+<path d="M10 3.4H38A6.6 6.6 0 0 1 44.6 10V38A6.6 6.6 0 0 1 38 44.6H10A6.6 6.6 0 0 1 3.4 38V10A6.6 6.6 0 0 1 10 3.4ZM10 7H38A3 3 0 0 1 41 10V38A3 3 0 0 1 38 41H10A3 3 0 0 1 7 38V10A3 3 0 0 1 10 7Z" fill="#cd8b68" fill-opacity=".15" fill-rule="evenodd"/>
+<path d="M10 5.2H38A4.8 4.8 0 0 1 42.8 10V38A4.8 4.8 0 0 1 38 42.8H10A4.8 4.8 0 0 1 5.2 38V10A4.8 4.8 0 0 1 10 5.2Z" fill="none" stroke="#cd8b68" stroke-opacity=".45" stroke-width=".5"/>
+<path d="M10 7H38A3 3 0 0 1 41 10V38A3 3 0 0 1 38 41H10A3 3 0 0 1 7 38V10A3 3 0 0 1 10 7Z" fill="none" stroke="#cd8b68" stroke-width=".8"/>
+<g transform="translate(7.88 7.88)"><path d="M-3.3 0A3.3 3.3 0 1 0 3.3 0A3.3 3.3 0 1 0 -3.3 0Z" fill="#fcecdf" stroke="#9f6a5f" stroke-width="1"/><path d="M-1.3 0A1.3 1.3 0 1 0 1.3 0A1.3 1.3 0 1 0 -1.3 0Z" fill="#cd8b68"/></g>
+<g transform="translate(40.12 7.88)"><path d="M-3.3 0A3.3 3.3 0 1 0 3.3 0A3.3 3.3 0 1 0 -3.3 0Z" fill="#fcecdf" stroke="#9f6a5f" stroke-width="1"/><path d="M-1.3 0A1.3 1.3 0 1 0 1.3 0A1.3 1.3 0 1 0 -1.3 0Z" fill="#cd8b68"/></g>
+<g transform="translate(7.88 40.12)"><path d="M-3.3 0A3.3 3.3 0 1 0 3.3 0A3.3 3.3 0 1 0 -3.3 0Z" fill="#fcecdf" stroke="#9f6a5f" stroke-width="1"/><path d="M-1.3 0A1.3 1.3 0 1 0 1.3 0A1.3 1.3 0 1 0 -1.3 0Z" fill="#cd8b68"/></g>
+<g transform="translate(40.12 40.12)"><path d="M-3.3 0A3.3 3.3 0 1 0 3.3 0A3.3 3.3 0 1 0 -3.3 0Z" fill="#fcecdf" stroke="#9f6a5f" stroke-width="1"/><path d="M-1.3 0A1.3 1.3 0 1 0 1.3 0A1.3 1.3 0 1 0 -1.3 0Z" fill="#cd8b68"/></g>
+</svg>

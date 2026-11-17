@@ -1,47 +1,42 @@
 \documentclass[tikz,border=2pt]{standalone}
-
+\usepackage{amsmath,amssymb}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
 
 \begin{document}
-	
-	\begin{tikzpicture}
-		\begin{axis}[
-			axis equal,
-			scale only axis,
-			width=9cm,
-			height=5cm,
-			domain=-2:2,
-			samples=200,
-			no markers,
-			legend pos=south east
-			]
-			\addplot[color=blue!20] ({x},{x^2/sqrt(x^2 + 1)});
-			\addlegendentry{$f_1(x)$}
-			
-			\addplot[color=blue!40] ({x},{x^2/sqrt(x^2 + 1/2)});
-			\addlegendentry{$f_2(x)$}
-			
-			\addplot[color=blue!60] ({x},{x^2/sqrt(x^2 + 1/4)});
-			\addlegendentry{$f_4(x)$}
-			
-			\addplot[color=blue!80] ({x},{x^2/sqrt(x^2 + 1/8)});
-			\addlegendentry{$f_8(x)$}
-			
-			\addplot[color=blue!100] ({x},{x^2/sqrt(x^2 + 1/16)});
-			\addlegendentry{$f_{16}(x)$}
-			
-			\addplot[color=red, thick] ({x},{abs(x)});
-			\addlegendentry{$f(x)=|x|$}
-			
-			\addplot[dashed, black, domain=0:2] (-1, x);
-			\node[circle,fill,inner sep=1pt,color=blue!20] at (axis cs:-1,{1/sqrt(1 + 1)}) {};
-			\node[circle,fill,inner sep=1pt,color=blue!40] at (axis cs:-1,{1/sqrt(1 + 1/2)}) {};
-			\node[circle,fill,inner sep=1pt,color=blue!60] at (axis cs:-1,{1/sqrt(1 + 1/4)}) {};
-			\node[circle,fill,inner sep=1pt,color=blue!100] at (axis cs:-1,{1/sqrt(1 + 1/8)}) {};
-			\node[circle,fill,inner sep=1pt,color=blue!100] at (axis cs:-1,{1/sqrt(1 + 1/16)}) {};
-			\node[circle,fill,inner sep=1pt,color=red] at (axis cs:-1,{1/sqrt(1)}) {};
-		\end{axis}
-	\end{tikzpicture}
-	
+% f_n(x) = x^2 / sqrt(x^2 + 1/n) for n = 1, 2, 4, 8, 16 (darker blue for larger n) converge to
+% f(x) = |x| at every x; the dots show f_n(-1) approaching f(-1) = 1.
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{axis}[
+		width=9.6cm, height=6cm,
+		axis lines=middle, axis line style={-{Latex[length=2mm]}},
+		xmin=-2.1, xmax=2.1, ymin=-0.1, ymax=2.2,
+		xtick={-2,-1,1,2}, ytick={1,2},
+		tick label style={font=\small},
+		xlabel={$x$}, ylabel={$y$},
+		xlabel style={below right}, ylabel style={above left},
+		domain=-2:2, samples=200, no markers,
+		legend pos=outer north east,
+		legend style={font=\small, draw=gray!50, fill=white},
+		legend cell align={left},
+		clip=false
+		]
+		\addplot[blue!25, thick] {x^2/sqrt(x^2+1)};
+		\addlegendentry{$f_1$}
+		\addplot[blue!45, thick] {x^2/sqrt(x^2+1/2)};
+		\addlegendentry{$f_2$}
+		\addplot[blue!65, thick] {x^2/sqrt(x^2+1/4)};
+		\addlegendentry{$f_4$}
+		\addplot[blue!85, thick] {x^2/sqrt(x^2+1/8)};
+		\addlegendentry{$f_8$}
+		\addplot[blue, thick] {x^2/sqrt(x^2+1/16)};
+		\addlegendentry{$f_{16}$}
+		\addplot[red, thick] {abs(x)};
+		\addlegendentry{$f(x)=|x|$}
+		\addplot[gray, dashed, domain=0:1.15] (-1,x);
+		\addplot[only marks, mark=*, mark size=1.5pt, blue!45, forget plot] coordinates {(-1,0.7071) (-1,0.8165) (-1,0.8944) (-1,0.9428) (-1,0.9701)};
+		\addplot[only marks, mark=*, mark size=1.7pt, red, forget plot] coordinates {(-1,1)};
+	\end{axis}
+\end{tikzpicture}
 \end{document}

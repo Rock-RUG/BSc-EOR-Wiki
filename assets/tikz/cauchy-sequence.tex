@@ -1,72 +1,29 @@
 \documentclass[tikz,border=2pt]{standalone}
-
+\usepackage{amsmath,amssymb}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\begin{filecontents}{an.dat}
-	1 1
-	2 0.5
-	3 0.333
-	4 0.25
-	5 0.2
-	6 0.167
-	7 0.143
-	8 0.125
-	9 0.111
-	10 0.1
-	11 0.091
-	12 0.0833
-	13 0.0769
-	14 0.0714
-	15 0.0667
-	16 0.0625
-	17 0.0588
-	18 0.0556
-	19 0.0526
-	20 0.05
-\end{filecontents}
-\begin{filecontents}{bn.dat}
-	1 0
-	2 0.909
-	3 0.141
-	4 -0.757
-	5 0.958
-	6 -0.279
-	7 -0.656
-	8 0.989
-	9 -0.412
-	10 -0.544
-	11 0.999
-	12 -0.536
-	13 -0.404
-	14 0.91
-	15 -0.132
-	16 -0.759
-	17 0.956
-	18 -0.279
-	19 -0.655
-	20 0.99
-\end{filecontents}
+\usetikzlibrary{arrows.meta}
 
 \begin{document}
-	
-	\begin{tikzpicture}
-		\begin{axis}[
-			xlabel={$n$},
-			ylabel={$a_n\text{,}$ $b_n$},
-			xmin=0,
-			xmax=20,
-			ytick={-1,0,1},
-			legend style={at={(0.98,0.02)}, anchor=south east},
-			width=\textwidth,
-			height=7cm,
-			grid=both,
-			]
-			\addplot+[mark=*,mark options={fill=blue},blue] table[x index=0,y index=1] {an.dat};
-			\addlegendentry{$\displaystyle a_n=\sin n/n$}
-			
-			\addplot+[mark=*,mark options={fill=red},red] table[x index=0,y index=1] {bn.dat};
-			\addlegendentry{$b_n=\sin n$}
-		\end{axis}
-	\end{tikzpicture}
-	
+% a_n = sin(n)/n (blue): the terms get arbitrarily close to each other (Cauchy).
+% b_n = sin n (red): terms keep jumping between about -1 and 1 (not Cauchy).
+\begin{tikzpicture}[every node/.style={font=\small}]
+	\begin{axis}[
+		width=8.49cm, height=5.09cm,
+		axis lines=middle, axis line style={-{Latex[length=2mm]}},
+		xmin=0, xmax=21.5, ymin=-1.15, ymax=1.3,
+		xtick={5,10,15,20}, ytick={-1,-0.5,0.5,1}, xticklabel style={fill=white, inner sep=1pt}, axis on top,
+		tick label style={font=\small},
+		xlabel={$n$}, xlabel style={below right},
+		grid=major, grid style={gray!20},
+		legend pos=outer north east, legend cell align={left},
+		legend style={font=\small, draw=gray!50, fill=white},
+		clip=false
+		]
+		\addplot[blue, thick, mark=*, mark size=1.5pt, samples at={1,...,20}] {sin(deg(x))/x};
+		\addlegendentry{$a_n=\sin n/n$}
+		\addplot[red, thick, mark=*, mark size=1.5pt, samples at={1,...,20}] {sin(deg(x))};
+		\addlegendentry{$b_n=\sin n$}
+	\end{axis}
+\end{tikzpicture}
 \end{document}

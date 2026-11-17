@@ -1,0 +1,46 @@
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+% Left: open discs V1 (centre (0,0)) and V2 (centre (1,0)), radius 1; the lens V1 cap V2 is convex, the union is not:
+% (0,0.9) in V1, (1,0.9) in V2, midpoint (0.5,0.9) in neither. Right: segments V1=[0,1]x{0}, V2={0}x[0,1];
+% V1+V2=[0,1]x[0,1], a filled square.
+\begin{tikzpicture}[font=\small, >={Latex[length=2mm]}]
+  \begin{scope}[x=1.55cm, y=1.55cm]
+    \fill[blue!15] (0,0) circle (1);
+    \fill[red!15] (1,0) circle (1);
+    \begin{scope}
+      \clip (0,0) circle (1);
+      \fill[green!20] (1,0) circle (1);
+    \end{scope}
+    \draw[blue!70!black, thick, dashed] (0,0) circle (1);
+    \draw[red!70!black, thick, dashed] (1,0) circle (1);
+    \node[blue!70!black] at (-0.55,-0.35) {$V_1$};
+    \node[red!70!black] at (1.55,-0.35) {$V_2$};
+    \node[green!50!black] at (0.5,-0.05) {$V_1\cap V_2$};
+    \draw[gray!60!black, thick] (0,0.9) -- (1,0.9);
+    \fill[blue!70!black] (0,0.9) circle (1.6pt);
+    \fill[red!70!black] (1,0.9) circle (1.6pt);
+    \draw[orange!90!black, thick, fill=white] (0.5,0.9) circle (1.8pt);
+    \node[blue!70!black, anchor=south east] at (-0.06,1.0) {$(0,0.9)$};
+    \node[red!70!black, anchor=south west] at (1.06,1.0) {$(1,0.9)$};
+    \node[orange!90!black, anchor=south] at (0.5,1.24) {$(0.5,0.9)\notin V_1\cup V_2$};
+  \end{scope}
+  \begin{scope}[xshift=5.3cm, yshift=-0.75cm, x=1.55cm, y=1.55cm]
+    \draw[gray, ->] (-0.4,0) -- (1.55,0) node[right, black] {$x_1$};
+    \draw[gray, ->] (0,-0.4) -- (0,1.4) node[above, black] {$x_2$};
+    \fill[green!20] (0,0) rectangle (1,1);
+    \draw[green!50!black, thick] (0,0) rectangle (1,1);
+    \draw[blue!70!black, very thick] (0,0) -- (1,0);
+    \draw[red!70!black, very thick] (0,0) -- (0,1);
+    \node[blue!70!black, anchor=north] at (0.5,-0.03) {$V_1$};
+    \node[red!70!black, anchor=east] at (-0.03,0.5) {$V_2$};
+    \node[green!50!black] at (0.5,0.5) {$V_1+V_2$};
+    \node[anchor=east] at (0,-0.12) {$0$};
+    \node[anchor=north west] at (1,0) {$1$};
+    \node[anchor=east] at (0,1) {$1$};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

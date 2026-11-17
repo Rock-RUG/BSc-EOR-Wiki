@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" fill="none">
+<rect width="480" height="480" fill="#fcf9f0"/>
+<path d="M0 24H480M0 49H480M0 74H480M0 99H480M0 124H480M0 149H480M0 174H480M0 199H480M0 224H480M0 249H480M0 274H480M0 299H480M0 324H480M0 349H480M0 374H480M0 399H480M0 424H480M0 449H480M0 474H480" stroke="#a9c1dc" stroke-width="1" opacity=".75"/>
+<path d="M58 0V480" stroke="#e08a84" stroke-width="1.5"/>
+<g fill="#e4ddcb" opacity="1"><path transform="translate(24 120) rotate(0) scale(1)" d="M-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0Z"/><path transform="translate(24 240) rotate(0) scale(1)" d="M-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0Z"/><path transform="translate(24 360) rotate(0) scale(1)" d="M-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0Z"/></g>
+<g stroke="#5d6a80" stroke-width="1.2" fill="none" opacity=".45"><path d="M380 400l24-30 14 10-24 30-16 6Z"/><path d="M110 420c20-10 40 6 60-4s30-12 50 0"/><path d="M360 70l20 0M370 60l0 20"/><path d="M400 140q10-14 20 0t20 0"/></g>
+<rect x="330" y="200" width="70" height="56" fill="#fff3a8" opacity=".6" transform="rotate(6 365 228)"/>
+</svg>
